@@ -1,9 +1,11 @@
-var express = require('express');
-var router = express.Router();
+import Express from 'express';
+
+let router = Express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+    res.send('respond with a resource');
 });
 
-module.exports = router;
+export default router;
+
