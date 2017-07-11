@@ -1,4 +1,5 @@
 import Express from 'express';
+import ExpressSession from 'express-session';
 import CookieParser from 'cookie-parser';
 import BodyParser from 'body-parser';
 import Path from 'path';
@@ -18,7 +19,12 @@ app.set('view engine', 'jade');
 app.use(Logger('dev'));
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({extended: false}));
-app.use(CookieParser());
+app.use(CookieParser('sessionSecret'));
+app.use(ExpressSession({
+    secret: 'sessionSecret',
+    resave: true,
+    saveUninitialized:true
+}));
 
 app.use(Express.static(Path.join(__dirname, 'public')));
 
