@@ -6,9 +6,8 @@ import Path from 'path';
 import Logger from 'morgan';
 import Mongoose from 'mongoose';
 
-import index from './routes/index';
-import users from './routes/users';
 import * as Config from "./config";
+import api_v1 from "./api/api_v1";
 
 const app = Express();
 
@@ -30,8 +29,7 @@ app.use(ExpressSession({
 
 app.use(Express.static(Path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
+app.use('/api/v1', api_v1);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -48,7 +46,7 @@ app.use(function (err, req, res, next) {
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
+    res.send(err.status + ' error');
 });
 
 Mongoose.connect(Config.DATABASE);
