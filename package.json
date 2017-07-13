@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www --exec babel-node"
+    "start": "nodemon ./cli/express --exec babel-node",
+    "reactServer": "node ./cli/react"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
@@ -26,7 +27,9 @@
     "babel-preset-stage-0": "^6.24.1",
     "css-loader": "^0.28.4",
     "nodemon": "^1.11.0",
+    "react-hot-loader": "^1.3.1",
     "react-scripts": "^1.0.10",
-    "style-loader": "^0.18.2"
+    "style-loader": "^0.18.2",
+    "webpack-dev-server": "^2.5.1"
   }
 }

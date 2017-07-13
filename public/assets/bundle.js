@@ -5460,9 +5460,9 @@ module.exports = DOMChildrenOperations;
 
 
 var DOMNamespaces = {
-  html: 'http://www.w3.org/1999/xhtml',
-  mathml: 'http://www.w3.org/1998/Math/MathML',
-  svg: 'http://www.w3.org/2000/svg'
+  html: 'http://express.w3.org/1999/xhtml',
+  mathml: 'http://express.w3.org/1998/Math/MathML',
+  svg: 'http://express.w3.org/2000/svg'
 };
 
 module.exports = DOMNamespaces;
@@ -9147,7 +9147,7 @@ module.exports = ReactInputSelection;
  * @typechecks
  */
 
-/* eslint-disable fb-www/typeof-undefined */
+/* eslint-disable fb-express/typeof-undefined */
 
 /**
  * Same as document.activeElement but wraps in a try-catch block. In IE it is
@@ -14422,7 +14422,7 @@ var ReactDebugTool = {
   }
 };
 
-// TODO remove these when RN/www gets updated
+// TODO remove these when RN/express gets updated
 ReactDebugTool.addDevtool = ReactDebugTool.addHook;
 ReactDebugTool.removeDevtool = ReactDebugTool.removeHook;
 
@@ -15063,7 +15063,7 @@ module.exports = Danger;
  * @typechecks
  */
 
-/*eslint-disable fb-www/unsafe-html*/
+/*eslint-disable fb-express/unsafe-html*/
 
 var ExecutionEnvironment = __webpack_require__(6);
 
@@ -15285,7 +15285,7 @@ module.exports = createArrayFromMixed;
  *
  */
 
-/*eslint-disable fb-www/unsafe-html */
+/*eslint-disable fb-express/unsafe-html */
 
 var ExecutionEnvironment = __webpack_require__(6);
 
@@ -15309,7 +15309,7 @@ var selectWrap = [1, '<select multiple="true">', '</select>'];
 var tableWrap = [1, '<table>', '</table>'];
 var trWrap = [3, '<table><tbody><tr>', '</tr></tbody></table>'];
 
-var svgWrap = [1, '<svg xmlns="http://www.w3.org/2000/svg">', '</svg>'];
+var svgWrap = [1, '<svg xmlns="http://express.w3.org/2000/svg">', '</svg>'];
 
 var markupWrap = {
   '*': [1, '?<div>', '</div>'],
@@ -21073,8 +21073,8 @@ module.exports = isNode;
 
 
 var NS = {
-  xlink: 'http://www.w3.org/1999/xlink',
-  xml: 'http://www.w3.org/XML/1998/namespace'
+  xlink: 'http://express.w3.org/1999/xlink',
+  xml: 'http://express.w3.org/XML/1998/namespace'
 };
 
 // We use attributes for everything SVG so let's avoid some duplication and run

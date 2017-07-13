@@ -1,5 +1,9 @@
+const webpack = require('webpack');
+
 module.exports = {
     entry: [
+        'webpack-dev-server/client?http://0.0.0.0:3001',
+        'webpack/hot/only-dev-server',
         './react/index.js'
     ],
     output: {
@@ -25,5 +29,7 @@ module.exports = {
                 }
             ]
         }]
-    }
+    }, plugins: [
+        new webpack.HotModuleReplacementPlugin()
+    ]
 };
