@@ -19,6 +19,7 @@ module.exports = {
             use: ['babel-loader']
         }, {
             test: /(\.css)$/,
+            exclude: /node_module/,
             use: [
                 'style-loader', {
                     loader: 'css-loader',
@@ -28,6 +29,14 @@ module.exports = {
                     }
                 }
             ]
+        }, {
+            test: /\.less$/,
+            include: /node_modules/,
+            use: [
+                'style-loader',
+                'css-loader',
+                'less-loader'
+            ],
         }]
     }, plugins: [
         new webpack.HotModuleReplacementPlugin()

@@ -4,5 +4,5 @@
     "stage-0",
     "react"
   ],
-  "plugins": []
+  "plugins": [["import", { "libraryName": "antd", "style": true }]]
 }
