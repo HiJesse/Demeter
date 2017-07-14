@@ -1,11 +1,12 @@
-import React, {Component} from "react";
-import style from "../styles/login.css";
+import React from "react";
+import style from "./styles/login.css";
 import {Affix, Button, Calendar, DatePicker, Input} from "antd";
 import {connect} from "react-redux";
 import {login} from "../actions/user";
+import LoginForm from "../components/LoginForm";
 const Search = Input.Search;
 
-class Login extends Component {
+class Login extends React.Component {
 
     constructor() {
         super();
@@ -33,6 +34,8 @@ class Login extends Component {
                     />
                     <Calendar onPanelChange={() => {}} />
                 </p>
+
+                <LoginForm />
             </div>
         );
     }
