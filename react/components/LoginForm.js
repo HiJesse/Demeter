@@ -34,12 +34,12 @@ class NormalLoginForm extends React.Component {
                             <Checkbox>记住密码</Checkbox>
                         </div>
                     )}
-                    <a className={formStyle.loginFormForgot} href="">忘记密码</a>
+                    <a className={formStyle.loginFormForgot} href="">修改密码</a>
                     <Button type="primary" htmlType="submit" className={formStyle.loginFormButton}>
                         {'登录'}
                     </Button>
                     <div className={formStyle.loginFormContact}>
-                        {'注册账号 请联系管理员'}
+                        {'注册账号/重置密码 请联系管理员'}
                     </div>
                 </FormItem>
             </Form>

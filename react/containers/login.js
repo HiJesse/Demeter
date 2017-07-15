@@ -1,10 +1,9 @@
 import React from "react";
 import style from "./styles/login.css";
-import {Affix, Button, Calendar, DatePicker, Input} from "antd";
 import {connect} from "react-redux";
 import {login} from "../actions/user";
 import LoginForm from "../components/LoginForm";
-const Search = Input.Search;
+import FooterView from "../components/FooterView";
 
 class Login extends React.Component {
 
@@ -17,25 +16,16 @@ class Login extends React.Component {
 
     render() {
         return (
-            <div className={style.App}>
-                <div className={style["App-header"]}>
-                    <h2>{this.props.title}</h2>
+            <div className={style.page}>
+                <div className={style.pageHeader}>
+                    Demeter
                 </div>
-                <p className={style["App-intro"]}>
-                    <DatePicker />
-                    <Affix>
-                        <Button type="primary" onClick={this._onClick.bind(this)}>button</Button>
-                    </Affix>
-
-                    <Search
-                        placeholder="input search text"
-                        style={{ width: 200 }}
-                        onSearch={value => console.log(value)}
-                    />
-                    <Calendar onPanelChange={() => {}} />
-                </p>
-
-                <LoginForm />
+                <div className={style.pageContent}>
+                    <LoginForm />
+                </div>
+                <div className={style.pageFooter}>
+                    <FooterView/>
+                </div>
             </div>
         );
     }
