@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./cli/express --exec babel-node",
-    "reactServer": "node ./cli/react"
+    "reactServer": "node ./cli/react",
+    "packBundle": "webpack"
   },
   "dependencies": {
     "antd": "^2.12.0",
@@ -19,6 +20,9 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.5",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1",
+    "react-router-redux": "^4.0.8",
     "redux": "^3.7.2",
     "serve-favicon": "~2.4.2",
     "webpack": "^3.2.0"

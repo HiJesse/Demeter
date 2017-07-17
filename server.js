@@ -3,6 +3,7 @@ import ExpressSession from 'express-session';
 import CookieParser from 'cookie-parser';
 import BodyParser from 'body-parser';
 import Path from 'path';
+import FS from 'fs';
 import Logger from 'morgan';
 import Mongoose from 'mongoose';
 
@@ -32,10 +33,20 @@ app.use(Express.static(Path.join(__dirname, 'public')));
 app.use('/api/v1', api_v1);
 
 // catch 404 and forward to error handler
+// 重定向到/public/index.html页面
 app.use(function (req, res, next) {
-    const err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+    FS.readFile(__dirname + '/public/index.html', function(err, data){
+        if(err){
+            console.log(err);
+            res.send('500 error' + err);
+        } else {
+            res.writeHead(200, {
+                'Content-type': 'text/html',
+                'Connection':'keep-alive'
+            });
+            res.end(data);
+        }
+    })
 });
 
 // error handler

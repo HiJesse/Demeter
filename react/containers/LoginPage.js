@@ -47,10 +47,14 @@ class LoginPage extends React.Component {
                                 initialValue: true,
                             })(
                                 <div className={style.loginFormRememberPassword}>
-                                    <Checkbox>记住密码</Checkbox>
+                                    <Checkbox>{'记住密码'}</Checkbox>
                                 </div>
                             )}
-                            <a className={style.loginFormForgot} href="">修改密码</a>
+                            <a
+                                className={style.loginFormForgot}
+                                onClick={()=> this.props.history.push('/forgetPassword')}>
+                                {'修改密码'}
+                            </a>
                             <Button type="primary" htmlType="submit" className={style.loginFormButton}>
                                 {'登录'}
                             </Button>
@@ -72,6 +76,7 @@ class LoginPage extends React.Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.props.dispatch(login(values.userName, md5(values.password)));
+
             }
         });
     }
