@@ -8,21 +8,22 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 100px;
+    height: 200px;
     background-color: #ececec;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
 
-    font-size: 300%;
+    font-size: 600%;
     color: #47a5e9;
+    font-family: "Impact",sans-serif;
 }
 
 .pageContent {
     position: absolute;
     left: 0;
     right: 0;
-    top: 100px;
+    top: 180px;
     bottom: 50px;
     display: flex;
     flex-direction: column;
@@ -41,4 +42,25 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+
+.loginForm {
+    max-width: 300px;
+}
+
+.loginFormRememberPassword {
+    float: left;
+}
+
+.loginFormForgot {
+    float: right;
+}
+
+.loginFormButton {
+    width: 100%;
+}
+
+.loginFormContact {
+    float: left;
 }

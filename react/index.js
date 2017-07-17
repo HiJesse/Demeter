@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Login from "./containers/login";
+import LoginPage from "./containers/LoginPage";
 import {Provider} from "react-redux";
 import configureStore from "./store/config_store"
 
@@ -8,7 +8,7 @@ let store = configureStore();
 
 ReactDOM.render(
     <Provider store={store}>
-        <Login />
+        <LoginPage />
     </Provider>,
     document.getElementById('root')
 );
