@@ -1,7 +1,7 @@
 import React from "react";
 import style from "./styles/login.css";
 import {connect} from "react-redux";
-import {login} from "../actions/user";
+import {login, logout} from "../actions/user";
 import {Button, Checkbox, Form, Icon, Input} from "antd";
 import FooterView from "../components/FooterView";
 import {md5} from "../../util/encrypt";
@@ -76,7 +76,7 @@ class LoginPage extends React.Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 this.props.dispatch(login(values.userName, md5(values.password)));
-
+                // this.props.dispatch(logout(values.userName));
             }
         });
     }
