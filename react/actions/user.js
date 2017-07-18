@@ -7,7 +7,7 @@ export const login = (account, pwd) => {
         "account": account,
         "password": pwd
     };
-    console.log(params);
+
     get(URL_LOGIN, params).then((data) => {
         console.log('jesse succeed', data)
     }).catch((e) => {

@@ -60,7 +60,12 @@ app.use(function (err, req, res, next) {
     res.send(err.status + ' error');
 });
 
-Mongoose.connect(Config.DATABASE);
+Mongoose.connect(Config.DATABASE, {useMongoClient:true});
+
+Mongoose.connection.on("open", function () {
+    console.info('Open MongoDB ' + Config.DATABASE + ' Succeed!');
+});
+
 Mongoose.connection.on('error', function () {
     console.info('Error: Could not connect to MongoDB. Did you forget to run `mongod`?'.red);
 });

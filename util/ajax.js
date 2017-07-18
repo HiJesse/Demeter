@@ -1,4 +1,6 @@
 import fetch from 'isomorphic-fetch'
+import {RES_FAILED, RES_SUCCEED} from "./status";
+
 
 /**
  * 构建get时请求参数
@@ -77,15 +79,17 @@ export function get(url, params) {
         fetchPromise.then((response) => {
             if (response.ok) {
                 response.json().then(function (data) {
-                    console.log(data);
-                    resolve(data);
-
+                    if (data.status === RES_SUCCEED) {
+                        resolve(data);
+                    } else {
+                        reject(data)
+                    }
                 });
             } else {
-                reject(buildErrorInfo(-2, 'response code error'))
+                reject(buildErrorInfo(RES_FAILED, 'response code error'))
             }
         }).catch((e) => {
-            reject(buildErrorInfo(-1, e.toString()));
+            reject(buildErrorInfo(RES_FAILED, e.toString()));
         });
     });
 }

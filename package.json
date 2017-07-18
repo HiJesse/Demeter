@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./cli/express --exec babel-node",
-    "reactServer": "node ./cli/react",
+    "start": "nodemon ./cli/express.js --exec babel-node",
+    "react": "node ./cli/react.js",
     "packBundle": "webpack"
   },
   "dependencies": {
