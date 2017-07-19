@@ -57,7 +57,7 @@ app.use(function (err, req, res, next) {
 
     // render the error page
     res.status(err.status || 500);
-    res.send(err.status + ' error');
+    res.send(err.status + ' ' + err.message);
 });
 
 Mongoose.connect(Config.DATABASE, {useMongoClient:true});

@@ -1,11 +1,13 @@
 import React from "react";
-import {Button, Form, Icon, Input} from "antd";
+import {Button, Form, Icon, Input, message} from "antd";
 import {connect} from "react-redux";
 import FooterView from "../components/FooterView";
 import style from "./styles/modifyPassword.css"
 import {MSG_ACCOUNT, MSG_PASSWORD} from "../constants/stringConstant";
 import pageStyle from "./styles/page.css";
 import {ROUTER_ROOT} from "../constants/routerConstant";
+import {closeAlert, modifyPassword} from "../actions/user";
+import {isStringEmpty} from "../../util/checker";
 
 const FormItem = Form.Item;
 
@@ -21,6 +23,7 @@ class ModifyPassword extends React.Component {
 
         return (
             <div className={pageStyle.page}>
+                {this._modifyPasswordStatus()}
                 <div className={pageStyle.pageHeader}>
                     Demeter
                 </div>
@@ -113,9 +116,27 @@ class ModifyPassword extends React.Component {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
+                this.props.modifyPassword(values.account, values.password, values.newPassword)
             }
         });
+    }
+
+    /**
+     * 修改密码状态处理
+     * @private
+     */
+    _modifyPasswordStatus() {
+        if (isStringEmpty(this.props.modifyPasswordMessage) && !this.props.alertMsg) {
+            return;
+        }
+
+        if (this.props.modifyPasswordStatus === 0) {
+            message.success(this.props.modifyPasswordMessage);
+            this.props.history.push(ROUTER_ROOT)
+        } else {
+            message.error(this.props.modifyPasswordMessage);
+        }
+        this.props.closeAlert();
     }
 
     /**
@@ -154,8 +175,18 @@ const ModifyPasswordForm = Form.create()(ModifyPassword);
 
 function select(state) {
     return {
-        title: state.user.msg
+        alertMsg: state.user.alertMsg,
+        modifyPasswordStatus: state.user.modifyPasswordStatus,
+        modifyPasswordMessage: state.user.modifyPasswordMessage
     };
 }
 
-export default connect(select)(ModifyPasswordForm);
+function mapDispatchToProps(dispatch) {
+    return {
+        modifyPassword: (account, pwd, newPwd) => modifyPassword(dispatch, account, pwd, newPwd),
+        closeAlert: () => dispatch(closeAlert)
+    }
+}
+
+
+export default connect(select, mapDispatchToProps)(ModifyPasswordForm);

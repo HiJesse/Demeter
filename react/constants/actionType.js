@@ -1,0 +1,5 @@
+export const ACTION_CLOSE_ALERT = 'CLOSE_ALERT';
+
+export const ACTION_LOGIN = 'LOGIN';
+export const ACTION_MODIFY_PASSWORD = 'MODIFY_PASSWORD';
+export const ACTION_LOGOUT = 'LOGOUT';

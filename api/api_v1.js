@@ -9,4 +9,7 @@ router.get('/login', user.login);
 // 注销
 router.get('/logout', user.logout);
 
+// 修改密码
+router.get('/modifyPassword', user.modifyPassword);
+
 export default router;
