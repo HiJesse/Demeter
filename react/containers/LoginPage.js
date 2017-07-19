@@ -1,10 +1,13 @@
 import React from "react";
 import style from "./styles/login.css";
+import pageStyle from "./styles/page.css";
 import {connect} from "react-redux";
 import {closeAlert, login} from "../actions/user";
 import {Button, Checkbox, Form, Icon, Input, message} from "antd";
 import FooterView from "../components/FooterView";
 import {isStringEmpty} from "../../util/checker";
+import {MSG_ACCOUNT, MSG_PASSWORD} from "../constants/stringConstant";
+import {ROUTER_MODIFY_PASSWORD} from "../constants/routerConstant";
 
 const FormItem = Form.Item;
 
@@ -17,23 +20,23 @@ class LoginPage extends React.Component {
     render() {
         const {getFieldDecorator} = this.props.form;
         return (
-            <div className={style.page}>
+            <div className={pageStyle.page}>
                 {this._loginStatus()}
-                <div className={style.pageHeader}>
+                <div className={pageStyle.pageHeader}>
                     Demeter
                 </div>
-                <div className={style.pageContent}>
+                <div className={pageStyle.pageContent}>
                     <Form onSubmit={this._handleSubmit.bind(this)} className={style.loginForm}>
                         <FormItem>
                             {getFieldDecorator('account', {
-                                rules: [{required: true, min: 3, message: '账号至少为3个字符'}],
+                                rules: [{required: true, min: 3, message: MSG_ACCOUNT}],
                             })(
                                 <Input prefix={<Icon type="user" style={{fontSize: 13}}/>} placeholder="账号"/>
                             )}
                         </FormItem>
                         <FormItem>
                             {getFieldDecorator('password', {
-                                rules: [{required: true, min: 6, message: '密码至少为6个字符'}],
+                                rules: [{required: true, min: 6, message: MSG_PASSWORD}],
                             })(
                                 <Input prefix={<Icon type="lock" style={{fontSize: 13}}/>} type="password"
                                        placeholder="密码"/>
@@ -49,8 +52,8 @@ class LoginPage extends React.Component {
                                 </div>
                             )}
                             <a
-                                className={style.loginFormForgot}
-                                onClick={()=> this.props.history.push('/forgetPassword')}>
+                                className={style.loginFormModify}
+                                onClick={()=> this.props.history.push(ROUTER_MODIFY_PASSWORD)}>
                                 {'修改密码'}
                             </a>
                             <Button type="primary" htmlType="submit" className={style.loginFormButton}>
@@ -62,7 +65,7 @@ class LoginPage extends React.Component {
                         </FormItem>
                     </Form>
                 </div>
-                <div className={style.pageFooter}>
+                <div className={pageStyle.pageFooter}>
                     <FooterView />
                 </div>
             </div>
