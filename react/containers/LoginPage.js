@@ -1,10 +1,10 @@
 import React from "react";
 import style from "./styles/login.css";
 import {connect} from "react-redux";
-import {login, logout} from "../actions/user";
-import {Button, Checkbox, Form, Icon, Input} from "antd";
+import {closeAlert, login} from "../actions/user";
+import {Button, Checkbox, Form, Icon, Input, message} from "antd";
 import FooterView from "../components/FooterView";
-import {md5} from "../../util/encrypt";
+import {isStringEmpty} from "../../util/checker";
 
 const FormItem = Form.Item;
 
@@ -12,22 +12,20 @@ class LoginPage extends React.Component {
 
     constructor() {
         super();
-        this.state = {
-            buttonName: 'button'
-        }
     }
 
     render() {
         const {getFieldDecorator} = this.props.form;
         return (
             <div className={style.page}>
+                {this._loginStatus()}
                 <div className={style.pageHeader}>
                     Demeter
                 </div>
                 <div className={style.pageContent}>
                     <Form onSubmit={this._handleSubmit.bind(this)} className={style.loginForm}>
                         <FormItem>
-                            {getFieldDecorator('userName', {
+                            {getFieldDecorator('account', {
                                 rules: [{required: true, min: 3, message: '账号至少为3个字符'}],
                             })(
                                 <Input prefix={<Icon type="user" style={{fontSize: 13}}/>} placeholder="账号"/>
@@ -71,29 +69,53 @@ class LoginPage extends React.Component {
         );
     }
 
+    /**
+     * 表单数据回调
+     * @param e
+     * @private
+     */
     _handleSubmit(e) {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                this.props.dispatch(login(values.userName, md5(values.password)));
-                // this.props.dispatch(logout(values.userName));
+                this.props.login(values.account, values.password);
             }
         });
     }
 
-    _onLoginFailedCallback(data) {
+    /**
+     * 登录状态处理
+     * @private
+     */
+    _loginStatus() {
+        if (isStringEmpty(this.props.loginMessage) && !this.props.alertMsg) {
+            return;
+        }
 
+        if (this.props.loginStatus === 0) {
+            message.success(this.props.loginMessage);
+        } else {
+            message.error(this.props.loginMessage);
+        }
+        this.props.closeAlert();
     }
 }
 
 const LoginPageForm = Form.create()(LoginPage);
 
-let i = 0;
-
 function select(state) {
     return {
-        title: state.user.msg + i++
+        alertMsg: state.user.alertMsg,
+        loginStatus: state.user.loginStatus,
+        loginMessage: state.user.loginMessage
     };
 }
 
-export default connect(select)(LoginPageForm);
+function mapDispatchToProps(dispatch) {
+    return {
+        login: (account, pwd) => login(dispatch, account, pwd),
+        closeAlert: () => dispatch(closeAlert)
+    }
+}
+
+export default connect(select, mapDispatchToProps)(LoginPageForm);

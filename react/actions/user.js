@@ -1,23 +1,29 @@
-import {LOGIN} from "../constants/action_type";
+import {CLOSE_ALERT, LOGIN} from "../constants/action_type";
 import {get, post} from "../../util/ajax";
 import {URL_LOGIN, URL_LOGOUT} from "../constants/url";
+import {md5} from "../../util/encrypt";
 
-export const login = (account, pwd) => {
+export function login(dispatch, account, pwd) {
     const params = {
         "account": account,
-        "password": pwd
+        "password": md5(pwd)
+    };
+
+    let action = {
+        type: LOGIN
     };
 
     get(URL_LOGIN, params).then((data) => {
-        console.log('jesse succeed', data)
+        action.data = data;
+        dispatch(action)
     }).catch((e) => {
-        console.log('jesse', e);
+        action.data = e;
+        dispatch(action);
     });
-    return {
-        type: LOGIN,
-        account: account,
-        pwd: pwd
-    }
+}
+
+export const closeAlert = {
+    type: CLOSE_ALERT
 };
 
 export const logout = (account) => {
