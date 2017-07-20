@@ -1,6 +1,6 @@
 import React from "react";
-import style from "./styles/login.css";
-import pageStyle from "./styles/page.css";
+import {loginStyle} from "./styles/login";
+import {pageStyle} from "./styles/page";
 import {connect} from "react-redux";
 import {closeAlert, login} from "../actions/user";
 import {Button, Checkbox, Form, Icon, Input, message} from "antd";
@@ -20,13 +20,13 @@ class LoginPage extends React.Component {
     render() {
         const {getFieldDecorator} = this.props.form;
         return (
-            <div className={pageStyle.page}>
+            <div>
                 {this._loginStatus()}
-                <div className={pageStyle.pageHeader}>
+                <div style={pageStyle.page_header}>
                     Demeter
                 </div>
-                <div className={pageStyle.pageContent}>
-                    <Form onSubmit={this._handleSubmit.bind(this)} className={style.loginForm}>
+                <div style={pageStyle.page_content}>
+                    <Form onSubmit={this._handleSubmit.bind(this)} style={loginStyle.view_form}>
                         <FormItem>
                             {getFieldDecorator('account', {
                                 rules: [{required: true, min: 3, message: MSG_ACCOUNT}],
@@ -47,27 +47,28 @@ class LoginPage extends React.Component {
                                 valuePropName: 'checked',
                                 initialValue: true,
                             })(
-                                <div className={style.loginFormRememberPassword}>
+                                <div style={loginStyle.view_remember}>
                                     <Checkbox>{'记住密码'}</Checkbox>
                                 </div>
                             )}
                             <a
-                                className={style.loginFormModify}
+                                style={loginStyle.text_modify_password}
                                 onClick={()=> this.props.history.push(ROUTER_MODIFY_PASSWORD)}>
                                 {'修改密码'}
                             </a>
-                            <Button type="primary" htmlType="submit" className={style.loginFormButton}>
+                            <Button type="primary" htmlType="submit" style={loginStyle.button_login}>
                                 {'登录'}
                             </Button>
-                            <div className={style.loginFormContact}>
+                            <div style={loginStyle.view_contact}>
                                 {'注册账号/重置密码 请联系管理员'}
                             </div>
                         </FormItem>
                     </Form>
                 </div>
-                <div className={pageStyle.pageFooter}>
+                <div style={pageStyle.page_footer}>
                     <FooterView />
                 </div>
+
             </div>
         );
     }

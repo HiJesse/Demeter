@@ -2,9 +2,9 @@ import React from "react";
 import {Button, Form, Icon, Input, message} from "antd";
 import {connect} from "react-redux";
 import FooterView from "../components/FooterView";
-import style from "./styles/modifyPassword.css"
+import {modifyStyle} from "./styles/modifyPassword"
 import {MSG_ACCOUNT, MSG_PASSWORD} from "../constants/stringConstant";
-import pageStyle from "./styles/page.css";
+import {pageStyle} from "./styles/page";
 import {ROUTER_ROOT} from "../constants/routerConstant";
 import {closeAlert, modifyPassword} from "../actions/user";
 import {isStringEmpty} from "../../util/checker";
@@ -22,14 +22,14 @@ class ModifyPassword extends React.Component {
         const {getFieldDecorator} = this.props.form;
 
         return (
-            <div className={pageStyle.page}>
+            <div>
                 {this._modifyPasswordStatus()}
-                <div className={pageStyle.pageHeader}>
+                <div style={pageStyle.page_header}>
                     Demeter
                 </div>
-                <div className={pageStyle.pageContent}>
+                <div style={pageStyle.page_content}>
                     <Form
-                        className={style.formModifyPassword}
+                        style={modifyStyle.view_form}
                         onSubmit={this._handleSubmit.bind(this)}>
                         <FormItem
                             hasFeedback>
@@ -81,16 +81,16 @@ class ModifyPassword extends React.Component {
                         </FormItem>
                         <FormItem>
                             <Button
-                                className={style.buttonReset}
+                                style={modifyStyle.button_modify}
                                 type="primary"
                                 htmlType="submit">修改密码</Button>
                             <Button
-                                className={style.buttonGoBack}
+                                style={modifyStyle.button_go_back}
                                 onClick={()=> this.props.history.push(ROUTER_ROOT)}>回到首页</Button>
                         </FormItem>
                     </Form>
                 </div>
-                <div className={pageStyle.pageFooter}>
+                <div style={pageStyle.page_footer}>
                     <FooterView />
                 </div>
             </div>
