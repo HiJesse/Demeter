@@ -1,5 +1,6 @@
 import React from "react";
 import {PROJECT_GITHUB, VIEW_FOOTER} from "../constants/stringConstant";
+import {Icon} from "antd";
 
 export default class FooterView extends React.Component {
 
@@ -8,6 +9,7 @@ export default class FooterView extends React.Component {
             <div>
                 {VIEW_FOOTER}
                 <a href={PROJECT_GITHUB}>Jesse</a>
+                <Icon type="github" style={{marginLeft: 3}}/>
             </div>
         );
     }

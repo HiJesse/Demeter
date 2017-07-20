@@ -5,7 +5,8 @@ import {BrowserRouter, Route} from "react-router-dom";
 import configureStore from "./store/config_store";
 import LoginPage from "./containers/LoginPage";
 import ModifyPassword from "./containers/ModifyPassword";
-import {ROUTER_MODIFY_PASSWORD, ROUTER_ROOT} from "./constants/routerConstant";
+import {ROUTER_HOME, ROUTER_MODIFY_PASSWORD, ROUTER_ROOT} from "./constants/routerConstant";
+import HomePage from "./containers/HomePage";
 
 
 let store = configureStore();
@@ -16,6 +17,7 @@ ReactDOM.render(
             <div>
                 <Route exact path={ROUTER_ROOT} component={LoginPage}/>
                 <Route path={ROUTER_MODIFY_PASSWORD} component={ModifyPassword}/>
+                <Route path={ROUTER_HOME} component={HomePage}/>
             </div>
         </BrowserRouter>
     </Provider>,

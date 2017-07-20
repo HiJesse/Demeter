@@ -7,7 +7,7 @@ import {Button, Checkbox, Form, Icon, Input, message} from "antd";
 import FooterView from "../components/FooterView";
 import {isStringEmpty} from "../../util/checker";
 import {MSG_ACCOUNT, MSG_PASSWORD} from "../constants/stringConstant";
-import {ROUTER_MODIFY_PASSWORD} from "../constants/routerConstant";
+import {ROUTER_HOME, ROUTER_MODIFY_PASSWORD} from "../constants/routerConstant";
 
 const FormItem = Form.Item;
 
@@ -98,6 +98,7 @@ class LoginPage extends React.Component {
 
         if (this.props.loginStatus === 0) {
             message.success(this.props.loginMessage);
+            this.props.history.push(ROUTER_HOME);
         } else {
             message.error(this.props.loginMessage);
         }
