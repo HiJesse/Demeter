@@ -98,6 +98,9 @@ class LoginPage extends React.Component {
 
         if (this.props.loginStatus === 0) {
             message.success(this.props.loginMessage);
+            localStorage.token = this.props.userInfo.token;
+            localStorage.uId = this.props.userInfo.uId;
+            localStorage.isAdmin = this.props.userInfo.isAdmin;
             this.props.history.push(ROUTER_HOME);
         } else {
             message.error(this.props.loginMessage);
@@ -112,7 +115,8 @@ function select(state) {
     return {
         alertMsg: state.user.alertMsg,
         loginStatus: state.user.loginStatus,
-        loginMessage: state.user.loginMessage
+        loginMessage: state.user.loginMessage,
+        userInfo: state.user.userInfo
     };
 }
 

@@ -95,7 +95,9 @@ class HomePage extends React.Component {
                             <Breadcrumb.Item>Bill</Breadcrumb.Item>
                         </Breadcrumb>
                         <div style={{padding: 24, background: '#fff', flex: 1}}>
-                            Bill is a cat.
+                            {localStorage.token}
+                            {localStorage.uId}
+                            {localStorage.isAdmin}
                         </div>
                     </Content>
                     <Footer style={{textAlign: 'center'}}>

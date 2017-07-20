@@ -1,20 +1,24 @@
+// user api
+import {buildResponse} from "../../util/ajax";
+import UserModel from "../../models/user";
+import {
+    RES_FAILED,
+    RES_FAILED_MODIFY_PWD,
+    RES_FAILED_USER_ERR_PWD,
+    RES_FAILED_USER_NONE,
+    RES_MSG_MODIFY_PWD,
+    RES_MSG_USER_ERR_PWD,
+    RES_MSG_USER_NONE,
+    RES_SUCCEED
+} from "../../util/status";
+import {createJsonWebToken} from "../../util/webToken";
+
 /**
  * 验证账号密码是否存在, 并返回不同状态
  * @param account
  * @param password
  * @param callback
  */
-import {buildResponse} from "../../util/ajax";
-import UserModel from "../../models/user";
-import {
-    RES_FAILED, RES_FAILED_MODIFY_PWD,
-    RES_FAILED_USER_ERR_PWD,
-    RES_FAILED_USER_NONE, RES_MSG_MODIFY_PWD,
-    RES_MSG_USER_ERR_PWD,
-    RES_MSG_USER_NONE,
-    RES_SUCCEED
-} from "../../util/status";
-
 function verifyUser(account, password, callback) {
     let status = RES_FAILED;
     let msg = null;
@@ -56,7 +60,11 @@ export function login(req, res) {
     verifyUser(account, password, (val) => {
         req.session.token = account;
         const data = val.data;
-        res.json(buildResponse(val.status, {token: data.token, isAdmin: data.isAdmin}, val.msg));
+        res.json(buildResponse(val.status, {
+            token: createJsonWebToken(data._id),
+            isAdmin: data.isAdmin,
+            uId: data._id
+        }, val.msg));
     });
 }
 

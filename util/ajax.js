@@ -72,7 +72,13 @@ export function get(url, params) {
         url += '?';
     }
 
-    const fetchPromise = fetch(url + buildParams(params));
+    const header = {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${localStorage.token}`
+        }
+    };
+    const fetchPromise = fetch(url + buildParams(params), header);
 
     return new Promise((resolve, reject) => {
 

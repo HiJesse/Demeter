@@ -15,12 +15,12 @@ function login(state, action) {
     } else {
         msg = action.msg;
     }
-
     return {
         ...state,
         alertMsg: true,
         loginStatus: action.status,
-        loginMessage: msg
+        loginMessage: msg,
+        userInfo: action.data
     };
 }
 
@@ -50,7 +50,8 @@ const initialUserState = {
     loginStatus: RES_FAILED,
     loginMessage: null,
     modifyPasswordStatus: RES_FAILED,
-    modifyPasswordMessage: null
+    modifyPasswordMessage: null,
+    userInfo: null
 };
 
 /**
