@@ -76,7 +76,8 @@ export const MENU_IOS_PACKAGE = {
  */
 function getValueFromSpecificKey(key, data) {
     const value = {
-        value: data.value
+        value: data.value,
+        icon: data.icon
     };
 
     if (isArrayEmpty(data.MENU_SUB)) {

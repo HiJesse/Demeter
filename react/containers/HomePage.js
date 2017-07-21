@@ -3,7 +3,7 @@ import {Breadcrumb, Icon, Layout, Menu} from "antd";
 import {connect} from "react-redux";
 import FooterView from "../components/FooterView";
 import {homeStyle} from "./styles/home";
-import {isArrayEmpty} from "../../util/checker";
+import {isArrayEmpty, isStringEmpty} from "../../util/checker";
 import {
     getValuesFromKey,
     MENU_ANDROID_PACKAGE,
@@ -12,22 +12,20 @@ import {
     MENU_USER_CENTER,
     MENU_USER_MANAGER
 } from "../constants/menuConstant";
+import {collapseMenu, fillSelectedMenuValues} from "../actions/home";
 
 const {Header, Content, Footer, Sider} = Layout;
 const SubMenu = Menu.SubMenu;
 
 class HomePage extends React.Component {
-    state = {
-        collapsed: false,
-    };
 
     render() {
         return (
             <Layout style={homeStyle.page}>
                 <Sider
                     collapsible
-                    collapsed={this.state.collapsed}
-                    onCollapse={(collapsed) => this.setState({collapsed})}>
+                    collapsed={this.props.isCollapsed}
+                    onCollapse={(collapsed) => this.props.collapseMenu(collapsed)}>
                     <div style={homeStyle.view_logo}/>
                     <Menu
                         theme="dark"
@@ -46,10 +44,7 @@ class HomePage extends React.Component {
                 <Layout style={{display: 'flex'}}>
                     <Header style={homeStyle.page_header}/>
                     <Content style={homeStyle.page_content}>
-                        <Breadcrumb style={{margin: '12px 0'}}>
-                            <Breadcrumb.Item>User</Breadcrumb.Item>
-                            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-                        </Breadcrumb>
+                        {this._createBreadCrumb()}
                         <div style={{padding: 24, background: '#fff', flex: 1}}>
                             {localStorage.token}
                             {localStorage.uId}
@@ -103,14 +98,66 @@ class HomePage extends React.Component {
         );
     }
 
+    /**
+     * 根据菜单选中, 创建面包屑
+     * @returns {XML}
+     * @private
+     */
+    _createBreadCrumb() {
+        const breadCrumbItems = [];
+
+        if (!isStringEmpty(this.props.menuValue)) {
+            breadCrumbItems.push(
+                <Breadcrumb.Item href="">
+                    <Icon type={this.props.menuValueIcon} />
+                    <span>{this.props.menuValue}</span>
+                </Breadcrumb.Item>
+            );
+        }
+
+        if (!isStringEmpty(this.props.subMenuValue)) {
+            breadCrumbItems.push(
+                <Breadcrumb.Item href="">
+                    <span>{this.props.subMenuValue}</span>
+                </Breadcrumb.Item>
+            );
+        }
+
+        return (
+            <Breadcrumb style={{margin: '12px 0'}}>
+                <Breadcrumb.Item href="">
+                    <Icon type="home" />
+                </Breadcrumb.Item>
+                {breadCrumbItems}
+            </Breadcrumb>
+        );
+    }
+
+    /**
+     * 菜单选中回调, 更新面包屑
+     * @param val
+     * @private
+     */
     _onMenuSelected(val) {
         const values = getValuesFromKey(val.key);
-        console.log('jesse', values)
+        this.props.fillSelectedMenuValues(values);
     }
 }
 
 function select(state) {
-    return {};
+    return {
+        isCollapsed: state.home.isCollapsed,
+        menuValue: state.home.menuValue,
+        menuValueIcon: state.home.menuValueIcon,
+        subMenuValue: state.home.subMenuValue
+    };
 }
 
-export default connect(select)(HomePage);
+function mapDispatchToProps(dispatch) {
+    return {
+        collapseMenu: (isCollapsed) => dispatch(collapseMenu(isCollapsed)),
+        fillSelectedMenuValues: (val) => dispatch(fillSelectedMenuValues(val))
+    }
+}
+
+export default connect(select, mapDispatchToProps)(HomePage);
