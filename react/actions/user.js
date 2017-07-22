@@ -1,6 +1,13 @@
-import {ACTION_CLOSE_ALERT, ACTION_LOGIN, ACTION_LOGOUT, ACTION_MODIFY_PASSWORD} from "../constants/actionType";
-import {get} from "../../util/ajax";
-import {URL_LOGIN, URL_LOGOUT, URL_MODIFY_PWD} from "../constants/url";
+// user actions
+import {
+    ACTION_CLOSE_ALERT,
+    ACTION_GET_USER_INFO,
+    ACTION_LOGIN,
+    ACTION_LOGOUT,
+    ACTION_MODIFY_PASSWORD
+} from "../constants/actionType";
+import {actionGet, get} from "../../util/ajax";
+import {URL_GET_USER_INFO, URL_LOGIN, URL_LOGOUT, URL_MODIFY_PWD} from "../constants/url";
 import {md5} from "../../util/encrypt";
 
 /**
@@ -10,21 +17,9 @@ import {md5} from "../../util/encrypt";
  * @param pwd
  */
 export function login(dispatch, account, pwd) {
-    const params = {
+    actionGet(dispatch, ACTION_LOGIN, URL_LOGIN, {
         "account": account,
         "password": md5(pwd)
-    };
-
-    let action = {
-        type: ACTION_LOGIN
-    };
-
-    get(URL_LOGIN, params).then((data) => {
-        action.data = data;
-        dispatch(action)
-    }).catch((e) => {
-        action.data = e;
-        dispatch(action);
     });
 }
 
@@ -44,21 +39,21 @@ export const closeAlert = {
  * @param newPwd
  */
 export function modifyPassword(dispatch, account, pwd, newPwd) {
-    const params = {
+    actionGet(dispatch, ACTION_MODIFY_PASSWORD, URL_MODIFY_PWD, {
         account: account,
         password: md5(pwd),
         newPassword: md5(newPwd)
-    };
-    let action = {
-        type: ACTION_MODIFY_PASSWORD
-    };
+    });
+}
 
-    get(URL_MODIFY_PWD, params).then((data) => {
-        action.data = data;
-        dispatch(action)
-    }).catch((e) => {
-        action.data = e;
-        dispatch(action);
+/**
+ * 根据uId获取用户信息
+ * @param dispatch
+ * @param uId
+ */
+export function getUserInfo(dispatch, uId) {
+    actionGet(dispatch, ACTION_GET_USER_INFO, URL_GET_USER_INFO, {
+        uId: uId,
     });
 }
 

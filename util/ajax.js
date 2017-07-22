@@ -99,3 +99,24 @@ export function get(url, params) {
         });
     });
 }
+
+/**
+ * 适配 redux get请求
+ * @param dispatch action dispatcher
+ * @param actionType
+ * @param url
+ * @param params
+ */
+export function actionGet(dispatch, actionType, url, params) {
+    let action = {
+        type: actionType
+    };
+
+    get(url, params).then((data) => {
+        action.data = data;
+        dispatch(action)
+    }).catch((e) => {
+        action.data = e;
+        dispatch(action);
+    });
+}

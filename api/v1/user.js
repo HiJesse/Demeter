@@ -58,7 +58,6 @@ export function login(req, res) {
     const account = req.query.account;
     const password = req.query.password;
     verifyUser(account, password, (val) => {
-        req.session.token = account;
         const data = val.data;
         res.json(buildResponse(val.status, {
             token: createJsonWebToken(data._id),
@@ -100,6 +99,35 @@ export function modifyPassword(req, res) {
             }
             res.json(buildResponse(status, {}, msg));
         });
+    });
+}
+
+/**
+ * 根据uId获取用户信息
+ * @param req
+ * @param res
+ */
+export function getUserInfo(req, res) {
+    const uId = req.query.uId;
+    let status = RES_FAILED;
+    let msg = null;
+    let userData = {};
+
+    UserModel.find({
+        _id: uId,
+    }, (err, data) => {
+        if (data.length === 1) {
+            status = RES_SUCCEED;
+            userData = data[0];
+        } else {
+            status = RES_FAILED_USER_NONE;
+            msg = RES_MSG_USER_NONE;
+        }
+
+        res.json(buildResponse(status, {
+            nickName: userData.nickName,
+            isAdmin: userData.isAdmin
+        }, msg));
     });
 }
 

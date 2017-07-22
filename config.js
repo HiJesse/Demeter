@@ -8,6 +8,7 @@ const dev = {
         whiteList: [
             '/',// 页面白名单
             '/modifyPassword',
+            '/home',
             // 接口白名单
             '/api/v1/login',
             '/api/v1/modifyPassword'

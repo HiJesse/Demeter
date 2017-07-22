@@ -13,11 +13,16 @@ import {
     MENU_USER_MANAGER
 } from "../constants/menuConstant";
 import {collapseMenu, fillSelectedMenuValues} from "../actions/home";
+import {getUserInfo} from "../actions/user";
 
 const {Header, Content, Footer, Sider} = Layout;
 const SubMenu = Menu.SubMenu;
 
 class HomePage extends React.Component {
+
+    componentDidMount() {
+        this.props.getUserData();
+    }
 
     render() {
         return (
@@ -42,7 +47,9 @@ class HomePage extends React.Component {
                     </Menu>
                 </Sider>
                 <Layout style={{display: 'flex'}}>
-                    <Header style={homeStyle.page_header}/>
+                    <Header style={homeStyle.page_header}>
+                        {this.props.isLogin + this.props.nickName + this.props.isAdmin}
+                    </Header>
                     <Content style={homeStyle.page_content}>
                         {this._createBreadCrumb()}
                         <div style={{padding: 24, background: '#fff', flex: 1}}>
@@ -146,6 +153,11 @@ class HomePage extends React.Component {
 
 function select(state) {
     return {
+        alertMsg: state.home.alertMsg,
+        errorMsg: state.home.errorMsg,
+        isLogin: state.home.isLogin,
+        nickName: state.home.nickName,
+        isAdmin: state.home.isAdmin,
         isCollapsed: state.home.isCollapsed,
         menuValue: state.home.menuValue,
         menuValueIcon: state.home.menuValueIcon,
@@ -155,6 +167,7 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
+        getUserData: () => getUserInfo(dispatch, localStorage.uId),
         collapseMenu: (isCollapsed) => dispatch(collapseMenu(isCollapsed)),
         fillSelectedMenuValues: (val) => dispatch(fillSelectedMenuValues(val))
     }

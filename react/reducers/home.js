@@ -1,14 +1,38 @@
 // home reducer
-import {ACTION_COLLAPSE_MENU, ACTION_FILL_MENU_VALUES} from "../constants/actionType";
+import {ACTION_COLLAPSE_MENU, ACTION_FILL_MENU_VALUES, ACTION_GET_USER_INFO} from "../constants/actionType";
+import {RES_SUCCEED} from "../../util/status";
+import {isStringEmpty} from "../../util/checker";
 
+/**
+ * 获取用户信息
+ * @param state
+ * @param action
+ */
+function getUserInfo(state, action) {
+    let msg = null;
+    if (action.status !== RES_SUCCEED) {
+        msg = action.msg;
+    }
 
+    return {
+        ...state,
+        alertMsg: !isStringEmpty(msg),
+        errorMsg: msg,
+        isLogin: isStringEmpty(msg),
+        isAdmin: isStringEmpty(msg) ? action.data.isAdmin : false,
+        nickName: isStringEmpty(msg) ? action.data.nickName : null,
+    };
+}
 
 const initialHomeState = {
     alertMsg: false,
     isCollapsed: false,
     menuValue: null,
     menuValueIcon: null,
-    subMenuValue: null
+    subMenuValue: null,
+    nickName: null,
+    isAdmin: false,
+    isLogin: true
 };
 
 /**
@@ -33,6 +57,9 @@ export function home(state = initialHomeState, action) {
                 menuValueIcon: action.data.menuValueIcon,
                 subMenuValue: action.data.subMenuValue
             };
+            break;
+        case ACTION_GET_USER_INFO:
+            newState = getUserInfo(state, action.data);
             break;
     }
     return newState;
