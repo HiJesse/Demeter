@@ -6,9 +6,6 @@ let router = express.Router();
 // 登录
 router.get('/user/login', user.login);
 
-// 注销
-router.get('/user/logout', user.logout);
-
 // 修改密码
 router.get('/user/modifyPassword', user.modifyPassword);
 

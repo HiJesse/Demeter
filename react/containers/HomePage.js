@@ -1,5 +1,5 @@
 import React from "react";
-import {Breadcrumb, Icon, Layout, Menu, message} from "antd";
+import {Breadcrumb, Button, Icon, Layout, Menu, message, Modal} from "antd";
 import {connect} from "react-redux";
 import FooterView from "../components/FooterView";
 import {homeStyle} from "./styles/home";
@@ -16,6 +16,7 @@ import {collapseMenu, fillSelectedMenuValues} from "../actions/home";
 import {closeAlert, getUserInfo} from "../actions/user";
 import {goToLogin} from "../../util/router";
 
+const confirm = Modal.confirm;
 const {Header, Content, Footer, Sider} = Layout;
 const SubMenu = Menu.SubMenu;
 
@@ -56,7 +57,29 @@ class HomePage extends React.Component {
                 </Sider>
                 <Layout style={{display: 'flex'}}>
                     <Header style={homeStyle.page_header}>
-                        {this.props.isLogin + this.props.nickName + this.props.isAdmin}
+                        <div style={{flex: 1, paddingLeft: 12}}>
+                            {`欢迎 ${this.props.nickName} 用户登录`}
+                        </div>
+                        <div style={{flex: 1}}>
+                            {`账号权限: ${this.props.isAdmin ? '管理员' : '普通用户'}`}
+                        </div>
+
+                        <div style={{
+                            flex: 1,
+                            paddingRight: 12,
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center'
+                        }}>
+                            <Button
+                                type="primary"
+                                onClick={this._showConfirmDialog.bind(this)}>
+                                {'退出登录'}
+                                <Icon type="logout" style={homeStyle.button_logout}/>
+                            </Button>
+                        </div>
+
+
                     </Header>
                     <Content style={homeStyle.page_content}>
                         {this._createBreadCrumb()}
@@ -124,7 +147,7 @@ class HomePage extends React.Component {
         if (!isStringEmpty(this.props.menuValue)) {
             breadCrumbItems.push(
                 <Breadcrumb.Item href="">
-                    <Icon type={this.props.menuValueIcon} />
+                    <Icon type={this.props.menuValueIcon}/>
                     <span>{this.props.menuValue}</span>
                 </Breadcrumb.Item>
             );
@@ -141,7 +164,7 @@ class HomePage extends React.Component {
         return (
             <Breadcrumb style={{margin: '12px 0'}}>
                 <Breadcrumb.Item href="">
-                    <Icon type="home" />
+                    <Icon type="home"/>
                 </Breadcrumb.Item>
                 {breadCrumbItems}
             </Breadcrumb>
@@ -183,6 +206,22 @@ class HomePage extends React.Component {
 
         message.error(this.props.errorMsg);
         this.props.closeAlert();
+    }
+
+    /**
+     * 弹出确认框
+     * @private
+     */
+    _showConfirmDialog() {
+        const that = this;
+        confirm({
+            title: '确认退出吗?',
+            onOk() {
+                localStorage.token = '';
+                localStorage.uId = '';
+                goToLogin(that.props.history);
+            }
+        });
     }
 }
 

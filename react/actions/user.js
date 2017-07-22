@@ -1,13 +1,7 @@
 // user actions
-import {
-    ACTION_CLOSE_ALERT,
-    ACTION_GET_USER_INFO,
-    ACTION_LOGIN,
-    ACTION_LOGOUT,
-    ACTION_MODIFY_PASSWORD
-} from "../constants/actionType";
-import {actionGet, get} from "../../util/ajax";
-import {URL_GET_USER_INFO, URL_LOGIN, URL_LOGOUT, URL_MODIFY_PWD} from "../constants/url";
+import {ACTION_CLOSE_ALERT, ACTION_GET_USER_INFO, ACTION_LOGIN, ACTION_MODIFY_PASSWORD} from "../constants/actionType";
+import {actionGet} from "../../util/ajax";
+import {URL_GET_USER_INFO, URL_LOGIN, URL_MODIFY_PWD} from "../constants/url";
 import {md5} from "../../util/encrypt";
 
 /**
@@ -56,20 +50,3 @@ export function getUserInfo(dispatch, uId) {
         uId: uId,
     });
 }
-
-export const logout = (account) => {
-    console.log('account', account);
-    const params = {
-        account: account,
-    };
-    get(URL_LOGOUT, params).then((response) => {
-        console.log('jesse', response)
-    }).catch((e) => {
-
-    });
-    return {
-        type: ACTION_LOGOUT,
-        account: account,
-        pwd: ''
-    }
-};

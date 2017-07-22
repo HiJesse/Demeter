@@ -130,9 +130,3 @@ export function getUserInfo(req, res) {
         }, msg));
     });
 }
-
-// 注销
-export function logout(req, res, next) {
-    res.send('logout ' + req.session.token + ' ' + req.query.account);
-}
-

@@ -6,7 +6,10 @@ export const homeStyle = {
     },
     page_header: {
         background: '#fff',
-        padding: 0
+        padding: 0,
+        display: 'flex',
+        alignItems: 'center',
+        // justifyContent: 'space-between'
     },
     page_content: {
         margin: '0 16px',
@@ -19,5 +22,9 @@ export const homeStyle = {
         background: '#333',
         margin: 16,
         borderRadius: 6
+    },
+    button_logout: {
+        fontSize: 16,
+        marginLeft: 5
     }
 };
