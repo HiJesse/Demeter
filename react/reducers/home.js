@@ -26,6 +26,7 @@ function getUserInfo(state, action) {
 
 const initialHomeState = {
     alertMsg: false,
+    errorMsg: null,
     isCollapsed: false,
     menuValue: null,
     menuValueIcon: null,

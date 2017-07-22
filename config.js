@@ -7,11 +7,11 @@ const dev = {
         secret: 'demeter_jesse',
         whiteList: [
             '/',// 页面白名单
+            '/login',
             '/modifyPassword',
-            '/home',
             // 接口白名单
-            '/api/v1/login',
-            '/api/v1/modifyPassword'
+            '/api/v1/user/login',
+            '/api/v1/user/modifyPassword'
         ]
     }
 };

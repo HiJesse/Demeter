@@ -1,5 +1,5 @@
 import React from "react";
-import {Breadcrumb, Icon, Layout, Menu} from "antd";
+import {Breadcrumb, Icon, Layout, Menu, message} from "antd";
 import {connect} from "react-redux";
 import FooterView from "../components/FooterView";
 import {homeStyle} from "./styles/home";
@@ -13,20 +13,28 @@ import {
     MENU_USER_MANAGER
 } from "../constants/menuConstant";
 import {collapseMenu, fillSelectedMenuValues} from "../actions/home";
-import {getUserInfo} from "../actions/user";
+import {closeAlert, getUserInfo} from "../actions/user";
+import {goToLogin} from "../../util/router";
 
 const {Header, Content, Footer, Sider} = Layout;
 const SubMenu = Menu.SubMenu;
 
 class HomePage extends React.Component {
 
+    state = {
+        init: true,
+    };
+
     componentDidMount() {
         this.props.getUserData();
+        this.state.init = false;
     }
 
     render() {
         return (
             <Layout style={homeStyle.page}>
+                {this._showMessage()}
+                {this._loginVerify()}
                 <Sider
                     collapsible
                     collapsed={this.props.isCollapsed}
@@ -149,6 +157,33 @@ class HomePage extends React.Component {
         const values = getValuesFromKey(val.key);
         this.props.fillSelectedMenuValues(values);
     }
+
+    /**
+     * 登录拦截
+     * @private
+     */
+    _loginVerify() {
+        if (!this.props.isLogin && !this.state.init) {
+            this.props.closeAlert();
+            goToLogin(this.props.history);
+        }
+    }
+
+    /**
+     * 显示message
+     * @private
+     */
+    _showMessage() {
+        if (this.state.init) {
+            return;
+        }
+        if (isStringEmpty(this.props.errorMsg) || !this.props.alertMsg) {
+            return;
+        }
+
+        message.error(this.props.errorMsg);
+        this.props.closeAlert();
+    }
 }
 
 function select(state) {
@@ -169,7 +204,8 @@ function mapDispatchToProps(dispatch) {
     return {
         getUserData: () => getUserInfo(dispatch, localStorage.uId),
         collapseMenu: (isCollapsed) => dispatch(collapseMenu(isCollapsed)),
-        fillSelectedMenuValues: (val) => dispatch(fillSelectedMenuValues(val))
+        fillSelectedMenuValues: (val) => dispatch(fillSelectedMenuValues(val)),
+        closeAlert: () => dispatch(closeAlert)
     }
 }
 

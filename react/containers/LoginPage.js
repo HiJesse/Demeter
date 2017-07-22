@@ -92,7 +92,7 @@ class LoginPage extends React.Component {
      * @private
      */
     _loginStatus() {
-        if (isStringEmpty(this.props.loginMessage) && !this.props.alertMsg) {
+        if (isStringEmpty(this.props.loginMessage) || !this.props.alertMsg) {
             return;
         }
 
@@ -100,7 +100,6 @@ class LoginPage extends React.Component {
             message.success(this.props.loginMessage);
             localStorage.token = this.props.userInfo.token;
             localStorage.uId = this.props.userInfo.uId;
-            localStorage.isAdmin = this.props.userInfo.isAdmin;
             this.props.history.push(ROUTER_HOME);
         } else {
             message.error(this.props.loginMessage);

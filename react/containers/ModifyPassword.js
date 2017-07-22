@@ -5,7 +5,7 @@ import FooterView from "../components/FooterView";
 import {modifyStyle} from "./styles/modifyPassword"
 import {MSG_ACCOUNT, MSG_PASSWORD} from "../constants/stringConstant";
 import {pageStyle} from "./styles/page";
-import {ROUTER_ROOT} from "../constants/routerConstant";
+import {ROUTER_LOGIN} from "../constants/routerConstant";
 import {closeAlert, modifyPassword} from "../actions/user";
 import {isStringEmpty} from "../../util/checker";
 
@@ -86,7 +86,7 @@ class ModifyPassword extends React.Component {
                                 htmlType="submit">修改密码</Button>
                             <Button
                                 style={modifyStyle.button_go_back}
-                                onClick={()=> this.props.history.push(ROUTER_ROOT)}>回到首页</Button>
+                                onClick={()=> this.props.history.push(ROUTER_LOGIN)}>回到首页</Button>
                         </FormItem>
                     </Form>
                 </div>
@@ -132,7 +132,7 @@ class ModifyPassword extends React.Component {
 
         if (this.props.modifyPasswordStatus === 0) {
             message.success(this.props.modifyPasswordMessage);
-            this.props.history.push(ROUTER_ROOT)
+            this.props.history.push(ROUTER_LOGIN)
         } else {
             message.error(this.props.modifyPasswordMessage);
         }

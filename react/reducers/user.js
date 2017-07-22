@@ -69,11 +69,7 @@ export function user(state = initialUserState, action) {
         case ACTION_CLOSE_ALERT:
             newState = {
                 ...state,
-                alertMsg: false,
-                loginStatus: RES_FAILED,
-                loginMessage: null,
-                modifyPasswordStatus: RES_FAILED,
-                modifyPasswordMessage: null
+                alertMsg: false
             };
             break;
         case ACTION_MODIFY_PASSWORD:
