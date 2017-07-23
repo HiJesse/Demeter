@@ -1,5 +1,5 @@
 // home actions
-import {ACTION_COLLAPSE_MENU, ACTION_FILL_MENU_VALUES} from "../constants/actionType";
+import {ACTION_COLLAPSE_MENU, ACTION_FILL_MENU_VALUES, ACTION_FILL_PAGE_CONTENT} from "../constants/actionType";
 import {isStringEmpty} from "../../util/checker";
 
 
@@ -25,6 +25,20 @@ export function fillSelectedMenuValues(val) {
             menuValue: val.value,
             menuValueIcon: val.icon,
             subMenuValue: subValue
+        }
+    }
+}
+
+// 菜单栏选中, 根据菜单选中填充页面内容
+export function fillSelectedPageContent(val) {
+    let pageContent = val.key;
+    if (!isStringEmpty(val.subKey)) {
+        pageContent = val.subKey;
+    }
+    return {
+        type: ACTION_FILL_PAGE_CONTENT,
+        data: {
+            pageContent: pageContent
         }
     }
 }

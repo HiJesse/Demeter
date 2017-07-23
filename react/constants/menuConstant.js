@@ -1,7 +1,11 @@
-// 菜单个人中心
+// home menu
 import {isArrayEmpty, isStringEmpty} from "../../util/checker";
+
+export const USER_CENTER = 'user_center';
+
+// 个人中心
 export const MENU_USER_CENTER = {
-    key: 'user_center',
+    key: USER_CENTER,
     value: '个人中心',
     icon: 'smile'
 };
@@ -76,6 +80,7 @@ export const MENU_IOS_PACKAGE = {
  */
 function getValueFromSpecificKey(key, data) {
     const value = {
+        key: data.key,
         value: data.value,
         icon: data.icon
     };
@@ -89,6 +94,7 @@ function getValueFromSpecificKey(key, data) {
         if (sub.key !== key) {
             continue;
         }
+        value.subKey = sub.key;
         value.subValue = sub.value;
         break;
     }

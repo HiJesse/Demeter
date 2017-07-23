@@ -1,5 +1,8 @@
 // home reducer
-import {ACTION_COLLAPSE_MENU, ACTION_FILL_MENU_VALUES, ACTION_GET_USER_INFO} from "../constants/actionType";
+import {
+    ACTION_COLLAPSE_MENU, ACTION_FILL_MENU_VALUES, ACTION_FILL_PAGE_CONTENT,
+    ACTION_GET_USER_INFO
+} from "../constants/actionType";
 import {RES_SUCCEED} from "../../util/status";
 import {isStringEmpty} from "../../util/checker";
 
@@ -25,15 +28,16 @@ function getUserInfo(state, action) {
 }
 
 const initialHomeState = {
-    alertMsg: false,
-    errorMsg: null,
-    isCollapsed: false,
-    menuValue: null,
-    menuValueIcon: null,
-    subMenuValue: null,
-    nickName: null,
-    isAdmin: false,
-    isLogin: true
+    alertMsg: false, // 是否弹窗
+    errorMsg: null, // 错误提示信息
+    isCollapsed: false, // 是否折叠菜单
+    menuValue: null, // 选中菜单内容- 例如用户中心
+    menuValueIcon: null, // 选中菜单图标
+    subMenuValue: null, // 选中子菜单内容- 例如用户列表
+    nickName: null, // 当前登录用户昵称
+    isAdmin: false, // 当前用户是否是管理员
+    isLogin: true, // 是否登录
+    pageContent: null // 主页内容标识
 };
 
 /**
@@ -62,6 +66,11 @@ export function home(state = initialHomeState, action) {
         case ACTION_GET_USER_INFO:
             newState = getUserInfo(state, action.data);
             break;
+        case ACTION_FILL_PAGE_CONTENT:
+            newState = {
+                ... state,
+                pageContent: action.data.pageContent
+            }
     }
     return newState;
 }

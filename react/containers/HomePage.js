@@ -10,16 +10,18 @@ import {
     MENU_IOS_PACKAGE,
     MENU_PROJECT_MANAGER,
     MENU_USER_CENTER,
-    MENU_USER_MANAGER
+    MENU_USER_MANAGER, USER_CENTER
 } from "../constants/menuConstant";
-import {collapseMenu, fillSelectedMenuValues} from "../actions/home";
+import {collapseMenu, fillSelectedMenuValues, fillSelectedPageContent} from "../actions/home";
 import {closeAlert, getUserInfo} from "../actions/user";
 import {goToLogin} from "../../util/router";
+import UserCenter from "./UserCenter";
 
 const confirm = Modal.confirm;
 const {Header, Content, Footer, Sider} = Layout;
 const SubMenu = Menu.SubMenu;
 
+// 主页
 class HomePage extends React.Component {
 
     state = {
@@ -83,11 +85,7 @@ class HomePage extends React.Component {
                     </Header>
                     <Content style={homeStyle.page_content}>
                         {this._createBreadCrumb()}
-                        <div style={{padding: 24, background: '#fff', flex: 1}}>
-                            {localStorage.token}
-                            {localStorage.uId}
-                            {localStorage.isAdmin}
-                        </div>
+                        {this._renderPageContent()}
                     </Content>
                     <Footer style={{textAlign: 'center'}}>
                         <FooterView />
@@ -172,13 +170,36 @@ class HomePage extends React.Component {
     }
 
     /**
-     * 菜单选中回调, 更新面包屑
+     * 根据菜单选中, 填充主页内容
+     * @private
+     */
+    _renderPageContent() {
+        let content;
+        switch (this.props.pageContent) {
+            case USER_CENTER:
+                content = (
+                    <UserCenter />
+                );
+                break;
+            default:
+                content = (
+                    <div style={homeStyle.view_content}>
+                        {'Default'}
+                    </div>
+                );
+        }
+        return content;
+    }
+
+    /**
+     * 菜单选中回调, 更新面包屑, 更新主页内容
      * @param val
      * @private
      */
     _onMenuSelected(val) {
         const values = getValuesFromKey(val.key);
         this.props.fillSelectedMenuValues(values);
+        this.props.fillSelectedPageContent(values);
     }
 
     /**
@@ -235,7 +256,8 @@ function select(state) {
         isCollapsed: state.home.isCollapsed,
         menuValue: state.home.menuValue,
         menuValueIcon: state.home.menuValueIcon,
-        subMenuValue: state.home.subMenuValue
+        subMenuValue: state.home.subMenuValue,
+        pageContent: state.home.pageContent
     };
 }
 
@@ -244,6 +266,7 @@ function mapDispatchToProps(dispatch) {
         getUserData: () => getUserInfo(dispatch, localStorage.uId),
         collapseMenu: (isCollapsed) => dispatch(collapseMenu(isCollapsed)),
         fillSelectedMenuValues: (val) => dispatch(fillSelectedMenuValues(val)),
+        fillSelectedPageContent: (val) => dispatch(fillSelectedPageContent(val)),
         closeAlert: () => dispatch(closeAlert)
     }
 }

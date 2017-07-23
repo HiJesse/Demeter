@@ -17,6 +17,11 @@ export const homeStyle = {
         display: 'flex',
         flexDirection: 'column'
     },
+    view_content: {
+        padding: 24,
+        background: '#fff',
+        flex: 1
+    },
     view_logo: {
         height: 32,
         background: '#333',
