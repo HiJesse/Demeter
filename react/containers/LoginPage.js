@@ -7,7 +7,7 @@ import {Button, Checkbox, Form, Icon, Input, message} from "antd";
 import FooterView from "../components/FooterView";
 import {isStringEmpty} from "../../util/checker";
 import {MSG_ACCOUNT, MSG_PASSWORD} from "../constants/stringConstant";
-import {ROUTER_HOME, ROUTER_MODIFY_PASSWORD} from "../constants/routerConstant";
+import {goToHomePage, goToModifyPasswordPage} from "../../util/router";
 
 const FormItem = Form.Item;
 
@@ -53,7 +53,7 @@ class LoginPage extends React.Component {
                             )}
                             <a
                                 style={loginStyle.text_modify_password}
-                                onClick={()=> this.props.history.push(ROUTER_MODIFY_PASSWORD)}>
+                                onClick={()=> goToModifyPasswordPage(this.props.history)}>
                                 {'修改密码'}
                             </a>
                             <Button type="primary" htmlType="submit" style={loginStyle.button_login}>
@@ -100,7 +100,7 @@ class LoginPage extends React.Component {
             message.success(this.props.loginMessage);
             localStorage.token = this.props.userInfo.token;
             localStorage.uId = this.props.userInfo.uId;
-            this.props.history.push(ROUTER_HOME);
+            goToHomePage(this.props.history);
         } else {
             message.error(this.props.loginMessage);
         }

@@ -14,7 +14,7 @@ import {
 } from "../constants/menuConstant";
 import {collapseMenu, fillSelectedMenuValues, fillSelectedPageContent} from "../actions/home";
 import {closeAlert, getUserInfo} from "../actions/user";
-import {goToLogin} from "../../util/router";
+import {goToLoginPage} from "../../util/router";
 import UserCenter from "./UserCenter";
 
 const confirm = Modal.confirm;
@@ -144,7 +144,7 @@ class HomePage extends React.Component {
 
         if (!isStringEmpty(this.props.menuValue)) {
             breadCrumbItems.push(
-                <Breadcrumb.Item href="">
+                <Breadcrumb.Item >
                     <Icon type={this.props.menuValueIcon}/>
                     <span>{this.props.menuValue}</span>
                 </Breadcrumb.Item>
@@ -153,7 +153,7 @@ class HomePage extends React.Component {
 
         if (!isStringEmpty(this.props.subMenuValue)) {
             breadCrumbItems.push(
-                <Breadcrumb.Item href="">
+                <Breadcrumb.Item >
                     <span>{this.props.subMenuValue}</span>
                 </Breadcrumb.Item>
             );
@@ -161,7 +161,7 @@ class HomePage extends React.Component {
 
         return (
             <Breadcrumb style={{margin: '12px 0'}}>
-                <Breadcrumb.Item href="">
+                <Breadcrumb.Item >
                     <Icon type="home"/>
                 </Breadcrumb.Item>
                 {breadCrumbItems}
@@ -209,7 +209,7 @@ class HomePage extends React.Component {
     _loginVerify() {
         if (!this.props.isLogin && !this.state.init) {
             this.props.closeAlert();
-            goToLogin(this.props.history);
+            goToLoginPage(this.props.history);
         }
     }
 
@@ -240,7 +240,7 @@ class HomePage extends React.Component {
             onOk() {
                 localStorage.token = '';
                 localStorage.uId = '';
-                goToLogin(that.props.history);
+                goToLoginPage(that.props.history);
             }
         });
     }
