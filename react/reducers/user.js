@@ -1,5 +1,8 @@
 //user reducer
-import {ACTION_CLOSE_ALERT, ACTION_LOGIN, ACTION_MODIFY_PASSWORD} from "../constants/actionType";
+import {
+    ACTION_CLOSE_ALERT, ACTION_LOGIN, ACTION_MODIFY_PASSWORD,
+    ACTION_MODIFY_PASSWORD_UID
+} from "../constants/actionType";
 import {RES_FAILED} from "../../util/status";
 
 /**
@@ -64,7 +67,7 @@ export function user(state = initialUserState, action) {
     let newState = state;
     switch (action.type) {
         case ACTION_LOGIN:
-             newState = login(state, action.data);
+            newState = login(state, action.data);
             break;
         case ACTION_CLOSE_ALERT:
             newState = {
@@ -73,6 +76,7 @@ export function user(state = initialUserState, action) {
             };
             break;
         case ACTION_MODIFY_PASSWORD:
+        case ACTION_MODIFY_PASSWORD_UID:
             newState = modifyPassword(state, action.data);
             break;
     }

@@ -21,7 +21,6 @@ class ModifyPasswordPage extends React.Component {
                 </div>
                 <div style={pageStyle.page_content}>
                     <ModifyPasswordView
-                        // modifyByAccount={false}
                         formStyle={modifyStyle.view_form}
                         handleSubmit={(values) => {
                             this.props.modifyPassword(values.account, values.password, values.newPassword);

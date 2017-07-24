@@ -2,12 +2,21 @@
 import {isArrayEmpty, isStringEmpty} from "../../util/checker";
 
 export const USER_CENTER = 'user_center';
+export const USER_CENTER_INFO = 'user_center_info';
+export const USER_CENTER_PASSWORD = 'user_center_password';
 
 // 个人中心
 export const MENU_USER_CENTER = {
     key: USER_CENTER,
     value: '个人中心',
-    icon: 'smile'
+    icon: 'smile',
+    MENU_SUB: [{
+        key: USER_CENTER_INFO,
+        value: '基本信息',
+    }, {
+        key: USER_CENTER_PASSWORD,
+        value: '修改密码',
+    }]
 };
 
 // 菜单项目管理

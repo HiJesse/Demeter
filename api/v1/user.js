@@ -9,24 +9,31 @@ import {
     RES_MSG_MODIFY_PWD,
     RES_MSG_USER_ERR_PWD,
     RES_MSG_USER_NONE,
+    RES_MSG_USER_NONE_PWD,
     RES_SUCCEED
 } from "../../util/status";
 import {createJsonWebToken} from "../../util/webToken";
+import {isStringEmpty} from "../../util/checker";
 
 /**
- * 验证账号密码是否存在, 并返回不同状态
- * @param account
+ * 验证账号密码是否存在, 并返回不同状态, 兼容根据uId和account查询
+ * @param isLogin 是否登录, true account, false uId
+ * @param account | uId
  * @param password
  * @param callback
  */
-function verifyUser(account, password, callback) {
+function verifyUser(isLogin, account, password, callback) {
     let status = RES_FAILED;
     let msg = null;
     let userData = {};
+    const params = {};
+    if (isLogin) {
+        params._id = account;
+    } else {
+        params.account = account;
+    }
 
-    UserModel.find({
-        account: account,
-    }, (err, data) => {
+    UserModel.find(params, (err, data) => {
         if (data.length === 1) {
             const pwd = data[0].pwd;
             if (pwd === password) {
@@ -38,7 +45,7 @@ function verifyUser(account, password, callback) {
             }
         } else {
             status = RES_FAILED_USER_NONE;
-            msg = RES_MSG_USER_NONE;
+            msg = isLogin ? RES_MSG_USER_NONE_PWD : RES_MSG_USER_NONE;
         }
 
         callback({
@@ -57,7 +64,7 @@ function verifyUser(account, password, callback) {
 export function login(req, res) {
     const account = req.query.account;
     const password = req.query.password;
-    verifyUser(account, password, (val) => {
+    verifyUser(false, account, password, (val) => {
         const data = val.data;
         res.json(buildResponse(val.status, {
             token: createJsonWebToken(data._id),
@@ -68,29 +75,35 @@ export function login(req, res) {
 }
 
 /**
- * 修改密码接口
- * @param req account/password/newPassword
+ * 修改密码接口, 兼容未登录模式和登录模式
+ * @param req (account | uId)/password/newPassword
  * @param res
  */
 export function modifyPassword(req, res) {
-    const account = req.query.account;
+    let isLogin = false;
+    let account = req.query.account;
     const password = req.query.password;
     const newPassword = req.query.newPassword;
+    let updateParams = {pwd: password};
 
-    verifyUser(account, password, (val) => {
+    if (isStringEmpty(account)) {
+        account = req.query.uId;
+        updateParams._id = account;
+        isLogin = true;
+    } else {
+        updateParams.account = account;
+    }
+
+    verifyUser(isLogin, account, password, (val) => {
         if (val.status !== RES_SUCCEED) {
-            const data = val.data;
-            res.json(buildResponse(val.status, {token: data.token, isAdmin: data.isAdmin}, val.msg));
+            res.json(buildResponse(val.status, {}, val.msg));
             return;
         }
 
         let status = RES_FAILED_MODIFY_PWD;
         let msg = RES_MSG_MODIFY_PWD;
 
-        UserModel.update({
-            account: account,
-            pwd: password
-        }, {
+        UserModel.update(updateParams, {
             $set: {pwd: newPassword}
         }, {upsert: true}, (error) => {
             if (!error) {

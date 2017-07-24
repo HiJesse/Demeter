@@ -21,7 +21,7 @@ function daysFromNow(days) {
 export function createJsonWebToken(uId) {
     const payload = {
         uId: uId,
-        expiration: parseInt(daysFromNow(60).getTime() / 1000),
+        expiration: parseInt(daysFromNow(5).getTime() / 1000),
     };
     return JWT.sign(payload, Config.env.JWT.secret);
 }

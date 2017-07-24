@@ -10,12 +10,14 @@ import {
     MENU_IOS_PACKAGE,
     MENU_PROJECT_MANAGER,
     MENU_USER_CENTER,
-    MENU_USER_MANAGER, USER_CENTER
+    MENU_USER_MANAGER,
+    USER_CENTER_INFO, USER_CENTER_PASSWORD
 } from "../constants/menuConstant";
 import {collapseMenu, fillSelectedMenuValues, fillSelectedPageContent} from "../actions/home";
 import {closeAlert, getUserInfo} from "../actions/user";
 import {goToLoginPage} from "../../util/router";
-import UserCenter from "./UserCenter";
+import UserCenter from "./UserCenterView";
+import ModifyPasswordByIdView from "./ModifyPasswordByIdView";
 
 const confirm = Modal.confirm;
 const {Header, Content, Footer, Sider} = Layout;
@@ -176,11 +178,17 @@ class HomePage extends React.Component {
     _renderPageContent() {
         let content;
         switch (this.props.pageContent) {
-            case USER_CENTER:
+            case USER_CENTER_INFO:
                 content = (
                     <UserCenter />
                 );
                 break;
+            case USER_CENTER_PASSWORD: {
+                content = (
+                    <ModifyPasswordByIdView />
+                );
+                break;
+            }
             default:
                 content = (
                     <div style={homeStyle.view_content}>
