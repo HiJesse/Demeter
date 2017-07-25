@@ -44,7 +44,9 @@ class HomePage extends React.Component {
                     collapsible
                     collapsed={this.props.isCollapsed}
                     onCollapse={(collapsed) => this.props.collapseMenu(collapsed)}>
-                    <div style={homeStyle.view_logo}/>
+                    <div style={homeStyle.view_logo}>
+                        {this.props.isCollapsed ? 'D' : 'Demeter'}
+                        </div>
                     <Menu
                         theme="dark"
                         defaultSelectedKeys={['1']}
@@ -146,7 +148,7 @@ class HomePage extends React.Component {
 
         if (!isStringEmpty(this.props.menuValue)) {
             breadCrumbItems.push(
-                <Breadcrumb.Item >
+                <Breadcrumb.Item key="value">
                     <Icon type={this.props.menuValueIcon}/>
                     <span>{this.props.menuValue}</span>
                 </Breadcrumb.Item>
@@ -155,7 +157,7 @@ class HomePage extends React.Component {
 
         if (!isStringEmpty(this.props.subMenuValue)) {
             breadCrumbItems.push(
-                <Breadcrumb.Item >
+                <Breadcrumb.Item key="subValue">
                     <span>{this.props.subMenuValue}</span>
                 </Breadcrumb.Item>
             );
@@ -163,7 +165,7 @@ class HomePage extends React.Component {
 
         return (
             <Breadcrumb style={{margin: '12px 0'}}>
-                <Breadcrumb.Item >
+                <Breadcrumb.Item key="home">
                     <Icon type="home"/>
                 </Breadcrumb.Item>
                 {breadCrumbItems}

@@ -26,10 +26,19 @@ export const homeStyle = {
         height: 32,
         background: '#333',
         margin: 16,
-        borderRadius: 6
+        borderRadius: 6,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '200%',
+        color: '#47a5e9',
+        fontFamily: "Impact"
     },
     button_logout: {
         fontSize: 16,
         marginLeft: 5
+    },
+    text_logo: {
+
     }
 };

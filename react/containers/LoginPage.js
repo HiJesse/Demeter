@@ -11,6 +11,7 @@ import {goToHomePage, goToModifyPasswordPage} from "../../util/router";
 
 const FormItem = Form.Item;
 
+// 登录页面
 class LoginPage extends React.Component {
 
     constructor() {
@@ -23,7 +24,7 @@ class LoginPage extends React.Component {
             <div>
                 {this._loginStatus()}
                 <div style={pageStyle.page_header}>
-                    Demeter
+                    {'Demeter'}
                 </div>
                 <div style={pageStyle.page_content}>
                     <Form onSubmit={this._handleSubmit.bind(this)} style={loginStyle.view_form}>

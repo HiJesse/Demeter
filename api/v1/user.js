@@ -139,7 +139,8 @@ export function getUserInfo(req, res) {
 
         res.json(buildResponse(status, {
             nickName: userData.nickName,
-            isAdmin: userData.isAdmin
+            isAdmin: userData.isAdmin,
+            account: userData.account
         }, msg));
     });
 }

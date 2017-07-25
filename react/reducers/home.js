@@ -24,6 +24,7 @@ function getUserInfo(state, action) {
         isLogin: isStringEmpty(msg),
         isAdmin: isStringEmpty(msg) ? action.data.isAdmin : false,
         nickName: isStringEmpty(msg) ? action.data.nickName : null,
+        account: isStringEmpty(msg) ? action.data.account : null,
     };
 }
 
@@ -36,6 +37,7 @@ const initialHomeState = {
     subMenuValue: null, // 选中子菜单内容- 例如用户列表
     nickName: null, // 当前登录用户昵称
     isAdmin: false, // 当前用户是否是管理员
+    account: null, // 账号
     isLogin: true, // 是否登录
     pageContent: null // 主页内容标识
 };
