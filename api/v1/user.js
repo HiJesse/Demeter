@@ -3,10 +3,10 @@ import {buildResponse} from "../../util/ajax";
 import UserModel from "../../models/user";
 import {
     RES_FAILED,
-    RES_FAILED_MODIFY_PWD,
+    RES_FAILED_MODIFY_PWD, RES_FAILED_UPDATE_USER_INFO,
     RES_FAILED_USER_ERR_PWD,
     RES_FAILED_USER_NONE,
-    RES_MSG_MODIFY_PWD,
+    RES_MSG_MODIFY_PWD, RES_MSG_UPDATE_USER_INFO,
     RES_MSG_USER_ERR_PWD,
     RES_MSG_USER_NONE,
     RES_MSG_USER_NONE_PWD,
@@ -142,5 +142,30 @@ export function getUserInfo(req, res) {
             isAdmin: userData.isAdmin,
             account: userData.account
         }, msg));
+    });
+}
+
+/**
+ * 根据uId更新用户基本信息
+ * @param req
+ * @param res
+ */
+export function updateUserInfo(req, res) {
+    const uId = req.query.uId;
+    const nickName = req.query.nickName;
+
+    let status = RES_FAILED_UPDATE_USER_INFO;
+    let msg = RES_MSG_UPDATE_USER_INFO;
+
+    UserModel.update({
+        _id: uId
+    }, {
+        $set: {nickName: nickName}
+    }, {upsert: true}, (error) => {
+        if (!error) {
+            status = RES_SUCCEED;
+            msg = null;
+        }
+        res.json(buildResponse(status, {}, msg));
     });
 }

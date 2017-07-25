@@ -1,9 +1,13 @@
 // home reducer
 import {
-    ACTION_COLLAPSE_MENU, ACTION_FILL_MENU_VALUES, ACTION_FILL_PAGE_CONTENT,
-    ACTION_GET_USER_INFO
+    ACTION_CLOSE_ALERT,
+    ACTION_COLLAPSE_MENU,
+    ACTION_FILL_MENU_VALUES,
+    ACTION_FILL_PAGE_CONTENT,
+    ACTION_GET_USER_INFO,
+    ACTION_UPDATE_USER_INFO
 } from "../constants/actionType";
-import {RES_SUCCEED} from "../../util/status";
+import {RES_FAILED, RES_SUCCEED} from "../../util/status";
 import {isStringEmpty} from "../../util/checker";
 
 /**
@@ -28,6 +32,27 @@ function getUserInfo(state, action) {
     };
 }
 
+/**
+ * 更新用户基本信息
+ * @param state
+ * @param action
+ */
+function updateUserInfo(state, action) {
+    let msg = null;
+    if (action.status !== RES_SUCCEED) {
+        msg = action.msg;
+    } else {
+        msg = '更新成功'
+    }
+
+    return {
+        ...state,
+        alertMsg: true,
+        errorMsg: msg,
+        updateStatus: action.status
+    };
+}
+
 const initialHomeState = {
     alertMsg: false, // 是否弹窗
     errorMsg: null, // 错误提示信息
@@ -39,7 +64,8 @@ const initialHomeState = {
     isAdmin: false, // 当前用户是否是管理员
     account: null, // 账号
     isLogin: true, // 是否登录
-    pageContent: null // 主页内容标识
+    pageContent: null, // 主页内容标识
+    updateStatus: RES_FAILED, // 个人信息更新状态
 };
 
 /**
@@ -72,7 +98,18 @@ export function home(state = initialHomeState, action) {
             newState = {
                 ... state,
                 pageContent: action.data.pageContent
-            }
+            };
+            break;
+        case ACTION_UPDATE_USER_INFO:
+            newState = updateUserInfo(state, action.data);
+            break;
+        case ACTION_CLOSE_ALERT:
+            newState = {
+                ...state,
+                alertMsg: false,
+                updateUserInfo: RES_FAILED
+            };
+            break;
     }
     return newState;
 }

@@ -12,4 +12,7 @@ router.get('/user/modifyPassword', user.modifyPassword);
 // 获取用户信息
 router.get('/user/getUserInfo', user.getUserInfo);
 
+// 跟新用户基本信息
+router.get('/user/updateGeneralInfo', user.updateUserInfo);
+
 export default router;

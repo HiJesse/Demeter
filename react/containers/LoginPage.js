@@ -8,6 +8,7 @@ import FooterView from "../components/FooterView";
 import {isStringEmpty} from "../../util/checker";
 import {MSG_ACCOUNT, MSG_PASSWORD} from "../constants/stringConstant";
 import {goToHomePage, goToModifyPasswordPage} from "../../util/router";
+import {RES_SUCCEED} from "../../util/status";
 
 const FormItem = Form.Item;
 
@@ -97,7 +98,7 @@ class LoginPage extends React.Component {
             return;
         }
 
-        if (this.props.loginStatus === 0) {
+        if (this.props.loginStatus === RES_SUCCEED) {
             message.success(this.props.loginMessage);
             localStorage.token = this.props.userInfo.token;
             localStorage.uId = this.props.userInfo.uId;

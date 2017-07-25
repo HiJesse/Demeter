@@ -4,10 +4,11 @@ import {
     ACTION_GET_USER_INFO,
     ACTION_LOGIN,
     ACTION_MODIFY_PASSWORD,
-    ACTION_MODIFY_PASSWORD_UID
+    ACTION_MODIFY_PASSWORD_UID,
+    ACTION_UPDATE_USER_INFO
 } from "../constants/actionType";
 import {actionGet} from "../../util/ajax";
-import {URL_GET_USER_INFO, URL_LOGIN, URL_MODIFY_PWD} from "../constants/url";
+import {URL_GET_USER_INFO, URL_LOGIN, URL_MODIFY_PWD, URL_UPDATE_USER_INFO} from "../constants/url";
 import {md5} from "../../util/encrypt";
 
 /**
@@ -69,5 +70,18 @@ export function modifyPasswordById(dispatch, uId, pwd, newPwd) {
         uId: uId,
         password: md5(pwd),
         newPassword: md5(newPwd)
+    });
+}
+
+/**
+ * 根据uId更新用户基本信息
+ * @param dispatch
+ * @param uId
+ * @param nickName
+ */
+export function updateUserInfo(dispatch, uId, nickName) {
+    actionGet(dispatch, ACTION_UPDATE_USER_INFO, URL_UPDATE_USER_INFO, {
+        uId: uId,
+        nickName: nickName
     });
 }

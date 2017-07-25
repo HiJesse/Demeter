@@ -11,3 +11,5 @@ export const URL_LOGIN = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'login';
 export const URL_MODIFY_PWD = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'modifyPassword';
 // 根据uid获取用户信息
 export const URL_GET_USER_INFO = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'getUserInfo';
+// 根据uid更新用户信息
+export const URL_UPDATE_USER_INFO = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'updateGeneralInfo';

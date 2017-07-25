@@ -17,3 +17,6 @@ export const RES_MSG_USER_ERR_PWD = '账号或密码不正确';
 // 修改密码失败
 export const RES_FAILED_MODIFY_PWD = 1002;
 export const RES_MSG_MODIFY_PWD = '修改密码失败';
+// 用户基本信息修改失败
+export const RES_FAILED_UPDATE_USER_INFO = 1003;
+export const RES_MSG_UPDATE_USER_INFO = '用户信息更新失败';

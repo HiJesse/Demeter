@@ -5,6 +5,7 @@ import {closeAlert, modifyPasswordById} from "../actions/user";
 import {connect} from "react-redux";
 import {message} from "antd";
 import {isStringEmpty} from "../../util/checker";
+import {RES_SUCCEED} from "../../util/status";
 
 // 个人中心-修改密码
 class ModifyPasswordByIdView extends React.Component {
@@ -31,7 +32,7 @@ class ModifyPasswordByIdView extends React.Component {
             return;
         }
 
-        if (this.props.modifyPasswordStatus === 0) { // 密码修改成功刷新当前页面
+        if (this.props.modifyPasswordStatus === RES_SUCCEED) { // 密码修改成功刷新当前页面
             message.success(this.props.modifyPasswordMessage, 1.5, () => location.reload());
         } else {
             message.error(this.props.modifyPasswordMessage);

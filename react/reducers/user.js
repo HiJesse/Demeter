@@ -1,9 +1,11 @@
 //user reducer
 import {
-    ACTION_CLOSE_ALERT, ACTION_LOGIN, ACTION_MODIFY_PASSWORD,
+    ACTION_CLOSE_ALERT,
+    ACTION_LOGIN,
+    ACTION_MODIFY_PASSWORD,
     ACTION_MODIFY_PASSWORD_UID
 } from "../constants/actionType";
-import {RES_FAILED} from "../../util/status";
+import {RES_FAILED, RES_SUCCEED} from "../../util/status";
 
 /**
  * 登录 reducer
@@ -13,7 +15,7 @@ import {RES_FAILED} from "../../util/status";
  */
 function login(state, action) {
     let msg = null;
-    if (action.status === 0) {
+    if (action.status === RES_SUCCEED) {
         msg = '登录成功';
     } else {
         msg = action.msg;
