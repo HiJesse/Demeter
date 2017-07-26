@@ -1,9 +1,11 @@
 //user reducer
+import {message} from "antd";
 import {
-    ACTION_CLOSE_ALERT,
+    ACTION_GET_USER_INFO,
     ACTION_LOGIN,
     ACTION_MODIFY_PASSWORD,
-    ACTION_MODIFY_PASSWORD_UID
+    ACTION_MODIFY_PASSWORD_UID,
+    ACTION_UPDATE_USER_INFO
 } from "../constants/actionType";
 import {RES_FAILED, RES_SUCCEED} from "../../util/status";
 
@@ -14,18 +16,17 @@ import {RES_FAILED, RES_SUCCEED} from "../../util/status";
  * @returns {*}
  */
 function login(state, action) {
-    let msg = null;
     if (action.status === RES_SUCCEED) {
-        msg = '登录成功';
+        message.success('登录成功');
     } else {
-        msg = action.msg;
+        message.error(action.msg);
     }
+
     return {
         ...state,
-        alertMsg: true,
         loginStatus: action.status,
-        loginMessage: msg,
-        userInfo: action.data
+        uId: action.data.uId,
+        token: action.data.token
     };
 }
 
@@ -35,28 +36,80 @@ function login(state, action) {
  * @param action
  */
 function modifyPassword(state, action) {
-    let msg = null;
-    if (action.status === 0) {
-        msg = '密码修改成功';
+    if (action.status === RES_SUCCEED) {
+        message.success('密码修改成功');
     } else {
-        msg = action.msg;
+        message.error(action.msg);
     }
 
     return {
         ...state,
-        alertMsg: true,
         modifyPasswordStatus: action.status,
-        modifyPasswordMessage: msg
+    };
+}
+
+/**
+ * 登录状态下修改密码
+ * @param state
+ * @param action
+ */
+function modifyPasswordById(state, action) {
+    if (action.status === RES_SUCCEED) {
+        message.success('密码修改成功', 1.5, () => location.reload());
+    } else {
+        message.error(action.msg);
+    }
+
+    return {
+        ...state
+    };
+}
+
+/**
+ * 获取用户信息
+ * @param state
+ * @param action
+ */
+function getUserInfo(state, action) {
+    const succeed = action.status === RES_SUCCEED;
+    if (!succeed) {
+        message.error(action.msg);
+    }
+
+    return {
+        ...state,
+        isLogin: succeed,
+        isAdmin: succeed ? action.data.isAdmin : false,
+        nickName: succeed ? action.data.nickName : null,
+        account: succeed ? action.data.account : null,
+    };
+}
+
+/**
+ * 更新用户基本信息
+ * @param state
+ * @param action
+ */
+function updateUserInfo(state, action) {
+    if (action.status === RES_SUCCEED) {
+        message.success('更新成功', 1.5, () => location.reload());
+    } else {
+        message.error(action.msg);
+    }
+
+    return {
+        ...state,
     };
 }
 
 const initialUserState = {
-    alertMsg: false,
     loginStatus: RES_FAILED,
-    loginMessage: null,
     modifyPasswordStatus: RES_FAILED,
-    modifyPasswordMessage: null,
-    userInfo: null
+    uId: null,
+    token: null,
+    isAdmin: false,
+    nickName: null,
+    account: null
 };
 
 /**
@@ -71,15 +124,17 @@ export function user(state = initialUserState, action) {
         case ACTION_LOGIN:
             newState = login(state, action.data);
             break;
-        case ACTION_CLOSE_ALERT:
-            newState = {
-                ...state,
-                alertMsg: false
-            };
-            break;
         case ACTION_MODIFY_PASSWORD:
-        case ACTION_MODIFY_PASSWORD_UID:
             newState = modifyPassword(state, action.data);
+            break;
+        case ACTION_MODIFY_PASSWORD_UID:
+            newState = modifyPasswordById(state, action.data);
+            break;
+        case ACTION_GET_USER_INFO:
+            newState = getUserInfo(state, action.data);
+            break;
+        case ACTION_UPDATE_USER_INFO:
+            newState = updateUserInfo(state, action.data);
             break;
     }
     return newState;

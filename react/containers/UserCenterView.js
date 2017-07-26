@@ -1,11 +1,9 @@
 import React from "react";
-import {Button, Form, Input, message} from "antd";
+import {Button, Form, Input} from "antd";
 import {homeStyle} from "./styles/home";
-import {closeAlert, getUserInfo, updateUserInfo} from "../actions/user";
+import {getUserInfo, updateUserInfo} from "../actions/user";
 import {connect} from "react-redux";
 import {MSG_NICKNAME} from "../constants/stringConstant";
-import {isStringEmpty} from "../../util/checker";
-import {RES_SUCCEED} from "../../util/status";
 
 const FormItem = Form.Item;
 
@@ -20,7 +18,6 @@ class UserCenterView extends React.Component {
         const {getFieldDecorator} = this.props.form;
         return (
             <div style={homeStyle.view_content}>
-                {this._showMessage()}
                 <Form
                     layout={'vertical'}
                     style={{width: 300}}
@@ -72,37 +69,15 @@ class UserCenterView extends React.Component {
             }
         });
     }
-
-    /**
-     * 显示message
-     * @private
-     */
-    _showMessage() {
-        if (isStringEmpty(this.props.errorMsg) || !this.props.alertMsg) {
-            return;
-        }
-
-        if (this.props.updateStatus === RES_SUCCEED) {
-            message.success(this.props.errorMsg, 1.5, () => location.reload());
-        } else {
-            message.error(this.props.errorMsg);
-        }
-
-        this.props.closeAlert();
-    }
 }
 
 const UserCenterViewForm = Form.create()(UserCenterView);
 
 function select(state) {
-    console.log(state.home)
     return {
-        alertMsg: state.home.alertMsg,
-        errorMsg: state.home.errorMsg,
-        nickName: state.home.nickName,
-        isAdmin: state.home.isAdmin,
-        account: state.home.account,
-        updateStatus: state.home.updateStatus
+        nickName: state.user.nickName,
+        isAdmin: state.user.isAdmin,
+        account: state.user.account,
     };
 }
 
@@ -110,7 +85,6 @@ function mapDispatchToProps(dispatch) {
     return {
         getUserData: () => getUserInfo(dispatch, localStorage.uId),
         updateUserInfo: (nickName) => updateUserInfo(dispatch, localStorage.uId, nickName),
-        closeAlert: () => dispatch(closeAlert)
     }
 }
 

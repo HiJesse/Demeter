@@ -1,5 +1,4 @@
 // 通用
-export const ACTION_CLOSE_ALERT = 'CLOSE_ALERT';
 
 // user
 export const ACTION_LOGIN = 'LOGIN';

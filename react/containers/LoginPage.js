@@ -2,10 +2,9 @@ import React from "react";
 import {loginStyle} from "./styles/login";
 import {pageStyle} from "./styles/page";
 import {connect} from "react-redux";
-import {closeAlert, login} from "../actions/user";
-import {Button, Checkbox, Form, Icon, Input, message} from "antd";
+import {login} from "../actions/user";
+import {Button, Checkbox, Form, Icon, Input} from "antd";
 import FooterView from "../components/FooterView";
-import {isStringEmpty} from "../../util/checker";
 import {MSG_ACCOUNT, MSG_PASSWORD} from "../constants/stringConstant";
 import {goToHomePage, goToModifyPasswordPage} from "../../util/router";
 import {RES_SUCCEED} from "../../util/status";
@@ -94,19 +93,11 @@ class LoginPage extends React.Component {
      * @private
      */
     _loginStatus() {
-        if (isStringEmpty(this.props.loginMessage) || !this.props.alertMsg) {
-            return;
-        }
-
         if (this.props.loginStatus === RES_SUCCEED) {
-            message.success(this.props.loginMessage);
-            localStorage.token = this.props.userInfo.token;
-            localStorage.uId = this.props.userInfo.uId;
+            localStorage.token = this.props.token;
+            localStorage.uId = this.props.uId;
             goToHomePage(this.props.history);
-        } else {
-            message.error(this.props.loginMessage);
         }
-        this.props.closeAlert();
     }
 }
 
@@ -114,17 +105,15 @@ const LoginPageForm = Form.create()(LoginPage);
 
 function select(state) {
     return {
-        alertMsg: state.user.alertMsg,
-        loginStatus: state.user.loginStatus,
-        loginMessage: state.user.loginMessage,
-        userInfo: state.user.userInfo
+        loginStatus: state.user.loginStatus, // 登录状态
+        uId: state.user.uId, // 用户uId
+        token: state.user.token // 用户token
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         login: (account, pwd) => login(dispatch, account, pwd),
-        closeAlert: () => dispatch(closeAlert)
     }
 }
 

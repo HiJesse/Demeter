@@ -9,6 +9,7 @@ export const homeStyle = {
         padding: 0,
         display: 'flex',
         alignItems: 'center',
+        minWidth: 500
         // justifyContent: 'space-between'
     },
     page_content: {

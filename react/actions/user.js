@@ -1,6 +1,5 @@
 // user actions
 import {
-    ACTION_CLOSE_ALERT,
     ACTION_GET_USER_INFO,
     ACTION_LOGIN,
     ACTION_MODIFY_PASSWORD,
@@ -23,14 +22,6 @@ export function login(dispatch, account, pwd) {
         "password": md5(pwd)
     });
 }
-
-/**
- * 关闭弹窗action
- * @type {{type}}
- */
-export const closeAlert = {
-    type: ACTION_CLOSE_ALERT
-};
 
 /**
  * 修改密码action

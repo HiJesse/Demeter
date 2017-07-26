@@ -1,5 +1,5 @@
 import React from "react";
-import {Breadcrumb, Button, Icon, Layout, Menu, message, Modal} from "antd";
+import {Breadcrumb, Button, Icon, Layout, Menu, Modal} from "antd";
 import {connect} from "react-redux";
 import FooterView from "../components/FooterView";
 import {homeStyle} from "./styles/home";
@@ -11,10 +11,11 @@ import {
     MENU_PROJECT_MANAGER,
     MENU_USER_CENTER,
     MENU_USER_MANAGER,
-    USER_CENTER_INFO, USER_CENTER_PASSWORD
+    USER_CENTER_INFO,
+    USER_CENTER_PASSWORD
 } from "../constants/menuConstant";
 import {collapseMenu, fillSelectedMenuValues, fillSelectedPageContent} from "../actions/home";
-import {closeAlert, getUserInfo} from "../actions/user";
+import {getUserInfo} from "../actions/user";
 import {goToLoginPage} from "../../util/router";
 import UserCenter from "./UserCenterView";
 import ModifyPasswordByIdView from "./ModifyPasswordByIdView";
@@ -38,7 +39,6 @@ class HomePage extends React.Component {
     render() {
         return (
             <Layout style={homeStyle.page}>
-                {this._showMessage()}
                 {this._loginVerify()}
                 <Sider
                     collapsible
@@ -218,25 +218,8 @@ class HomePage extends React.Component {
      */
     _loginVerify() {
         if (!this.props.isLogin && !this.state.init) {
-            this.props.closeAlert();
             goToLoginPage(this.props.history);
         }
-    }
-
-    /**
-     * 显示message
-     * @private
-     */
-    _showMessage() {
-        if (this.state.init) {
-            return;
-        }
-        if (isStringEmpty(this.props.errorMsg) || !this.props.alertMsg) {
-            return;
-        }
-
-        message.error(this.props.errorMsg);
-        this.props.closeAlert();
     }
 
     /**
@@ -258,16 +241,14 @@ class HomePage extends React.Component {
 
 function select(state) {
     return {
-        alertMsg: state.home.alertMsg,
-        errorMsg: state.home.errorMsg,
-        isLogin: state.home.isLogin,
-        nickName: state.home.nickName,
-        isAdmin: state.home.isAdmin,
-        isCollapsed: state.home.isCollapsed,
-        menuValue: state.home.menuValue,
-        menuValueIcon: state.home.menuValueIcon,
-        subMenuValue: state.home.subMenuValue,
-        pageContent: state.home.pageContent
+        isLogin: state.user.isLogin, // 是否登录
+        nickName: state.user.nickName, // 用户昵称
+        isAdmin: state.user.isAdmin, // 用户权限
+        isCollapsed: state.home.isCollapsed, // 菜单是否折叠
+        menuValue: state.home.menuValue, // 一级菜单名称
+        menuValueIcon: state.home.menuValueIcon, // 一级菜单图标
+        subMenuValue: state.home.subMenuValue, // 二级菜单名称
+        pageContent: state.home.pageContent, // 菜单触发内容页
     };
 }
 
@@ -277,7 +258,6 @@ function mapDispatchToProps(dispatch) {
         collapseMenu: (isCollapsed) => dispatch(collapseMenu(isCollapsed)),
         fillSelectedMenuValues: (val) => dispatch(fillSelectedMenuValues(val)),
         fillSelectedPageContent: (val) => dispatch(fillSelectedPageContent(val)),
-        closeAlert: () => dispatch(closeAlert)
     }
 }
 
