@@ -2,10 +2,10 @@
 import {buildResponse} from "../../util/ajax";
 import UserModel from "../../models/user";
 import {
-    RES_FAILED,
+    RES_FAILED, RES_FAILED_CREATE_USER,
     RES_FAILED_MODIFY_PWD, RES_FAILED_UPDATE_USER_INFO,
     RES_FAILED_USER_ERR_PWD,
-    RES_FAILED_USER_NONE,
+    RES_FAILED_USER_NONE, RES_MSG_CREATE_USER,
     RES_MSG_MODIFY_PWD, RES_MSG_UPDATE_USER_INFO,
     RES_MSG_USER_ERR_PWD,
     RES_MSG_USER_NONE,
@@ -14,6 +14,7 @@ import {
 } from "../../util/status";
 import {createJsonWebToken} from "../../util/webToken";
 import {isStringEmpty} from "../../util/checker";
+import {md5} from "../../util/encrypt";
 
 /**
  * 验证账号密码是否存在, 并返回不同状态, 兼容根据uId和account查询
@@ -162,6 +163,29 @@ export function updateUserInfo(req, res) {
     }, {
         $set: {nickName: nickName}
     }, {upsert: true}, (error) => {
+        if (!error) {
+            status = RES_SUCCEED;
+            msg = null;
+        }
+        res.json(buildResponse(status, {}, msg));
+    });
+}
+
+/**
+ * 根据account创建新用户
+ * @param req
+ * @param res
+ */
+export function createUser(req, res) {
+    const account = req.query.account;
+
+    let status = RES_FAILED_CREATE_USER;
+    let msg = RES_MSG_CREATE_USER;
+
+    UserModel.create({
+        account: account,
+        pwd: md5('a123456')
+    }, (error) => {
         if (!error) {
             status = RES_SUCCEED;
             msg = null;

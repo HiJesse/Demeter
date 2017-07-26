@@ -15,4 +15,7 @@ router.get('/user/getUserInfo', user.getUserInfo);
 // 跟新用户基本信息
 router.get('/user/updateGeneralInfo', user.updateUserInfo);
 
+// 创建用户
+router.get('/user/createUser', user.createUser);
+
 export default router;

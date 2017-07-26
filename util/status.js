@@ -20,3 +20,6 @@ export const RES_MSG_MODIFY_PWD = '修改密码失败';
 // 用户基本信息修改失败
 export const RES_FAILED_UPDATE_USER_INFO = 1003;
 export const RES_MSG_UPDATE_USER_INFO = '用户信息更新失败';
+// 创建用户失败
+export const RES_FAILED_CREATE_USER = 1004;
+export const RES_MSG_CREATE_USER = '创建用户失败';

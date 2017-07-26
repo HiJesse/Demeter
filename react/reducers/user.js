@@ -1,6 +1,7 @@
 //user reducer
 import {message} from "antd";
 import {
+    ACTION_CREATE_USER,
     ACTION_GET_USER_INFO,
     ACTION_LOGIN,
     ACTION_MODIFY_PASSWORD,
@@ -102,6 +103,23 @@ function updateUserInfo(state, action) {
     };
 }
 
+/**
+ * 创建用户
+ * @param state
+ * @param action
+ */
+function createUser(state, action) {
+    if (action.status === RES_SUCCEED) {
+        message.success('创建成功');
+    } else {
+        message.error(action.msg);
+    }
+
+    return {
+        ...state,
+    };
+}
+
 const initialUserState = {
     loginStatus: RES_FAILED,
     modifyPasswordStatus: RES_FAILED,
@@ -135,6 +153,9 @@ export function user(state = initialUserState, action) {
             break;
         case ACTION_UPDATE_USER_INFO:
             newState = updateUserInfo(state, action.data);
+            break;
+        case ACTION_CREATE_USER:
+            newState = createUser(state, action.data);
             break;
     }
     return newState;
