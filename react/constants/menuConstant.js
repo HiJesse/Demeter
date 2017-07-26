@@ -36,6 +36,7 @@ export const MENU_PROJECT_MANAGER = {
     }]
 };
 
+export const USER_MANAGER_CREATE = 'user_manager_create';
 // 菜单用户管理
 export const MENU_USER_MANAGER = {
     key: 'user_manager',
@@ -45,7 +46,7 @@ export const MENU_USER_MANAGER = {
         key: 'user_manager_list',
         value: '用户列表',
     }, {
-        key: 'user_manager_create',
+        key: USER_MANAGER_CREATE,
         value: '新建用户',
     }, {
         key: 'user_manager_reset',
