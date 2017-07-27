@@ -75,7 +75,7 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        createUser: (account) => createUser(dispatch, account),
+        createUser: (account) => createUser(dispatch, account, localStorage.uId),
     }
 }
 

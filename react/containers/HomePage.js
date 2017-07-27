@@ -5,7 +5,7 @@ import FooterView from "../components/FooterView";
 import {homeStyle} from "./styles/home";
 import {isArrayEmpty, isStringEmpty} from "../../util/checker";
 import {
-    getValuesFromKey,
+    getValuesFromKey, isAdminMenu,
     MENU_ANDROID_PACKAGE,
     MENU_IOS_PACKAGE,
     MENU_PROJECT_MANAGER,
@@ -58,8 +58,8 @@ class HomePage extends React.Component {
                         {this._createMenu(MENU_ANDROID_PACKAGE)}
                         {this._createMenu(MENU_IOS_PACKAGE)}
 
-                        {this._createMenu(MENU_USER_MANAGER)}
                         {this._createMenu(MENU_PROJECT_MANAGER)}
+                        {this._createMenu(MENU_USER_MANAGER)}
                         {this._createMenu(MENU_USER_CENTER)}
                     </Menu>
                 </Sider>
@@ -108,6 +108,10 @@ class HomePage extends React.Component {
      * @private
      */
     _createMenu(data) {
+        if (!this.props.isAdmin && isAdminMenu(data)) {
+            return null;
+        }
+
         if (isArrayEmpty(data.MENU_SUB)) {
             return (
                 <Menu.Item key={data.key}>

@@ -3,17 +3,17 @@ import {buildResponse} from "../../util/ajax";
 import UserModel from "../../models/user";
 import {
     RES_FAILED, RES_FAILED_CREATE_USER,
-    RES_FAILED_MODIFY_PWD, RES_FAILED_RESET_PASSWORD, RES_FAILED_UPDATE_USER_INFO,
+    RES_FAILED_MODIFY_PWD, RES_FAILED_NOT_ADMIN, RES_FAILED_RESET_PASSWORD, RES_FAILED_UPDATE_USER_INFO,
     RES_FAILED_USER_ERR_PWD,
     RES_FAILED_USER_NONE, RES_MSG_CREATE_USER,
-    RES_MSG_MODIFY_PWD, RES_MSG_RESET_PASSWORD, RES_MSG_UPDATE_USER_INFO,
+    RES_MSG_MODIFY_PWD, RES_MSG_NOT_ADMIN, RES_MSG_RESET_PASSWORD, RES_MSG_UPDATE_USER_INFO,
     RES_MSG_USER_ERR_PWD,
     RES_MSG_USER_NONE,
     RES_MSG_USER_NONE_PWD,
     RES_SUCCEED
 } from "../../util/status";
 import {createJsonWebToken} from "../../util/webToken";
-import {isStringEmpty} from "../../util/checker";
+import {isArrayEmpty, isStringEmpty} from "../../util/checker";
 import {md5} from "../../util/encrypt";
 
 /**
@@ -54,6 +54,40 @@ function verifyUser(isLogin, account, password, callback) {
             msg: msg,
             data: userData
         })
+    });
+}
+
+/**
+ * 根据params参数判读该用户是否存在
+ * @param params
+ * @returns {Promise}
+ */
+function isUserExist(params) {
+    return new Promise((resolve, reject) => {
+        UserModel.find(params, (err, data) => {
+            if (data.length === 1) {
+                resolve({isUserExist: true});
+            } else {
+                reject({isUserExist: false});
+            }
+        });
+    });
+}
+
+/**
+ * 根据params参数判断该用户是否为管理员
+ * @param params
+ * @returns {Promise}
+ */
+function isAdmin(params) {
+    return new Promise((resolve, reject) => {
+        UserModel.find(params, (err, data) => {
+            if (!isArrayEmpty(data) && data.length === 1 && data[0].isAdmin) {
+                resolve({isAdmin: true});
+            } else {
+                reject({isAdmin: false});
+            }
+        });
     });
 }
 
@@ -178,17 +212,31 @@ export function updateUserInfo(req, res) {
  */
 export function createUser(req, res) {
     const account = req.query.account;
+    const uId = req.query.uId;
+
+    const params = {
+        account: account,
+        pwd: md5('a123456')
+    };
+    const adminParams = {
+        _id: uId
+    };
 
     let status = RES_FAILED_CREATE_USER;
     let msg = RES_MSG_CREATE_USER;
 
-    UserModel.create({
-        account: account,
-        pwd: md5('a123456')
-    }, (error) => {
-        if (!error) {
-            status = RES_SUCCEED;
-            msg = null;
+    isAdmin(adminParams).then(() => {
+        UserModel.create(params, (error) => {
+            if (!error) {
+                status = RES_SUCCEED;
+                msg = null;
+            }
+            res.json(buildResponse(status, {}, msg));
+        });
+    }).catch((error) => {
+        if (error.isAdmin === false) {
+            status = RES_FAILED_NOT_ADMIN;
+            msg = RES_MSG_NOT_ADMIN;
         }
         res.json(buildResponse(status, {}, msg));
     });
@@ -201,30 +249,37 @@ export function createUser(req, res) {
  */
 export function resetPassword(req, res) {
     const account = req.query.account;
+    const uId = req.query.uId;
     const params = {
         account: account
+    };
+    const adminParams = {
+        _id: uId
     };
 
     let status = RES_FAILED_RESET_PASSWORD;
     let msg = RES_MSG_RESET_PASSWORD;
 
-    UserModel.find(params, (err, data) => {
-        if (data.length === 1) {
-            UserModel.update({
-                account: account
-            }, {
-                $set: {pwd: md5('a123456')}
-            }, {upsert: true}, (error) => {
-                if (!error) {
-                    status = RES_SUCCEED;
-                    msg = null;
-                }
-                res.json(buildResponse(status, {}, msg));
-            });
-        } else {
+    isAdmin(adminParams).then(() => {
+        return isUserExist(params);
+    }).then(() => {
+        UserModel.update(params, {
+            $set: {pwd: md5('a123456')}
+        }, {upsert: true}, (error) => {
+            if (!error) {
+                status = RES_SUCCEED;
+                msg = null;
+            }
             res.json(buildResponse(status, {}, msg));
+        });
+    }).catch((error) => {
+        if (error.isAdmin === false) {
+            status = RES_FAILED_NOT_ADMIN;
+            msg = RES_MSG_NOT_ADMIN;
+        } else if (error.isUserExist === false) {
+            status = RES_FAILED_USER_NONE;
+            msg = RES_MSG_USER_NONE;
         }
+        res.json(buildResponse(status, {}, msg));
     });
-
-
 }

@@ -136,3 +136,17 @@ export function getValuesFromKey(key) {
     }
     return values;
 }
+
+/**
+ * 当前Menu item是否需要管理员权限
+ * @param data
+ * @returns {boolean}
+ */
+export function isAdminMenu(data) {
+    let isAdminMenu = false;
+    if (data === MENU_PROJECT_MANAGER ||
+        data === MENU_USER_MANAGER) {
+        isAdminMenu = true;
+    }
+    return isAdminMenu;
+}

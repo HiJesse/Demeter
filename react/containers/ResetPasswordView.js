@@ -63,7 +63,7 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        resetPassword: (account) => resetPassword(dispatch, account),
+        resetPassword: (account) => resetPassword(dispatch, account, localStorage.uId),
     }
 }
 

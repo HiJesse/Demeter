@@ -84,23 +84,25 @@ export function updateUserInfo(dispatch, uId, nickName) {
 /**
  * 创建新用户
  * @param dispatch
+ * @param account
  * @param uId
- * @param nickName
  */
-export function createUser(dispatch, account) {
+export function createUser(dispatch, account, uId) {
     actionGet(dispatch, ACTION_CREATE_USER, URL_CREATE_USER, {
         account: account,
+        uId: uId
     });
 }
 
 /**
  * 重置用户密码
  * @param dispatch
+ * @param account
  * @param uId
- * @param nickName
  */
-export function resetPassword(dispatch, account) {
+export function resetPassword(dispatch, account, uId) {
     actionGet(dispatch, ACTION_RESET_PASSWORD, URL_RESET_PASSWORD, {
         account: account,
+        uId: uId
     });
 }

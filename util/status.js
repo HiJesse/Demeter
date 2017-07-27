@@ -6,7 +6,9 @@ export const RES_FAILED = -1;
 export const RES_FAILED_TOKEN = -2;
 export const RES_MSG_TOKEN = '请先登录';
 
-
+// 是否是管理员
+export const RES_FAILED_NOT_ADMIN = 100;
+export const RES_MSG_NOT_ADMIN = '权限不足';
 // 账号不存在
 export const RES_FAILED_USER_NONE = 1000;
 export const RES_MSG_USER_NONE = '账号不存在';
