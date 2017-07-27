@@ -4,11 +4,14 @@ import {
     ACTION_GET_USER_INFO,
     ACTION_LOGIN,
     ACTION_MODIFY_PASSWORD,
-    ACTION_MODIFY_PASSWORD_UID,
+    ACTION_MODIFY_PASSWORD_UID, ACTION_RESET_PASSWORD,
     ACTION_UPDATE_USER_INFO
 } from "../constants/actionType";
 import {actionGet} from "../../util/ajax";
-import {URL_CREATE_USER, URL_GET_USER_INFO, URL_LOGIN, URL_MODIFY_PWD, URL_UPDATE_USER_INFO} from "../constants/url";
+import {
+    URL_CREATE_USER, URL_GET_USER_INFO, URL_LOGIN, URL_MODIFY_PWD, URL_RESET_PASSWORD,
+    URL_UPDATE_USER_INFO
+} from "../constants/url";
 import {md5} from "../../util/encrypt";
 
 /**
@@ -86,6 +89,18 @@ export function updateUserInfo(dispatch, uId, nickName) {
  */
 export function createUser(dispatch, account) {
     actionGet(dispatch, ACTION_CREATE_USER, URL_CREATE_USER, {
+        account: account,
+    });
+}
+
+/**
+ * 重置用户密码
+ * @param dispatch
+ * @param uId
+ * @param nickName
+ */
+export function resetPassword(dispatch, account) {
+    actionGet(dispatch, ACTION_RESET_PASSWORD, URL_RESET_PASSWORD, {
         account: account,
     });
 }

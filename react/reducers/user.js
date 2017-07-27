@@ -5,7 +5,7 @@ import {
     ACTION_GET_USER_INFO,
     ACTION_LOGIN,
     ACTION_MODIFY_PASSWORD,
-    ACTION_MODIFY_PASSWORD_UID,
+    ACTION_MODIFY_PASSWORD_UID, ACTION_RESET_PASSWORD,
     ACTION_UPDATE_USER_INFO
 } from "../constants/actionType";
 import {RES_FAILED, RES_SUCCEED} from "../../util/status";
@@ -120,6 +120,23 @@ function createUser(state, action) {
     };
 }
 
+/**
+ * 重置密码
+ * @param state
+ * @param action
+ */
+function resetPassword(state, action) {
+    if (action.status === RES_SUCCEED) {
+        message.success('重置密码成功');
+    } else {
+        message.error(action.msg);
+    }
+
+    return {
+        ...state,
+    };
+}
+
 const initialUserState = {
     loginStatus: RES_FAILED,
     modifyPasswordStatus: RES_FAILED,
@@ -156,6 +173,9 @@ export function user(state = initialUserState, action) {
             break;
         case ACTION_CREATE_USER:
             newState = createUser(state, action.data);
+            break;
+        case ACTION_RESET_PASSWORD:
+            newState = resetPassword(state, action.data);
             break;
     }
     return newState;

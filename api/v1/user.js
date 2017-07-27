@@ -3,10 +3,10 @@ import {buildResponse} from "../../util/ajax";
 import UserModel from "../../models/user";
 import {
     RES_FAILED, RES_FAILED_CREATE_USER,
-    RES_FAILED_MODIFY_PWD, RES_FAILED_UPDATE_USER_INFO,
+    RES_FAILED_MODIFY_PWD, RES_FAILED_RESET_PASSWORD, RES_FAILED_UPDATE_USER_INFO,
     RES_FAILED_USER_ERR_PWD,
     RES_FAILED_USER_NONE, RES_MSG_CREATE_USER,
-    RES_MSG_MODIFY_PWD, RES_MSG_UPDATE_USER_INFO,
+    RES_MSG_MODIFY_PWD, RES_MSG_RESET_PASSWORD, RES_MSG_UPDATE_USER_INFO,
     RES_MSG_USER_ERR_PWD,
     RES_MSG_USER_NONE,
     RES_MSG_USER_NONE_PWD,
@@ -192,4 +192,39 @@ export function createUser(req, res) {
         }
         res.json(buildResponse(status, {}, msg));
     });
+}
+
+/**
+ * 根据account重置用户密码
+ * @param req
+ * @param res
+ */
+export function resetPassword(req, res) {
+    const account = req.query.account;
+    const params = {
+        account: account
+    };
+
+    let status = RES_FAILED_RESET_PASSWORD;
+    let msg = RES_MSG_RESET_PASSWORD;
+
+    UserModel.find(params, (err, data) => {
+        if (data.length === 1) {
+            UserModel.update({
+                account: account
+            }, {
+                $set: {pwd: md5('a123456')}
+            }, {upsert: true}, (error) => {
+                if (!error) {
+                    status = RES_SUCCEED;
+                    msg = null;
+                }
+                res.json(buildResponse(status, {}, msg));
+            });
+        } else {
+            res.json(buildResponse(status, {}, msg));
+        }
+    });
+
+
 }

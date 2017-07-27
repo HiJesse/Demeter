@@ -37,6 +37,7 @@ export const MENU_PROJECT_MANAGER = {
 };
 
 export const USER_MANAGER_CREATE = 'user_manager_create';
+export const USER_MANAGER_RESET_PWD = 'user_manager_reset_pwd';
 // 菜单用户管理
 export const MENU_USER_MANAGER = {
     key: 'user_manager',
@@ -49,7 +50,7 @@ export const MENU_USER_MANAGER = {
         key: USER_MANAGER_CREATE,
         value: '新建用户',
     }, {
-        key: 'user_manager_reset',
+        key: USER_MANAGER_RESET_PWD,
         value: '重置密码',
     }]
 };

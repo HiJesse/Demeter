@@ -18,4 +18,7 @@ router.get('/user/updateGeneralInfo', user.updateUserInfo);
 // 创建用户
 router.get('/user/createUser', user.createUser);
 
+// 重置用户密码
+router.get('/user/resetPassword', user.resetPassword);
+
 export default router;

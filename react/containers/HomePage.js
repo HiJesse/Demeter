@@ -12,7 +12,7 @@ import {
     MENU_USER_CENTER,
     MENU_USER_MANAGER,
     USER_CENTER_INFO,
-    USER_CENTER_PASSWORD, USER_MANAGER_CREATE
+    USER_CENTER_PASSWORD, USER_MANAGER_CREATE, USER_MANAGER_RESET_PWD
 } from "../constants/menuConstant";
 import {collapseMenu, fillSelectedMenuValues, fillSelectedPageContent} from "../actions/home";
 import {getUserInfo} from "../actions/user";
@@ -20,6 +20,7 @@ import {goToLoginPage} from "../../util/router";
 import UserCenter from "./UserCenterView";
 import ModifyPasswordByIdView from "./ModifyPasswordByIdView";
 import CreateUserView from "./CreateUserView";
+import ResetPasswordView from "./ResetPasswordView";
 
 const confirm = Modal.confirm;
 const {Header, Content, Footer, Sider} = Layout;
@@ -195,6 +196,11 @@ class HomePage extends React.Component {
             case USER_MANAGER_CREATE:
                 content = (
                     <CreateUserView />
+                );
+                break;
+            case USER_MANAGER_RESET_PWD:
+                content = (
+                    <ResetPasswordView />
                 );
                 break;
             default:

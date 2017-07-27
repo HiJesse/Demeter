@@ -1,14 +1,14 @@
 import React from "react";
 import {Button, Form, Input} from "antd";
 import {homeStyle} from "./styles/home";
-import {createUser} from "../actions/user";
+import {resetPassword} from "../actions/user";
 import {connect} from "react-redux";
 import {MSG_ACCOUNT} from "../constants/stringConstant";
 
 const FormItem = Form.Item;
 
-// 用户管理-新建用户
-class CreateUserView extends React.Component {
+// 用户管理-重置密码
+class ResetPasswordView extends React.Component {
 
     render() {
         const {getFieldDecorator} = this.props.form;
@@ -26,23 +26,11 @@ class CreateUserView extends React.Component {
                             <Input />
                         )}
                     </FormItem>
-                    <FormItem
-                        label="昵称">
-                        <Input
-                            disabled={true}
-                            value={'匿名'}/>
-                    </FormItem>
-                    <FormItem
-                        label="权限">
-                        <Input
-                            disabled={true}
-                            value={'普通用户'}/>
-                    </FormItem>
                     <FormItem>
                         <Button
                             type="primary"
                             htmlType="submit">
-                            {'创建新用户'}
+                            {'重置密码'}
                         </Button>
                     </FormItem>
                 </Form>
@@ -59,13 +47,13 @@ class CreateUserView extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                this.props.createUser(values.account);
+                this.props.resetPassword(values.account);
             }
         });
     }
 }
 
-const CreateUserViewFrom = Form.create()(CreateUserView);
+const ResetPasswordViewForm = Form.create()(ResetPasswordView);
 
 function select(state) {
     return {
@@ -75,8 +63,8 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        createUser: (account) => createUser(dispatch, account),
+        resetPassword: (account) => resetPassword(dispatch, account),
     }
 }
 
-export default connect(select, mapDispatchToProps)(CreateUserViewFrom);
+export default connect(select, mapDispatchToProps)(ResetPasswordViewForm);
