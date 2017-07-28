@@ -5,14 +5,18 @@ import FooterView from "../components/FooterView";
 import {homeStyle} from "./styles/home";
 import {isArrayEmpty, isStringEmpty} from "../../util/checker";
 import {
-    getValuesFromKey, isAdminMenu,
+    getValuesFromKey,
+    isAdminMenu,
     MENU_ANDROID_PACKAGE,
     MENU_IOS_PACKAGE,
     MENU_PROJECT_MANAGER,
     MENU_USER_CENTER,
     MENU_USER_MANAGER,
     USER_CENTER_INFO,
-    USER_CENTER_PASSWORD, USER_MANAGER_CREATE, USER_MANAGER_RESET_PWD
+    USER_CENTER_PASSWORD,
+    USER_MANAGER_CREATE,
+    USER_MANAGER_LIST,
+    USER_MANAGER_RESET_PWD
 } from "../constants/menuConstant";
 import {collapseMenu, fillSelectedMenuValues, fillSelectedPageContent} from "../actions/home";
 import {getUserInfo} from "../actions/user";
@@ -21,6 +25,7 @@ import UserCenter from "./UserCenterView";
 import ModifyPasswordByIdView from "./ModifyPasswordByIdView";
 import CreateUserView from "./CreateUserView";
 import ResetPasswordView from "./ResetPasswordView";
+import UserListView from "./UserListView";
 
 const confirm = Modal.confirm;
 const {Header, Content, Footer, Sider} = Layout;
@@ -205,6 +210,11 @@ class HomePage extends React.Component {
             case USER_MANAGER_RESET_PWD:
                 content = (
                     <ResetPasswordView />
+                );
+                break;
+            case USER_MANAGER_LIST:
+                content = (
+                    <UserListView />
                 );
                 break;
             default:

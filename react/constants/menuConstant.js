@@ -38,13 +38,14 @@ export const MENU_PROJECT_MANAGER = {
 
 export const USER_MANAGER_CREATE = 'user_manager_create';
 export const USER_MANAGER_RESET_PWD = 'user_manager_reset_pwd';
+export const USER_MANAGER_LIST = 'user_manager_list';
 // 菜单用户管理
 export const MENU_USER_MANAGER = {
     key: 'user_manager',
     value: '用户管理',
     icon: 'user',
     MENU_SUB: [{
-        key: 'user_manager_list',
+        key: USER_MANAGER_LIST,
         value: '用户列表',
     }, {
         key: USER_MANAGER_CREATE,
