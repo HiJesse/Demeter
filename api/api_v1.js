@@ -21,4 +21,7 @@ router.get('/user/createUser', user.createUser);
 // 重置用户密码
 router.get('/user/resetPassword', user.resetPassword);
 
+// 获取用户列表
+router.get('/user/fetchUserList', user.fetchUserList);
+
 export default router;

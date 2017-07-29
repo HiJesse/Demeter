@@ -28,3 +28,6 @@ export const RES_MSG_CREATE_USER = '创建用户失败';
 // 重置密码失败
 export const RES_FAILED_RESET_PASSWORD = 1005;
 export const RES_MSG_RESET_PASSWORD = '重置密码失败';
+// 获取用户列表失败
+export const RES_FAILED_FETCH_USER_LIST = 1006;
+export const RES_MSG_FETCH_USER_LIST = '获取用户列表失败';

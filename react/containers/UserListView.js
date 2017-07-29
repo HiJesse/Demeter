@@ -1,5 +1,5 @@
 import React from "react";
-import {resetPassword} from "../actions/user";
+import {fetchUserList} from "../actions/user";
 import {connect} from "react-redux";
 import {Popconfirm, Table} from "antd";
 import TextEditableItemView, {TextEditableMode, TextEditableStatus} from "../components/TextEditableItemView";
@@ -34,8 +34,12 @@ class UserListView extends React.Component {
         };
     }
 
+    componentDidMount() {
+        this.props.fetchUserList();
+    }
+
     render() {
-        const {data} = this.state;
+        const data = this.props.userList;
         const dataSource = data.map((item) => {
             const obj = {};
             Object.keys(item).forEach((key) => {
@@ -48,7 +52,7 @@ class UserListView extends React.Component {
 
         return (
             <div style={homeStyle.view_content}>
-                <Table bordered dataSource={dataSource} columns={columns} pagination={{ pageSize: 10 }}/>
+                <Table bordered dataSource={dataSource} columns={columns} pagination={{pageSize: 10}}/>
             </div>
         );
     }
@@ -62,27 +66,27 @@ class UserListView extends React.Component {
             title: '账号',
             dataIndex: 'account',
             width: '15%',
-            render: (text, record, index) => this._buildTextInputColumnItem(this.state.data, index, 'account', text),
+            render: (text, record, index) => this._buildTextInputColumnItem(this.props.userList, index, 'account', text),
         }, {
             title: '昵称',
             dataIndex: 'nickname',
             width: '15%',
-            render: (text, record, index) => this._buildTextInputColumnItem(this.state.data, index, 'nickname', text),
+            render: (text, record, index) => this._buildTextInputColumnItem(this.props.userList, index, 'nickname', text),
         }, {
             title: '权限',
             dataIndex: 'auth',
             width: '15%',
-            render: (text, record, index) => this._buildTextInputColumnItem(this.state.data, index, 'auth', text),
+            render: (text, record, index) => this._buildTextInputColumnItem(this.props.userList, index, 'auth', text),
         }, {
             title: '所属项目',
             dataIndex: 'projects',
             width: '15%',
-            render: (text, record, index) => this._buildTextInputColumnItem(this.state.data, index, 'projects', text),
+            render: (text, record, index) => this._buildTextInputColumnItem(this.props.userList, index, 'projects', text),
         }, {
             title: '行为',
             dataIndex: 'operation',
             render: (text, record, index) => {
-                const {editable} = this.state.data[index].account;
+                const {editable} = this.props.userList[index].account;
                 return (
                     <div className="editable-row-operations">
                         {
@@ -184,13 +188,13 @@ class UserListView extends React.Component {
 }
 function select(state) {
     return {
-        ...state
+        userList: state.user.userList
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        resetPassword: (account) => resetPassword(dispatch, account, localStorage.uId),
+        fetchUserList: () => fetchUserList(dispatch, localStorage.uId),
     }
 }
 

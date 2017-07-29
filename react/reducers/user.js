@@ -1,7 +1,7 @@
 //user reducer
 import {message} from "antd";
 import {
-    ACTION_CREATE_USER,
+    ACTION_CREATE_USER, ACTION_FETCH_USER_LIST,
     ACTION_GET_USER_INFO,
     ACTION_LOGIN,
     ACTION_MODIFY_PASSWORD,
@@ -137,6 +137,45 @@ function resetPassword(state, action) {
     };
 }
 
+/**
+ * 获取用户列表
+ * @param state
+ * @param action
+ */
+function fetchUserList(state, action) {
+    const succeed = action.status === RES_SUCCEED;
+    if (!succeed) {
+        message.error(action.msg);
+    }
+
+    const userList = action.data.map(function (item, index) {
+        return {
+            key: index,
+            account: {
+                editable: false,
+                value: item.account,
+            },
+            nickname: {
+                editable: false,
+                value: item.nickName,
+            },
+            auth: {
+                editable: false,
+                value: item.isAdmin ? '管理员' : '普通用户',
+            },
+            projects: {
+                editable: false,
+                value: 'xxx',
+            }
+        };
+    });
+
+    return {
+        ...state,
+        userList: userList
+    };
+}
+
 const initialUserState = {
     loginStatus: RES_FAILED,
     modifyPasswordStatus: RES_FAILED,
@@ -144,7 +183,8 @@ const initialUserState = {
     token: null,
     isAdmin: false,
     nickName: null,
-    account: null
+    account: null,
+    userList: []
 };
 
 /**
@@ -176,6 +216,9 @@ export function user(state = initialUserState, action) {
             break;
         case ACTION_RESET_PASSWORD:
             newState = resetPassword(state, action.data);
+            break;
+        case ACTION_FETCH_USER_LIST:
+            newState = fetchUserList(state, action.data);
             break;
     }
     return newState;

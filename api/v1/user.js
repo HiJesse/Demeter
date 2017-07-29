@@ -2,11 +2,21 @@
 import {buildResponse} from "../../util/ajax";
 import UserModel from "../../models/user";
 import {
-    RES_FAILED, RES_FAILED_CREATE_USER,
-    RES_FAILED_MODIFY_PWD, RES_FAILED_NOT_ADMIN, RES_FAILED_RESET_PASSWORD, RES_FAILED_UPDATE_USER_INFO,
+    RES_FAILED,
+    RES_FAILED_CREATE_USER,
+    RES_FAILED_FETCH_USER_LIST,
+    RES_FAILED_MODIFY_PWD,
+    RES_FAILED_NOT_ADMIN,
+    RES_FAILED_RESET_PASSWORD,
+    RES_FAILED_UPDATE_USER_INFO,
     RES_FAILED_USER_ERR_PWD,
-    RES_FAILED_USER_NONE, RES_MSG_CREATE_USER,
-    RES_MSG_MODIFY_PWD, RES_MSG_NOT_ADMIN, RES_MSG_RESET_PASSWORD, RES_MSG_UPDATE_USER_INFO,
+    RES_FAILED_USER_NONE,
+    RES_MSG_CREATE_USER,
+    RES_MSG_FETCH_USER_LIST,
+    RES_MSG_MODIFY_PWD,
+    RES_MSG_NOT_ADMIN,
+    RES_MSG_RESET_PASSWORD,
+    RES_MSG_UPDATE_USER_INFO,
     RES_MSG_USER_ERR_PWD,
     RES_MSG_USER_NONE,
     RES_MSG_USER_NONE_PWD,
@@ -87,6 +97,30 @@ function isAdmin(params) {
             } else {
                 reject({isAdmin: false});
             }
+        });
+    });
+}
+
+/**
+ * 获取所有用户信息
+ * @returns {Promise}
+ */
+function findAllUser() {
+    return new Promise((resolve, reject) => {
+        UserModel.find({}, (err, data) => {
+            if (data.length < 1) {
+                reject();
+                return;
+            }
+
+            const allUserInfo = data.map(function (item) {
+                return {
+                    account: item.account,
+                    nickName: item.nickName,
+                    isAdmin: item.isAdmin,
+                };
+            });
+            resolve(allUserInfo);
         });
     });
 }
@@ -279,6 +313,35 @@ export function resetPassword(req, res) {
         } else if (error.isUserExist === false) {
             status = RES_FAILED_USER_NONE;
             msg = RES_MSG_USER_NONE;
+        }
+        res.json(buildResponse(status, {}, msg));
+    });
+}
+
+/**
+ * 获取用户列表, 根据uId判断当前用户是否为管理员
+ * @param req
+ * @param res
+ */
+export function fetchUserList(req, res) {
+    const uId = req.query.uId;
+    const adminParams = {
+        _id: uId
+    };
+
+    let status = RES_FAILED_FETCH_USER_LIST;
+    let msg = RES_MSG_FETCH_USER_LIST;
+
+    isAdmin(adminParams).then(() => {
+        return findAllUser();
+    }).then((allUserInfo) => {
+        status = RES_SUCCEED;
+        msg = null;
+        res.json(buildResponse(status, allUserInfo, msg));
+    }).catch((error) => {
+        if (error.isAdmin === false) {
+            status = RES_FAILED_NOT_ADMIN;
+            msg = RES_MSG_NOT_ADMIN;
         }
         res.json(buildResponse(status, {}, msg));
     });
