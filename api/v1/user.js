@@ -131,8 +131,8 @@ function findAllUser() {
  * @param res
  */
 export function login(req, res) {
-    const account = req.query.account;
-    const password = req.query.password;
+    const account = req.body.account;
+    const password = req.body.password;
     verifyUser(false, account, password, (val) => {
         const data = val.data;
         res.json(buildResponse(val.status, {
@@ -150,13 +150,13 @@ export function login(req, res) {
  */
 export function modifyPassword(req, res) {
     let isLogin = false;
-    let account = req.query.account;
-    const password = req.query.password;
-    const newPassword = req.query.newPassword;
+    let account = req.body.account;
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
     let updateParams = {pwd: password};
 
     if (isStringEmpty(account)) {
-        account = req.query.uId;
+        account = req.body.uId;
         updateParams._id = account;
         isLogin = true;
     } else {
@@ -220,8 +220,8 @@ export function getUserInfo(req, res) {
  * @param res
  */
 export function updateUserInfo(req, res) {
-    const uId = req.query.uId;
-    const nickName = req.query.nickName;
+    const uId = req.body.uId;
+    const nickName = req.body.nickName;
 
     let status = RES_FAILED_UPDATE_USER_INFO;
     let msg = RES_MSG_UPDATE_USER_INFO;
@@ -245,8 +245,8 @@ export function updateUserInfo(req, res) {
  * @param res
  */
 export function createUser(req, res) {
-    const account = req.query.account;
-    const uId = req.query.uId;
+    const account = req.body.account;
+    const uId = req.body.uId;
 
     const params = {
         account: account,
@@ -282,8 +282,8 @@ export function createUser(req, res) {
  * @param res
  */
 export function resetPassword(req, res) {
-    const account = req.query.account;
-    const uId = req.query.uId;
+    const account = req.body.account;
+    const uId = req.body.uId;
     const params = {
         account: account
     };

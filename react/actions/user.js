@@ -9,7 +9,7 @@ import {
     ACTION_RESET_PASSWORD,
     ACTION_UPDATE_USER_INFO
 } from "../constants/actionType";
-import {actionGet} from "../../util/ajax";
+import {actionAjax, AJAX_METHOD} from "../../util/ajax";
 import {
     URL_CREATE_USER,
     URL_FETCH_USER_LIST,
@@ -28,7 +28,7 @@ import {md5} from "../../util/encrypt";
  * @param pwd
  */
 export function login(dispatch, account, pwd) {
-    actionGet(dispatch, ACTION_LOGIN, URL_LOGIN, {
+    actionAjax(dispatch, ACTION_LOGIN, AJAX_METHOD.POST, URL_LOGIN, {
         "account": account,
         "password": md5(pwd)
     });
@@ -42,7 +42,7 @@ export function login(dispatch, account, pwd) {
  * @param newPwd
  */
 export function modifyPassword(dispatch, account, pwd, newPwd) {
-    actionGet(dispatch, ACTION_MODIFY_PASSWORD, URL_MODIFY_PWD, {
+    actionAjax(dispatch, ACTION_MODIFY_PASSWORD, AJAX_METHOD.POST, URL_MODIFY_PWD, {
         account: account,
         password: md5(pwd),
         newPassword: md5(newPwd)
@@ -55,7 +55,7 @@ export function modifyPassword(dispatch, account, pwd, newPwd) {
  * @param uId
  */
 export function getUserInfo(dispatch, uId) {
-    actionGet(dispatch, ACTION_GET_USER_INFO, URL_GET_USER_INFO, {
+    actionAjax(dispatch, ACTION_GET_USER_INFO, AJAX_METHOD.GET, URL_GET_USER_INFO, {
         uId: uId,
     });
 }
@@ -68,7 +68,7 @@ export function getUserInfo(dispatch, uId) {
  * @param newPwd
  */
 export function modifyPasswordById(dispatch, uId, pwd, newPwd) {
-    actionGet(dispatch, ACTION_MODIFY_PASSWORD_UID, URL_MODIFY_PWD, {
+    actionAjax(dispatch, ACTION_MODIFY_PASSWORD_UID, AJAX_METHOD.POST, URL_MODIFY_PWD, {
         uId: uId,
         password: md5(pwd),
         newPassword: md5(newPwd)
@@ -82,7 +82,7 @@ export function modifyPasswordById(dispatch, uId, pwd, newPwd) {
  * @param nickName
  */
 export function updateUserInfo(dispatch, uId, nickName) {
-    actionGet(dispatch, ACTION_UPDATE_USER_INFO, URL_UPDATE_USER_INFO, {
+    actionAjax(dispatch, ACTION_UPDATE_USER_INFO, AJAX_METHOD.POST, URL_UPDATE_USER_INFO, {
         uId: uId,
         nickName: nickName
     });
@@ -95,7 +95,7 @@ export function updateUserInfo(dispatch, uId, nickName) {
  * @param uId
  */
 export function createUser(dispatch, account, uId) {
-    actionGet(dispatch, ACTION_CREATE_USER, URL_CREATE_USER, {
+    actionAjax(dispatch, ACTION_CREATE_USER, AJAX_METHOD.POST, URL_CREATE_USER, {
         account: account,
         uId: uId
     });
@@ -108,20 +108,19 @@ export function createUser(dispatch, account, uId) {
  * @param uId
  */
 export function resetPassword(dispatch, account, uId) {
-    actionGet(dispatch, ACTION_RESET_PASSWORD, URL_RESET_PASSWORD, {
+    actionAjax(dispatch, ACTION_RESET_PASSWORD, AJAX_METHOD.POST, URL_RESET_PASSWORD, {
         account: account,
         uId: uId
     });
 }
 
 /**
- * 重置用户密码
+ * 获取用户列表
  * @param dispatch
- * @param account
  * @param uId
  */
 export function fetchUserList(dispatch, uId) {
-    actionGet(dispatch, ACTION_FETCH_USER_LIST, URL_FETCH_USER_LIST, {
+    actionAjax(dispatch, ACTION_FETCH_USER_LIST, AJAX_METHOD.GET, URL_FETCH_USER_LIST, {
         uId: uId
     });
 }
