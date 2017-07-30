@@ -5,12 +5,12 @@ import BodyParser from "body-parser";
 import Path from "path";
 import FS from "fs";
 import Logger from "morgan";
-import Mongoose from "mongoose";
 import JWT from "express-jwt";
 
 import * as Config from "./config";
 import api_v1 from "./api/api_v1";
 import {RES_FAILED_TOKEN, RES_MSG_TOKEN} from "./util/status";
+import {connectDB} from "./util/dbUtil";
 
 const app = Express();
 
@@ -72,14 +72,6 @@ app.use(function (err, req, res, next) {
 
 });
 
-Mongoose.connect(Config.env.DATABASE, {useMongoClient:true});
-
-Mongoose.connection.on("open", function () {
-    console.info('Open MongoDB ' + Config.env.DATABASE + ' Succeed!');
-});
-
-Mongoose.connection.on('error', function () {
-    console.info('Error: Could not connect to MongoDB. Did you forget to run `mongod`?'.red);
-});
+connectDB();
 
 export default app;

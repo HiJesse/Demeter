@@ -31,7 +31,7 @@ class UserCenterView extends React.Component {
                     <FormItem
                         label="昵称">
                         {getFieldDecorator('nickName', {
-                            rules: [{min: 3, message: MSG_NICKNAME}],
+                            rules: [{min: 2, message: MSG_NICKNAME}],
                             initialValue: this.props.nickName
                         })(
                             <Input />

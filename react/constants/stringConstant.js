@@ -9,4 +9,4 @@ export const MSG_ACCOUNT = '账号至少为3个字符';
 // 密码非法消息
 export const MSG_PASSWORD = '密码至少为6个字符';
 // 昵称非法消息
-export const MSG_NICKNAME = '昵称只要为3个字符';
+export const MSG_NICKNAME = '昵称至少为2个字符';
