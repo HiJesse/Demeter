@@ -3,6 +3,7 @@ import {buildResponse} from "../../util/ajax";
 import UserModel from "../../models/user";
 import {
     RES_FAILED,
+    RES_FAILED_COUNT_USER,
     RES_FAILED_CREATE_USER,
     RES_FAILED_FETCH_USER_LIST,
     RES_FAILED_MODIFY_PWD,
@@ -11,6 +12,7 @@ import {
     RES_FAILED_UPDATE_USER_INFO,
     RES_FAILED_USER_ERR_PWD,
     RES_FAILED_USER_NONE,
+    RES_MSG_COUNT_USER,
     RES_MSG_CREATE_USER,
     RES_MSG_FETCH_USER_LIST,
     RES_MSG_MODIFY_PWD,
@@ -105,9 +107,12 @@ function isAdmin(params) {
  * 获取所有用户信息
  * @returns {Promise}
  */
-function findAllUser() {
+function findUsersByPage(pageSize, pageNum) {
     return new Promise((resolve, reject) => {
-        UserModel.find({}, (err, data) => {
+        const query = UserModel.find({});
+        query.skip((pageNum - 1) * pageSize);
+        query.limit(pageSize);
+        query.exec((err, data) => {
             if (data.length < 1) {
                 reject();
                 return;
@@ -121,6 +126,22 @@ function findAllUser() {
                 };
             });
             resolve(allUserInfo);
+        });
+    });
+}
+
+/**
+ * 获取用户总数, 失败的话返回-1
+ * @returns {Promise}
+ */
+function countUsers() {
+    return new Promise((resolve, reject) => {
+        UserModel.count({}, (err, count) => {
+            if (err) {
+                reject({userCount: -1});
+                return;
+            }
+            resolve({userCount: count});
         });
     });
 }
@@ -319,12 +340,16 @@ export function resetPassword(req, res) {
 }
 
 /**
- * 获取用户列表, 根据uId判断当前用户是否为管理员
+ * 根据页码和页面容量获取用户列表
+ * 先判断uid是否为管理员, 再获取用户总数, 再根据页码信息查询用户列表
  * @param req
  * @param res
  */
 export function fetchUserList(req, res) {
     const uId = req.query.uId;
+    const pageSize = Number(req.query.pageSize);
+    const pageNum = Number(req.query.pageNum);
+    let userCount = -1;
     const adminParams = {
         _id: uId
     };
@@ -332,16 +357,27 @@ export function fetchUserList(req, res) {
     let status = RES_FAILED_FETCH_USER_LIST;
     let msg = RES_MSG_FETCH_USER_LIST;
 
+
     isAdmin(adminParams).then(() => {
-        return findAllUser();
+        return countUsers();
+    }).then((data) => {
+        userCount = data.userCount;
+        return findUsersByPage(pageSize, pageNum);
     }).then((allUserInfo) => {
         status = RES_SUCCEED;
         msg = null;
-        res.json(buildResponse(status, allUserInfo, msg));
+        res.json(buildResponse(status, {
+            userList: allUserInfo,
+            userCount: userCount,
+            pageNum: pageNum
+        }, msg));
     }).catch((error) => {
         if (error.isAdmin === false) {
             status = RES_FAILED_NOT_ADMIN;
             msg = RES_MSG_NOT_ADMIN;
+        } else if (error.userCount === -1) {
+            status = RES_FAILED_COUNT_USER;
+            msg = RES_MSG_COUNT_USER;
         }
         res.json(buildResponse(status, {}, msg));
     });

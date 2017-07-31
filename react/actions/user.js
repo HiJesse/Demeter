@@ -1,7 +1,6 @@
 // user actions
 import {
     ACTION_CREATE_USER,
-    ACTION_FETCH_USER_LIST,
     ACTION_GET_USER_INFO,
     ACTION_LOGIN,
     ACTION_MODIFY_PASSWORD,
@@ -12,7 +11,6 @@ import {
 import {actionAjax, AJAX_METHOD} from "../../util/ajax";
 import {
     URL_CREATE_USER,
-    URL_FETCH_USER_LIST,
     URL_GET_USER_INFO,
     URL_LOGIN,
     URL_MODIFY_PWD,
@@ -110,17 +108,6 @@ export function createUser(dispatch, account, uId) {
 export function resetPassword(dispatch, account, uId) {
     actionAjax(dispatch, ACTION_RESET_PASSWORD, AJAX_METHOD.POST, URL_RESET_PASSWORD, {
         account: account,
-        uId: uId
-    });
-}
-
-/**
- * 获取用户列表
- * @param dispatch
- * @param uId
- */
-export function fetchUserList(dispatch, uId) {
-    actionAjax(dispatch, ACTION_FETCH_USER_LIST, AJAX_METHOD.GET, URL_FETCH_USER_LIST, {
         uId: uId
     });
 }

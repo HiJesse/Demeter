@@ -1,5 +1,5 @@
 import React from "react";
-import {fetchUserList} from "../actions/user";
+import {fetchUserList} from "../actions/userList";
 import {connect} from "react-redux";
 import {Popconfirm, Table} from "antd";
 import TextEditableItemView, {TextEditableMode, TextEditableStatus} from "../components/TextEditableItemView";
@@ -9,33 +9,8 @@ import {homeStyle} from "./styles/home";
 // 用户管理-用户列表
 class UserListView extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: [{
-                key: '0',
-                account: {
-                    editable: false,
-                    value: 'jesse',
-                },
-                nickname: {
-                    editable: false,
-                    value: '32',
-                },
-                auth: {
-                    editable: false,
-                    value: '管理员',
-                },
-                projects: {
-                    editable: false,
-                    value: 'xxx',
-                }
-            }],
-        };
-    }
-
     componentDidMount() {
-        this.props.fetchUserList();
+        this.props.fetchUserList(this.props.pageSize, this.props.pageNum);
     }
 
     render() {
@@ -52,7 +27,18 @@ class UserListView extends React.Component {
 
         return (
             <div style={homeStyle.view_content}>
-                <Table bordered dataSource={dataSource} columns={columns} pagination={{pageSize: 10}}/>
+                <Table
+                    bordered
+                    dataSource={dataSource}
+                    columns={columns}
+                    loading={this.props.pageLoading}
+                    pagination={{
+                        total: this.props.userCount,
+                        pageSize: this.props.pageSize
+                    }}
+                    onChange={(pagination) => {
+                        this.props.fetchUserList(pagination.pageSize, pagination.current);
+                    }}/>
             </div>
         );
     }
@@ -121,15 +107,16 @@ class UserListView extends React.Component {
      * @private
      */
     _buildTextInputColumnItem(data, index, key, text) {
-        const {editable, status} = data[index][key];
+        const {editable, status, value} = data[index][key];
         if (typeof editable === 'undefined') {
             return text;
         }
+
         return (
             <TextEditableItemView
                 editable={editable}
                 mode={TextEditableMode.INPUT}
-                value={text}
+                value={value}
                 status={status}
                 onChange={value => this._handleChange(key, index, value)}
             />);
@@ -142,7 +129,7 @@ class UserListView extends React.Component {
      * @private
      */
     _saveOrCancelItem(index, type) {
-        const {data} = this.state;
+        const data = this.props.userList;
         Object.keys(data[index]).forEach((item) => {
             if (data[index][item] && typeof data[index][item].editable !== 'undefined') {
                 data[index][item].editable = false;
@@ -164,7 +151,7 @@ class UserListView extends React.Component {
      * @private
      */
     _editItem(index) {
-        const {data} = this.state;
+        const data = this.props.userList;
         Object.keys(data[index]).forEach((item) => {
             if (data[index][item] && typeof data[index][item].editable !== 'undefined') {
                 data[index][item].editable = true;
@@ -181,20 +168,24 @@ class UserListView extends React.Component {
      * @private
      */
     _handleChange(key, index, value) {
-        const {data} = this.state;
+        const data = this.props.userList;
         data[index][key].value = value;
         this.setState({data});
     }
 }
 function select(state) {
     return {
-        userList: state.user.userList
+        userList: state.userList.userList,
+        pageSize: state.userList.pageSize,
+        pageNum: state.userList.pageNum,
+        userCount: state.userList.userCount,
+        pageLoading: state.userList.pageLoading
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        fetchUserList: () => fetchUserList(dispatch, localStorage.uId),
+        fetchUserList: (pageSize, pageNum) => fetchUserList(dispatch, localStorage.uId, pageSize, pageNum),
     }
 }
 

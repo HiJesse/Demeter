@@ -25,6 +25,7 @@ export default class TextEditableItemView extends React.Component {
                 this.cacheValue = this.state.value;
             }
         }
+
         if (nextProps.status && nextProps.status !== this.props.status) {
             if (nextProps.status === TextEditableStatus.SAVE) {
                 this.props.onChange(this.state.value);
@@ -32,6 +33,10 @@ export default class TextEditableItemView extends React.Component {
                 this.setState({value: this.cacheValue});
                 this.props.onChange(this.cacheValue);
             }
+        }
+
+        if (nextProps.value !== this.state.value) {
+            this.setState({value: nextProps.value})
         }
     }
 
