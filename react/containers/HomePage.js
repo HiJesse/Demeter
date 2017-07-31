@@ -48,6 +48,7 @@ class HomePage extends React.Component {
             <Layout style={homeStyle.page}>
                 {this._loginVerify()}
                 <Sider
+                    style={{height: '100%'}}
                     collapsible
                     collapsed={this.props.isCollapsed}
                     onCollapse={(collapsed) => this.props.collapseMenu(collapsed)}>
@@ -68,7 +69,7 @@ class HomePage extends React.Component {
                         {this._createMenu(MENU_USER_CENTER)}
                     </Menu>
                 </Sider>
-                <Layout style={{display: 'flex'}}>
+                <Layout style={{display: 'flex', height: '100%'}}>
                     <Header style={homeStyle.page_header}>
                         <div style={{flex: 1, paddingLeft: 12}}>
                             {`欢迎 ${this.props.nickName} 用户登录`}

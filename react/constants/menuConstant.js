@@ -103,12 +103,11 @@ function getValueFromSpecificKey(key, data) {
 
     for (let i = 0; i < data.MENU_SUB.length; i++) {
         const sub = data.MENU_SUB[i];
-        if (sub.key !== key) {
-            continue;
+        if (sub.key === key) {
+            value.subKey = sub.key;
+            value.subValue = sub.value;
+            break;
         }
-        value.subKey = sub.key;
-        value.subValue = sub.value;
-        break;
     }
     return value;
 }

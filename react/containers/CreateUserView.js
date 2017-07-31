@@ -12,6 +12,7 @@ class CreateUserView extends React.Component {
 
     render() {
         const {getFieldDecorator} = this.props.form;
+
         return (
             <div style={homeStyle.view_content}>
                 <Form

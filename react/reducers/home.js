@@ -38,6 +38,7 @@ export function home(state = initialHomeState, action) {
                 pageContent: action.data.pageContent
             };
             break;
+        default:
     }
     return newState;
 }

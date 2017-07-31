@@ -76,6 +76,7 @@ export function userList(state = initialUserListState, action) {
                 pageLoading: action.data.pageLoading
             };
             break;
+        default:
     }
     return newState;
 }

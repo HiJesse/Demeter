@@ -21,7 +21,8 @@ export const homeStyle = {
     view_content: {
         padding: 24,
         background: '#fff',
-        flex: 1
+        flex: 1,
+        borderRadius: 4
     },
     view_logo: {
         height: 32,

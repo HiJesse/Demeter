@@ -174,7 +174,7 @@ export function modifyPassword(req, res) {
     let account = req.body.account;
     const password = req.body.password;
     const newPassword = req.body.newPassword;
-    let updateParams = {pwd: password};
+    const updateParams = {pwd: password};
 
     if (isStringEmpty(account)) {
         account = req.body.uId;

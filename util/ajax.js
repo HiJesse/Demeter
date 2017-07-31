@@ -57,7 +57,7 @@ export function buildResponse(status, params, msg) {
  */
 export function post(url, params) {
     const content = JSON.stringify(params);
-    let data = {
+    const data = {
         method: AJAX_METHOD.POST,
         headers: {
             'Authorization': `Bearer ${localStorage.token}`,
@@ -135,7 +135,7 @@ export function get(url, params) {
  * @param params
  */
 export function actionAjax(dispatch, actionType, method, url, params) {
-    let action = {
+    const action = {
         type: actionType
     };
 

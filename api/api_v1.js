@@ -1,7 +1,7 @@
 import express from 'express';
 import * as user from "./v1/user";
 
-let router = express.Router();
+const router = express.Router();
 
 // 登录
 router.post('/user/login', user.login);

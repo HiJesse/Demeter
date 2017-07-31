@@ -14,6 +14,7 @@ class ResetPasswordView extends React.Component {
         const {getFieldDecorator} = this.props.form;
         return (
             <div style={homeStyle.view_content}>
+
                 <Form
                     layout={'vertical'}
                     style={{width: 300}}

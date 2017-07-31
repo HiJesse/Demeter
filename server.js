@@ -37,7 +37,7 @@ app.use('/api/v1', api_v1);
 
 // catch 404 and forward to error handler
 // 重定向到/public/index.html页面
-app.use(function (req, res, next) {
+app.use(function (req, res) {
     FS.readFile(__dirname + '/public/index.html', function(err, data){
         if(err){
             console.log(err);
@@ -56,7 +56,7 @@ app.use(function (req, res, next) {
  * 处理express 接口错误信息
  * 拦截token, 包装token失效response. api时返回json 页面时重定向到登录页面
  */
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
     if (err.name !== 'UnauthorizedError') {
         res.locals.message = err.message;
         res.locals.error = req.app.get('env') === 'development' ? err : {};

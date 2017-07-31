@@ -178,6 +178,8 @@ export function user(state = initialUserState, action) {
         case ACTION_RESET_PASSWORD:
             newState = resetPassword(state, action.data);
             break;
+        default:
+
     }
     return newState;
 }

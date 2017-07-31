@@ -11,5 +11,5 @@ new WebpackDevServer(webpack(Config), {
     if (err) {
         console.log(err);
     }
-    console.log('Listening at localhost:3001');
+    console.log('Listening at localhost:3001 ' + result);
 });
