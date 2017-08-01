@@ -1,6 +1,11 @@
 //user list reducer
 import {message} from "antd";
-import {ACTION_FETCH_USER_LIST, ACTION_PAGE_LOADING} from "../constants/actionType";
+import {
+    ACTION_CHANGE_SEARCH_INPUT,
+    ACTION_CHANGE_SEARCH_INPUT_VISIBLE,
+    ACTION_FETCH_USER_LIST,
+    ACTION_PAGE_LOADING
+} from "../constants/actionType";
 import {RES_SUCCEED} from "../../util/status";
 
 
@@ -55,7 +60,9 @@ const initialUserListState = {
     userList: [],
     pageNum: 1,
     pageSize: 10,
-    pageLoading: false
+    pageLoading: false,
+    nicknameSearch: null,
+    searchInputVisible: false,
 };
 
 /**
@@ -74,6 +81,18 @@ export function userList(state = initialUserListState, action) {
             newState = {
                 ... state,
                 pageLoading: action.data.pageLoading
+            };
+            break;
+        case ACTION_CHANGE_SEARCH_INPUT:
+            newState = {
+                ... state,
+                nicknameSearch: action.data.nicknameSearch
+            };
+            break;
+        case ACTION_CHANGE_SEARCH_INPUT_VISIBLE:
+            newState = {
+                ... state,
+                searchInputVisible: action.data.searchInputVisible
             };
             break;
         default:

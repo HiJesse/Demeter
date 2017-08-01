@@ -1,9 +1,10 @@
 import React from "react";
-import {fetchUserList} from "../actions/userList";
+import {changeSearchInput, changeSearchVisible, fetchUserList} from "../actions/userList";
 import {connect} from "react-redux";
-import {Popconfirm, Table} from "antd";
+import {Button, Icon, Input, Popconfirm, Table} from "antd";
 import TextEditableItemView, {TextEditableMode, TextEditableStatus} from "../components/TextEditableItemView";
 import {homeStyle} from "./styles/home";
+import {userListView} from "./styles/userListView";
 
 
 // 用户管理-用户列表
@@ -52,6 +53,25 @@ class UserListView extends React.Component {
             title: '账号',
             dataIndex: 'account',
             width: '15%',
+            filterDropdown: (
+                <div style={userListView.view_search}>
+                    <Input
+                        placeholder="账号"
+                        value={this.props.nicknameSearch}
+                        onChange={(e) => this.props.changeSearchInput(e.target.value)}
+                        onPressEnter={this._onSearch.bind(this)}
+                    />
+                    <Button
+                        type="primary"
+                        style={userListView.button_search}
+                        onClick={this.onSearch}>搜索</Button>
+                </div>
+            ),
+            filterIcon: <Icon type="search" style={userListView.icon_search} />,
+            filterDropdownVisible: this.props.searchInputVisible,
+            onFilterDropdownVisibleChange: (visible) => {
+                this.props.changeSearchVisible(visible);
+            },
             render: (text, record, index) => this._buildTextInputColumnItem(this.props.userList, index, 'account', text),
         }, {
             title: '昵称',
@@ -172,20 +192,33 @@ class UserListView extends React.Component {
         data[index][key].value = value;
         this.setState({data});
     }
+
+    /**
+     * 搜索回调
+     * @private
+     */
+    _onSearch() {
+        this.props.changeSearchVisible(false);
+        this.props.fetchUserList(this.props.pageSize, this.props.pageNum);
+    }
 }
 function select(state) {
     return {
-        userList: state.userList.userList,
-        pageSize: state.userList.pageSize,
-        pageNum: state.userList.pageNum,
-        userCount: state.userList.userCount,
-        pageLoading: state.userList.pageLoading
+        userList: state.userList.userList, // 用户列表
+        pageSize: state.userList.pageSize, // 分页容量
+        pageNum: state.userList.pageNum, // 当前页码
+        userCount: state.userList.userCount, // 用户总数
+        pageLoading: state.userList.pageLoading, // 分页loading
+        nicknameSearch: state.userList.nicknameSearch, // 搜索昵称输入
+        searchInputVisible: state.userList.searchInputVisible, //搜索框是否可见
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         fetchUserList: (pageSize, pageNum) => fetchUserList(dispatch, localStorage.uId, pageSize, pageNum),
+        changeSearchInput: (search) => dispatch(changeSearchInput(search)),
+        changeSearchVisible: (visible) => dispatch(changeSearchVisible(visible)),
     }
 }
 

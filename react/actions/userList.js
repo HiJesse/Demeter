@@ -1,6 +1,11 @@
 // user list actions
 import {actionAjax, AJAX_METHOD} from "../../util/ajax";
-import {ACTION_FETCH_USER_LIST, ACTION_PAGE_LOADING} from "../constants/actionType";
+import {
+    ACTION_CHANGE_SEARCH_INPUT,
+    ACTION_CHANGE_SEARCH_INPUT_VISIBLE,
+    ACTION_FETCH_USER_LIST,
+    ACTION_PAGE_LOADING
+} from "../constants/actionType";
 import {URL_FETCH_USER_LIST} from "../constants/url";
 
 /**
@@ -31,4 +36,32 @@ export function fetchUserList(dispatch, uId, pageSize, pageNum) {
         pageSize: pageSize,
         pageNum: pageNum
     });
+}
+
+/**
+ * 输入搜索昵称变化
+ * @param nicknameSearch
+ * @returns {{type, data: {searchText: *}}}
+ */
+export function changeSearchInput(nicknameSearch) {
+    return {
+        type: ACTION_CHANGE_SEARCH_INPUT,
+        data: {
+            nicknameSearch: nicknameSearch
+        }
+    }
+}
+
+/**
+ * 搜索框是否可见
+ * @param visible
+ * @returns {{type, data: {searchInputVisible: *}}}
+ */
+export function changeSearchVisible(visible) {
+    return {
+        type: ACTION_CHANGE_SEARCH_INPUT_VISIBLE,
+        data: {
+            searchInputVisible: visible
+        }
+    }
 }
