@@ -5,6 +5,7 @@ import {Button, Icon, Input, Popconfirm, Table} from "antd";
 import TextEditableItemView, {TextEditableMode, TextEditableStatus} from "../components/TextEditableItemView";
 import {homeStyle} from "./styles/home";
 import {userListView} from "./styles/userListView";
+import {resetPassword} from "../actions/user";
 
 
 // 用户管理-用户列表
@@ -74,7 +75,7 @@ class UserListView extends React.Component {
             onFilterDropdownVisibleChange: (visible) => {
                 this.props.changeSearchVisible(visible);
             },
-            render: (text, record, index) => this._buildTextInputColumnItem(this.props.userList, index, 'account', text),
+            render: (text, record, index) => (<div>{text}</div>),
         }, {
             title: '昵称',
             dataIndex: 'nickname',
@@ -84,39 +85,56 @@ class UserListView extends React.Component {
             title: '权限',
             dataIndex: 'auth',
             width: '15%',
-            render: (text, record, index) => this._buildTextInputColumnItem(this.props.userList, index, 'auth', text),
+            render: (text, record, index) => (<div>{text}</div>),
         }, {
             title: '所属项目',
             dataIndex: 'projects',
             width: '15%',
-            render: (text, record, index) => this._buildTextInputColumnItem(this.props.userList, index, 'projects', text),
+            render: (text, record, index) => (<div>{text}</div>),
         }, {
             title: '行为',
             dataIndex: 'operation',
             render: (text, record, index) => {
                 const {editable} = this.props.userList[index].account;
-                return (
-                    <div className="editable-row-operations">
-                        {
-                            editable ?
-                                <span>
-                                    <a onClick={() => this._saveOrCancelItem(index, TextEditableStatus.SAVE)}>Save</a>
-                                    <Popconfirm title="Sure to cancel?"
-                                                onConfirm={() => this._saveOrCancelItem(index, TextEditableStatus.CANCEL)}>
-                                        <a>Cancel</a>
-                                    </Popconfirm>
-                                </span>
-                                :
-                                <span style={{display: 'flex', justifyContent: 'space-around'}}>
-                                    <a onClick={() => this._editItem(index)}>修改昵称</a>
-                                    <a onClick={() => this._editItem(index)}>重置密码</a>
-                                    <a onClick={() => this._editItem(index)}>删除用户</a>
-                                </span>
-                        }
-                    </div>
-                );
+                return this._buildOperationColumn(index, editable)
             },
         }];
+    }
+
+    /**
+     * 构建表格中行为列
+     * @param index
+     * @param editable
+     * @returns {XML}
+     * @private
+     */
+    _buildOperationColumn(index, editable) {
+        let column;
+        if (editable) {
+            column = (
+                <span style={userListView.view_operation}>
+                    <a onClick={() => this._updateNickname(index, TextEditableStatus.SAVE)}>{'更新'}</a>
+                    <Popconfirm
+                        title="确定取消吗?"
+                        onConfirm={() => this._updateNickname(index, TextEditableStatus.CANCEL)}>
+                        <a>{'取消'}</a>
+                    </Popconfirm>
+                </span>
+            );
+        } else {
+            column = (
+                <span style={userListView.view_operation}>
+                    <a onClick={() => this._editItem(index)}>{'修改昵称'}</a>
+                    <Popconfirm
+                        title="确认重置密码?"
+                        onConfirm={() => this.props.resetPassword(this.props.userList[index].account.value)}>
+                        <a href="#">{'重置密码'}</a>
+                    </Popconfirm>
+                    <a onClick={() => this._editItem(index)}>{'删除用户'}</a>
+                </span>
+            );
+        }
+        return column;
     }
 
     /**
@@ -140,17 +158,21 @@ class UserListView extends React.Component {
                 mode={TextEditableMode.INPUT}
                 value={value}
                 status={status}
-                onChange={value => this._handleChange(key, index, value)}
+                onChange={value => {
+                    const data = this.props.userList;
+                    data[index][key].value = value;
+                    this.setState({data});
+                }}
             />);
     }
 
     /**
-     * 保存或取消item的修改
+     * 保存或取消昵称的修改
      * @param index
      * @param type
      * @private
      */
-    _saveOrCancelItem(index, type) {
+    _updateNickname(index, type) {
         const data = this.props.userList;
         Object.keys(data[index]).forEach((item) => {
             if (data[index][item] && typeof data[index][item].editable !== 'undefined') {
@@ -183,19 +205,6 @@ class UserListView extends React.Component {
     }
 
     /**
-     * 用户数据变化后回调
-     * @param key
-     * @param index
-     * @param value
-     * @private
-     */
-    _handleChange(key, index, value) {
-        const data = this.props.userList;
-        data[index][key].value = value;
-        this.setState({data});
-    }
-
-    /**
      * 搜索回调
      * @private
      */
@@ -223,6 +232,7 @@ function mapDispatchToProps(dispatch) {
         },
         changeSearchInput: (search) => dispatch(changeSearchInput(search)),
         changeSearchVisible: (visible) => dispatch(changeSearchVisible(visible)),
+        resetPassword: (account) => resetPassword(dispatch, account, localStorage.uId),
     }
 }
 

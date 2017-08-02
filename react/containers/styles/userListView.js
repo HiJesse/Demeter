@@ -7,6 +7,10 @@ export const userListView = {
         borderRadius: 6,
         boxShadow: '0 1px 6px rgba(0, 0, 0, .2)'
     },
+    view_operation: {
+        display: 'flex',
+        justifyContent: 'space-around'
+    },
     icon_search: {
         marginLeft: 5,
         fontSize: 16,
