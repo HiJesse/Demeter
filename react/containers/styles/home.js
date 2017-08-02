@@ -9,8 +9,8 @@ export const homeStyle = {
         padding: 0,
         display: 'flex',
         alignItems: 'center',
-        minWidth: 500
-        // justifyContent: 'space-between'
+        minWidth: 500,
+        borderRadius: 4
     },
     page_content: {
         margin: '0 16px',
@@ -22,7 +22,7 @@ export const homeStyle = {
         padding: 24,
         background: '#fff',
         flex: 1,
-        borderRadius: 4
+        borderRadius: 4,
     },
     view_logo: {
         height: 32,

@@ -104,12 +104,20 @@ function isAdmin(params) {
 }
 
 /**
- * 获取所有用户信息
+ * 分页获取用户信息, 并支持基于账号的模糊搜索
+ * @param pageSize
+ * @param pageNum
+ * @param accountSearch
  * @returns {Promise}
  */
-function findUsersByPage(pageSize, pageNum) {
+function findUsersByPage(pageSize, pageNum, accountSearch) {
+    const findParams = {};
+    if (!isStringEmpty(accountSearch) && accountSearch !== 'null') {
+        findParams.account = new RegExp(accountSearch, 'i');
+    }
+
     return new Promise((resolve, reject) => {
-        const query = UserModel.find({});
+        const query = UserModel.find(findParams);
         query.skip((pageNum - 1) * pageSize);
         query.limit(pageSize);
         query.exec((err, data) => {
@@ -131,12 +139,18 @@ function findUsersByPage(pageSize, pageNum) {
 }
 
 /**
- * 获取用户总数, 失败的话返回-1
+ * 获取根据参数的用户总数, 失败的话返回-1
+ * @param accountSearch 模糊查找
  * @returns {Promise}
  */
-function countUsers() {
+function countUsers(accountSearch) {
+    const findParams = {};
+    if (!isStringEmpty(accountSearch) && accountSearch !== 'null') {
+        findParams.account = new RegExp(accountSearch, 'i');
+    }
+
     return new Promise((resolve, reject) => {
-        UserModel.count({}, (err, count) => {
+        UserModel.count(findParams, (err, count) => {
             if (err) {
                 reject({userCount: -1});
                 return;
@@ -349,6 +363,7 @@ export function fetchUserList(req, res) {
     const uId = req.query.uId;
     const pageSize = Number(req.query.pageSize);
     const pageNum = Number(req.query.pageNum);
+    const accountSearch = req.query.accountSearch;
     let userCount = -1;
     const adminParams = {
         _id: uId
@@ -359,10 +374,10 @@ export function fetchUserList(req, res) {
 
 
     isAdmin(adminParams).then(() => {
-        return countUsers();
+        return countUsers(accountSearch);
     }).then((data) => {
         userCount = data.userCount;
-        return findUsersByPage(pageSize, pageNum);
+        return findUsersByPage(pageSize, pageNum, accountSearch);
     }).then((allUserInfo) => {
         status = RES_SUCCEED;
         msg = null;

@@ -28,26 +28,28 @@ export function loading(dispatch, pageLoading) {
  * @param uId
  * @param pageSize 一页多少用户
  * @param pageNum 获取第几页数据
+ * @param accountSearch 根据账号模糊查询
  */
-export function fetchUserList(dispatch, uId, pageSize, pageNum) {
+export function fetchUserList(dispatch, uId, pageSize, pageNum, accountSearch) {
     loading(dispatch, true);
     actionAjax(dispatch, ACTION_FETCH_USER_LIST, AJAX_METHOD.GET, URL_FETCH_USER_LIST, {
         uId: uId,
         pageSize: pageSize,
-        pageNum: pageNum
+        pageNum: pageNum,
+        accountSearch: accountSearch
     });
 }
 
 /**
- * 输入搜索昵称变化
- * @param nicknameSearch
+ * 输入搜索账号变化
+ * @param accountSearch
  * @returns {{type, data: {searchText: *}}}
  */
-export function changeSearchInput(nicknameSearch) {
+export function changeSearchInput(accountSearch) {
     return {
         type: ACTION_CHANGE_SEARCH_INPUT,
         data: {
-            nicknameSearch: nicknameSearch
+            accountSearch: accountSearch
         }
     }
 }

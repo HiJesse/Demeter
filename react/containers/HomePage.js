@@ -69,7 +69,7 @@ class HomePage extends React.Component {
                         {this._createMenu(MENU_USER_CENTER)}
                     </Menu>
                 </Sider>
-                <Layout style={{display: 'flex', height: '100%'}}>
+                <Layout style={{display: 'flex'}}>
                     <Header style={homeStyle.page_header}>
                         <div style={{flex: 1, paddingLeft: 12}}>
                             {`欢迎 ${this.props.nickName} 用户登录`}
@@ -92,8 +92,6 @@ class HomePage extends React.Component {
                                 <Icon type="logout" style={homeStyle.button_logout}/>
                             </Button>
                         </div>
-
-
                     </Header>
                     <Content style={homeStyle.page_content}>
                         {this._createBreadCrumb()}

@@ -11,7 +11,7 @@ import {userListView} from "./styles/userListView";
 class UserListView extends React.Component {
 
     componentDidMount() {
-        this.props.fetchUserList(this.props.pageSize, this.props.pageNum);
+        this.props.fetchUserList(this.props.pageSize, this.props.pageNum, this.props.accountSearch);
     }
 
     render() {
@@ -33,12 +33,14 @@ class UserListView extends React.Component {
                     dataSource={dataSource}
                     columns={columns}
                     loading={this.props.pageLoading}
+                    scroll={{y: true}}
                     pagination={{
                         total: this.props.userCount,
-                        pageSize: this.props.pageSize
+                        pageSize: this.props.pageSize,
+                        current: this.props.pageNum
                     }}
                     onChange={(pagination) => {
-                        this.props.fetchUserList(pagination.pageSize, pagination.current);
+                        this.props.fetchUserList(pagination.pageSize, pagination.current, this.props.accountSearch);
                     }}/>
             </div>
         );
@@ -57,17 +59,17 @@ class UserListView extends React.Component {
                 <div style={userListView.view_search}>
                     <Input
                         placeholder="账号"
-                        value={this.props.nicknameSearch}
+                        value={this.props.accountSearch}
                         onChange={(e) => this.props.changeSearchInput(e.target.value)}
                         onPressEnter={this._onSearch.bind(this)}
                     />
                     <Button
                         type="primary"
                         style={userListView.button_search}
-                        onClick={this.onSearch}>搜索</Button>
+                        onClick={this._onSearch.bind(this)}>搜索</Button>
                 </div>
             ),
-            filterIcon: <Icon type="search" style={userListView.icon_search} />,
+            filterIcon: <Icon type="search" style={userListView.icon_search}/>,
             filterDropdownVisible: this.props.searchInputVisible,
             onFilterDropdownVisibleChange: (visible) => {
                 this.props.changeSearchVisible(visible);
@@ -199,7 +201,7 @@ class UserListView extends React.Component {
      */
     _onSearch() {
         this.props.changeSearchVisible(false);
-        this.props.fetchUserList(this.props.pageSize, this.props.pageNum);
+        this.props.fetchUserList(this.props.pageSize, 1, this.props.accountSearch);
     }
 }
 function select(state) {
@@ -209,14 +211,16 @@ function select(state) {
         pageNum: state.userList.pageNum, // 当前页码
         userCount: state.userList.userCount, // 用户总数
         pageLoading: state.userList.pageLoading, // 分页loading
-        nicknameSearch: state.userList.nicknameSearch, // 搜索昵称输入
+        accountSearch: state.userList.accountSearch, // 搜索账号输入
         searchInputVisible: state.userList.searchInputVisible, //搜索框是否可见
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        fetchUserList: (pageSize, pageNum) => fetchUserList(dispatch, localStorage.uId, pageSize, pageNum),
+        fetchUserList: (pageSize, pageNum, accountSearch) => {
+            fetchUserList(dispatch, localStorage.uId, pageSize, pageNum, accountSearch);
+        },
         changeSearchInput: (search) => dispatch(changeSearchInput(search)),
         changeSearchVisible: (visible) => dispatch(changeSearchVisible(visible)),
     }

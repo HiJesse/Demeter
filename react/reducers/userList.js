@@ -61,7 +61,7 @@ const initialUserListState = {
     pageNum: 1,
     pageSize: 10,
     pageLoading: false,
-    nicknameSearch: null,
+    accountSearch: null,
     searchInputVisible: false,
 };
 
@@ -86,7 +86,7 @@ export function userList(state = initialUserListState, action) {
         case ACTION_CHANGE_SEARCH_INPUT:
             newState = {
                 ... state,
-                nicknameSearch: action.data.nicknameSearch
+                accountSearch: action.data.accountSearch
             };
             break;
         case ACTION_CHANGE_SEARCH_INPUT_VISIBLE:
