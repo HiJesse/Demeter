@@ -19,3 +19,5 @@ export const URL_CREATE_USER = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'cre
 export const URL_RESET_PASSWORD = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'resetPassword';
 // 获取用户列表
 export const URL_FETCH_USER_LIST = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'fetchUserList';
+// 删除用户
+export const URL_DELETE_USER = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'deleteUser';

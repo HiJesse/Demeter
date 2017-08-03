@@ -2,7 +2,7 @@
 import {message} from "antd";
 import {
     ACTION_CHANGE_SEARCH_INPUT,
-    ACTION_CHANGE_SEARCH_INPUT_VISIBLE,
+    ACTION_CHANGE_SEARCH_INPUT_VISIBLE, ACTION_DELETE_USER,
     ACTION_FETCH_USER_LIST,
     ACTION_PAGE_LOADING
 } from "../constants/actionType";
@@ -51,11 +51,32 @@ function fetchUserList(state, action) {
         userList: userList,
         userCount: action.data.userCount,
         pageNum: action.data.pageNum,
-        pageLoading: false
+        pageLoading: false,
+        needRefreshData: false
     };
 }
 
-const initialUserListState = {
+/**
+ * 删除用户, 成功的话则刷新table数据
+ * @param state
+ * @param action
+ * @returns {*}
+ */
+function deleteUser(state, action) {
+    const succeed = action.status === RES_SUCCEED;
+    if (!succeed) {
+        message.error(action.msg);
+        return {
+            ...state
+        };
+    }
+    return {
+        ...state,
+        needRefreshData: true
+    };
+}
+
+    const initialUserListState = {
     userCount: 0,
     userList: [],
     pageNum: 1,
@@ -63,6 +84,7 @@ const initialUserListState = {
     pageLoading: false,
     accountSearch: null,
     searchInputVisible: false,
+    needRefreshData: false,
 };
 
 /**
@@ -94,6 +116,9 @@ export function userList(state = initialUserListState, action) {
                 ... state,
                 searchInputVisible: action.data.searchInputVisible
             };
+            break;
+        case ACTION_DELETE_USER:
+            newState = deleteUser(state, action.data);
             break;
         default:
     }

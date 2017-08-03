@@ -1,5 +1,5 @@
 import React from "react";
-import {changeSearchInput, changeSearchVisible, fetchUserList} from "../actions/userList";
+import {changeSearchInput, changeSearchVisible, deleteUser, fetchUserList} from "../actions/userList";
 import {connect} from "react-redux";
 import {Button, Icon, Input, Popconfirm, Table} from "antd";
 import TextEditableItemView, {TextEditableMode, TextEditableStatus} from "../components/TextEditableItemView";
@@ -16,6 +16,9 @@ class UserListView extends React.Component {
     }
 
     render() {
+        if (this.props.needRefreshData) {
+            this.props.fetchUserList(this.props.pageSize, this.props.pageNum, this.props.accountSearch)
+        }
         const data = this.props.userList;
         const dataSource = data.map((item) => {
             const obj = {};
@@ -130,7 +133,11 @@ class UserListView extends React.Component {
                         onConfirm={() => this.props.resetPassword(this.props.userList[index].account.value)}>
                         <a href="#">{'重置密码'}</a>
                     </Popconfirm>
-                    <a onClick={() => this._editItem(index)}>{'删除用户'}</a>
+                    <Popconfirm
+                        title="确认删除用户?"
+                        onConfirm={() => this.props.deleteUser(this.props.userList[index].account.value)}>
+                        <a href="#">{'删除用户'}</a>
+                    </Popconfirm>
                 </span>
             );
         }
@@ -215,6 +222,7 @@ class UserListView extends React.Component {
 }
 function select(state) {
     return {
+        needRefreshData: state.userList.needRefreshData, // 是否需要刷新数据, 有数据变化时为true
         userList: state.userList.userList, // 用户列表
         pageSize: state.userList.pageSize, // 分页容量
         pageNum: state.userList.pageNum, // 当前页码
@@ -233,6 +241,7 @@ function mapDispatchToProps(dispatch) {
         changeSearchInput: (search) => dispatch(changeSearchInput(search)),
         changeSearchVisible: (visible) => dispatch(changeSearchVisible(visible)),
         resetPassword: (account) => resetPassword(dispatch, account, localStorage.uId),
+        deleteUser: (account) => deleteUser(dispatch, localStorage.uId, account),
     }
 }
 

@@ -4,7 +4,7 @@ import UserModel from "../../models/user";
 import {
     RES_FAILED,
     RES_FAILED_COUNT_USER,
-    RES_FAILED_CREATE_USER,
+    RES_FAILED_CREATE_USER, RES_FAILED_DELETE_USER,
     RES_FAILED_FETCH_USER_LIST,
     RES_FAILED_MODIFY_PWD,
     RES_FAILED_NOT_ADMIN,
@@ -13,7 +13,7 @@ import {
     RES_FAILED_USER_ERR_PWD,
     RES_FAILED_USER_NONE,
     RES_MSG_COUNT_USER,
-    RES_MSG_CREATE_USER,
+    RES_MSG_CREATE_USER, RES_MSG_DELETE_USER,
     RES_MSG_FETCH_USER_LIST,
     RES_MSG_MODIFY_PWD,
     RES_MSG_NOT_ADMIN,
@@ -393,6 +393,41 @@ export function fetchUserList(req, res) {
         } else if (error.userCount === -1) {
             status = RES_FAILED_COUNT_USER;
             msg = RES_MSG_COUNT_USER;
+        }
+        res.json(buildResponse(status, {}, msg));
+    });
+}
+
+/**
+ * 删除用户
+ * @param req
+ * @param res
+ */
+export function deleteUser(req, res) {
+    const uId = req.body.uId;
+    const account = req.body.account;
+    const adminParams = {
+        _id: uId
+    };
+
+    let status = RES_FAILED_DELETE_USER;
+    let msg = RES_MSG_DELETE_USER;
+
+
+    isAdmin(adminParams).then(() => {
+        UserModel.remove({
+            account: account
+        }, (err) => {
+            if (!err) {
+                status = RES_SUCCEED;
+                msg = null;
+            }
+            res.json(buildResponse(status, {}, msg));
+        });
+    }).catch((error) => {
+        if (error.isAdmin === false) {
+            status = RES_FAILED_NOT_ADMIN;
+            msg = RES_MSG_NOT_ADMIN;
         }
         res.json(buildResponse(status, {}, msg));
     });

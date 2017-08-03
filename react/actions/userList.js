@@ -2,11 +2,11 @@
 import {actionAjax, AJAX_METHOD} from "../../util/ajax";
 import {
     ACTION_CHANGE_SEARCH_INPUT,
-    ACTION_CHANGE_SEARCH_INPUT_VISIBLE,
+    ACTION_CHANGE_SEARCH_INPUT_VISIBLE, ACTION_DELETE_USER,
     ACTION_FETCH_USER_LIST,
     ACTION_PAGE_LOADING
 } from "../constants/actionType";
-import {URL_FETCH_USER_LIST} from "../constants/url";
+import {URL_DELETE_USER, URL_FETCH_USER_LIST} from "../constants/url";
 
 /**
  * 是否显示列表加载loading
@@ -66,4 +66,17 @@ export function changeSearchVisible(visible) {
             searchInputVisible: visible
         }
     }
+}
+
+/**
+ * 删除用户
+ * @param dispatch
+ * @param uId
+ * @param account
+ */
+export function deleteUser(dispatch, uId, account) {
+    actionAjax(dispatch, ACTION_DELETE_USER, AJAX_METHOD.POST, URL_DELETE_USER, {
+        uId: uId,
+        account: account
+    });
 }

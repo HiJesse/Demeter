@@ -24,4 +24,7 @@ router.post('/user/resetPassword', user.resetPassword);
 // 获取用户列表
 router.get('/user/fetchUserList', user.fetchUserList);
 
+// 删除用户
+router.post('/user/deleteUser', user.deleteUser);
+
 export default router;

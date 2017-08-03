@@ -34,3 +34,6 @@ export const RES_MSG_FETCH_USER_LIST = '获取用户列表失败';
 // 查询用户总数失败
 export const RES_FAILED_COUNT_USER = 1007;
 export const RES_MSG_COUNT_USER = '查询用户总数失败';
+// 删除用户失败
+export const RES_FAILED_DELETE_USER = 1008;
+export const RES_MSG_DELETE_USER = '删除用户失败';
