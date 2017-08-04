@@ -2,8 +2,9 @@
 import {message} from "antd";
 import {
     ACTION_CHANGE_SEARCH_INPUT,
-    ACTION_CHANGE_SEARCH_INPUT_VISIBLE, ACTION_DELETE_USER,
-    ACTION_FETCH_USER_LIST,
+    ACTION_CHANGE_SEARCH_INPUT_VISIBLE,
+    ACTION_DELETE_USER,
+    ACTION_FETCH_USER_LIST_FULFILLED,
     ACTION_PAGE_LOADING
 } from "../constants/actionType";
 import {RES_SUCCEED} from "../../util/status";
@@ -76,7 +77,7 @@ function deleteUser(state, action) {
     };
 }
 
-    const initialUserListState = {
+const initialUserListState = {
     userCount: 0,
     userList: [],
     pageNum: 1,
@@ -96,7 +97,7 @@ function deleteUser(state, action) {
 export function userList(state = initialUserListState, action) {
     let newState = state;
     switch (action.type) {
-        case ACTION_FETCH_USER_LIST:
+        case ACTION_FETCH_USER_LIST_FULFILLED:
             newState = fetchUserList(state, action.data);
             break;
         case ACTION_PAGE_LOADING:

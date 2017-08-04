@@ -1,4 +1,6 @@
 import fetch from 'isomorphic-fetch'
+import 'rxjs';
+import {Observable} from "rxjs";
 import {RES_FAILED, RES_SUCCEED} from "./status";
 
 export const AJAX_METHOD = {
@@ -159,3 +161,50 @@ export function actionAjax(dispatch, actionType, method, url, params) {
         dispatch(action);
     });
 }
+
+/**
+ * 根据fetch promise对象构建出一个Observable
+ * @param fetch
+ * @returns {Observable<T>|*}
+ */
+const buildRequestObservable = fetch => {
+    const request = new Promise((resolve, reject) => {
+        fetch.then((response) => {
+            if (response.ok) {
+                response.json().then((data) => {
+                    if (data.status === RES_SUCCEED) {
+                        resolve(data);
+                    } else {
+                        reject(data)
+                    }
+                });
+            } else {
+                reject(buildErrorInfo(RES_FAILED, 'response code error'))
+            }
+        }).catch((e) => {
+            reject(buildErrorInfo(RES_FAILED, e.toString()));
+        });
+    });
+    return Observable.fromPromise(request);
+};
+
+/**
+ * get请求, 返回Observable promise 对象
+ * @param url
+ * @param params
+ * @returns {Observable.<T>|*}
+ */
+export const ajaxGet = (url, params) => {
+    if (!url.endsWith('?')) {
+        url += '?';
+    }
+
+    const header = {
+        method: AJAX_METHOD.GET,
+        headers: {
+            'Authorization': `Bearer ${localStorage.token}`
+        }
+    };
+
+    return buildRequestObservable(fetch(url + buildParams(params), header));
+};

@@ -7,7 +7,6 @@ import {homeStyle} from "./styles/home";
 import {userListView} from "./styles/userListView";
 import {resetPassword} from "../actions/user";
 
-
 // 用户管理-用户列表
 class UserListView extends React.Component {
 
@@ -236,7 +235,7 @@ function select(state) {
 function mapDispatchToProps(dispatch) {
     return {
         fetchUserList: (pageSize, pageNum, accountSearch) => {
-            fetchUserList(dispatch, localStorage.uId, pageSize, pageNum, accountSearch);
+            dispatch(fetchUserList(localStorage.uId, pageSize, pageNum, accountSearch));
         },
         changeSearchInput: (search) => dispatch(changeSearchInput(search)),
         changeSearchVisible: (visible) => dispatch(changeSearchVisible(visible)),
