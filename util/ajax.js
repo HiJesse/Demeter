@@ -208,3 +208,52 @@ export const ajaxGet = (url, params) => {
 
     return buildRequestObservable(fetch(url + buildParams(params), header));
 };
+
+/**
+ * post请求, 返回Observable promise 对象
+ * @param url
+ * @param params
+ * @returns {Observable.<T>|*}
+ */
+export const ajaxPost = (url, params) => {
+    const content = JSON.stringify(params);
+    const data = {
+        method: AJAX_METHOD.POST,
+        headers: {
+            'Authorization': `Bearer ${localStorage.token}`,
+            "Content-Type": "application/json",
+            "Content-Length": content.length.toString()
+        },
+        body: JSON.stringify(params)
+    };
+
+    return buildRequestObservable(fetch(url, data));
+};
+
+/**
+ * 提供给epic事件流使用, 根据参数构建request
+ * @param requestParams {actionType, method, url, params}
+ */
+export const ajaxRequest = requestParams => {
+    const {actionType, method, url, params} = requestParams;
+
+    let observable;
+    switch (method) {
+        case AJAX_METHOD.POST:
+            observable = ajaxPost(url, params);
+            break;
+        case AJAX_METHOD.GET:
+            observable = ajaxGet(url, params);
+            break;
+        default:
+            observable = ajaxGet(url, params);
+    }
+
+    return observable.map(data => ({
+        type: actionType,
+        data: data
+    })).catch(e => Observable.of({
+        type: actionType,
+        data: e
+    }));
+};

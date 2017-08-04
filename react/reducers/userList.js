@@ -3,7 +3,7 @@ import {message} from "antd";
 import {
     ACTION_CHANGE_SEARCH_INPUT,
     ACTION_CHANGE_SEARCH_INPUT_VISIBLE,
-    ACTION_DELETE_USER,
+    ACTION_DELETE_USER_FULFILLED,
     ACTION_FETCH_USER_LIST_FULFILLED,
     ACTION_PAGE_LOADING
 } from "../constants/actionType";
@@ -118,7 +118,7 @@ export function userList(state = initialUserListState, action) {
                 searchInputVisible: action.data.searchInputVisible
             };
             break;
-        case ACTION_DELETE_USER:
+        case ACTION_DELETE_USER_FULFILLED:
             newState = deleteUser(state, action.data);
             break;
         default:

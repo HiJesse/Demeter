@@ -63,13 +63,13 @@ export const changeSearchVisible = visible => ({
 
 /**
  * 删除用户
- * @param dispatch
  * @param uId
  * @param account
  */
-export function deleteUser(dispatch, uId, account) {
-    actionAjax(dispatch, ACTION_DELETE_USER, AJAX_METHOD.POST, URL_DELETE_USER, {
+export const deleteUser = (uId, account) => ({
+    type: ACTION_DELETE_USER,
+    data: {
         uId: uId,
         account: account
-    });
-}
+    }
+});

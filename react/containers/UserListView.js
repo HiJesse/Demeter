@@ -240,7 +240,7 @@ function mapDispatchToProps(dispatch) {
         changeSearchInput: (search) => dispatch(changeSearchInput(search)),
         changeSearchVisible: (visible) => dispatch(changeSearchVisible(visible)),
         resetPassword: (account) => resetPassword(dispatch, account, localStorage.uId),
-        deleteUser: (account) => deleteUser(dispatch, localStorage.uId, account),
+        deleteUser: (account) => dispatch(deleteUser(localStorage.uId, account)),
     }
 }
 
