@@ -1,7 +1,7 @@
 import React from "react";
 import {homeStyle} from "./styles/home";
 import ModifyPasswordView from "../components/ModifyPasswordView";
-import {modifyPasswordById} from "../actions/user";
+import {modifyPasswordByIdAction} from "../actions/user";
 import {connect} from "react-redux";
 
 // 个人中心-修改密码
@@ -22,7 +22,7 @@ class ModifyPasswordByIdView extends React.Component {
 
 function mapDispatchToProps(dispatch) {
     return {
-        modifyPassword: (pwd, newPwd) => modifyPasswordById(dispatch, localStorage.uId, pwd, newPwd),
+        modifyPassword: (pwd, newPwd) => dispatch(modifyPasswordByIdAction(localStorage.uId, pwd, newPwd)),
     }
 }
 

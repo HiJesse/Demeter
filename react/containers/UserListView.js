@@ -10,7 +10,7 @@ import {Button, Icon, Input, Popconfirm, Table} from "antd";
 import TextEditableItemView, {TextEditableMode, TextEditableStatus} from "../components/TextEditableItemView";
 import {homeStyle} from "./styles/home";
 import {userListView} from "./styles/userListView";
-import {resetPassword} from "../actions/user";
+import {resetPasswordAction} from "../actions/user";
 
 // 用户管理-用户列表
 class UserListView extends React.Component {
@@ -244,8 +244,8 @@ function mapDispatchToProps(dispatch) {
         },
         changeSearchInput: (search) => dispatch(changeSearchInputAction(search)),
         changeSearchVisible: (visible) => dispatch(changeSearchVisibleAction(visible)),
-        resetPassword: (account) => resetPassword(dispatch, account, localStorage.uId),
         deleteUser: (account) => dispatch(deleteUserAction(localStorage.uId, account)),
+        resetPassword: (account) => dispatch(resetPasswordAction(account, localStorage.uId)),
     }
 }
 

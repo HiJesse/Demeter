@@ -19,7 +19,7 @@ import {
     USER_MANAGER_RESET_PWD
 } from "../constants/menuConstant";
 import {collapseMenuAction, fillSelectedMenuValuesAction, fillSelectedPageContentAction} from "../actions/home";
-import {getUserInfo} from "../actions/user";
+import {getUserInfoAction} from "../actions/user";
 import {goToLoginPage} from "../../util/router";
 import UserCenter from "./UserCenterView";
 import ModifyPasswordByIdView from "./ModifyPasswordByIdView";
@@ -279,7 +279,7 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        getUserData: () => getUserInfo(dispatch, localStorage.uId),
+        getUserData: () => dispatch(getUserInfoAction(localStorage.uId)),
         collapseMenu: (isCollapsed) => dispatch(collapseMenuAction(isCollapsed)),
         fillSelectedMenuValues: (val) => dispatch(fillSelectedMenuValuesAction(val)),
         fillSelectedPageContent: (val) => dispatch(fillSelectedPageContentAction(val)),

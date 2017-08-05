@@ -2,7 +2,7 @@ import React from "react";
 import {loginStyle} from "./styles/login";
 import {pageStyle} from "./styles/page";
 import {connect} from "react-redux";
-import {login} from "../actions/user";
+import {login, loginAction} from "../actions/user";
 import {Button, Checkbox, Form, Icon, Input} from "antd";
 import FooterView from "../components/FooterView";
 import {MSG_ACCOUNT, MSG_PASSWORD} from "../constants/stringConstant";
@@ -113,7 +113,7 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        login: (account, pwd) => login(dispatch, account, pwd),
+        login: (account, pwd) => dispatch(loginAction(account, pwd)),
     }
 }
 

@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Form, Input} from "antd";
 import {homeStyle} from "./styles/home";
-import {getUserInfo, updateUserInfo} from "../actions/user";
+import {getUserInfoAction, updateUserInfoAction} from "../actions/user";
 import {connect} from "react-redux";
 import {MSG_NICKNAME} from "../constants/stringConstant";
 
@@ -83,8 +83,8 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        getUserData: () => getUserInfo(dispatch, localStorage.uId),
-        updateUserInfo: (nickName) => updateUserInfo(dispatch, localStorage.uId, nickName),
+        getUserData: () => dispatch(getUserInfoAction(localStorage.uId)),
+        updateUserInfo: (nickName) => dispatch(updateUserInfoAction(localStorage.uId, nickName)),
     }
 }
 

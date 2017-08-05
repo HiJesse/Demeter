@@ -8,106 +8,97 @@ import {
     ACTION_RESET_PASSWORD,
     ACTION_UPDATE_USER_INFO
 } from "../constants/actionType";
-import {actionAjax, AJAX_METHOD} from "../../util/ajax";
-import {
-    URL_CREATE_USER,
-    URL_GET_USER_INFO,
-    URL_LOGIN,
-    URL_MODIFY_PWD,
-    URL_RESET_PASSWORD,
-    URL_UPDATE_USER_INFO
-} from "../constants/url";
 import {md5} from "../../util/encrypt";
 
 /**
  * 登录action
- * @param dispatch
  * @param account
  * @param pwd
  */
-export function login(dispatch, account, pwd) {
-    actionAjax(dispatch, ACTION_LOGIN, AJAX_METHOD.POST, URL_LOGIN, {
-        "account": account,
-        "password": md5(pwd)
-    });
-}
+export const loginAction = (account, pwd) => ({
+    type: ACTION_LOGIN,
+    data: {
+        account: account,
+        password: md5(pwd)
+    }
+});
 
 /**
  * 修改密码action
- * @param dispatch
  * @param account
  * @param pwd
  * @param newPwd
  */
-export function modifyPassword(dispatch, account, pwd, newPwd) {
-    actionAjax(dispatch, ACTION_MODIFY_PASSWORD, AJAX_METHOD.POST, URL_MODIFY_PWD, {
+export const modifyPasswordAction = (account, pwd, newPwd) => ({
+    type: ACTION_MODIFY_PASSWORD,
+    data: {
         account: account,
         password: md5(pwd),
         newPassword: md5(newPwd)
-    });
-}
+    }
+});
 
 /**
  * 根据uId获取用户信息
- * @param dispatch
  * @param uId
  */
-export function getUserInfo(dispatch, uId) {
-    actionAjax(dispatch, ACTION_GET_USER_INFO, AJAX_METHOD.GET, URL_GET_USER_INFO, {
+export const getUserInfoAction = uId => ({
+    type: ACTION_GET_USER_INFO,
+    data: {
         uId: uId,
-    });
-}
+    }
+});
 
 /**
  * 根据uId和老密码修改新密码
- * @param dispatch
  * @param uId
  * @param pwd
  * @param newPwd
  */
-export function modifyPasswordById(dispatch, uId, pwd, newPwd) {
-    actionAjax(dispatch, ACTION_MODIFY_PASSWORD_UID, AJAX_METHOD.POST, URL_MODIFY_PWD, {
+export const modifyPasswordByIdAction = (uId, pwd, newPwd) => ({
+    type: ACTION_MODIFY_PASSWORD_UID,
+    data: {
         uId: uId,
         password: md5(pwd),
         newPassword: md5(newPwd)
-    });
-}
+    }
+});
 
 /**
  * 根据uId更新用户基本信息
- * @param dispatch
  * @param uId
  * @param nickName
  */
-export function updateUserInfo(dispatch, uId, nickName) {
-    actionAjax(dispatch, ACTION_UPDATE_USER_INFO, AJAX_METHOD.POST, URL_UPDATE_USER_INFO, {
+export const updateUserInfoAction = (uId, nickName) => ({
+    type: ACTION_UPDATE_USER_INFO,
+    data: {
         uId: uId,
         nickName: nickName
-    });
-}
+    }
+});
 
 /**
  * 创建新用户
- * @param dispatch
  * @param account
  * @param uId
  */
-export function createUser(dispatch, account, uId) {
-    actionAjax(dispatch, ACTION_CREATE_USER, AJAX_METHOD.POST, URL_CREATE_USER, {
+export const createUserAction = (account, uId) => ({
+    type: ACTION_CREATE_USER,
+    data: {
         account: account,
         uId: uId
-    });
-}
+    }
+});
 
 /**
  * 重置用户密码
- * @param dispatch
  * @param account
  * @param uId
  */
-export function resetPassword(dispatch, account, uId) {
-    actionAjax(dispatch, ACTION_RESET_PASSWORD, AJAX_METHOD.POST, URL_RESET_PASSWORD, {
+export const resetPasswordAction = (account, uId) =>({
+    type: ACTION_RESET_PASSWORD,
+    data: {
         account: account,
         uId: uId
-    });
-}
+    }
+});

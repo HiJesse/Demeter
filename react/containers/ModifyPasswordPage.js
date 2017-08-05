@@ -2,7 +2,7 @@ import React from "react";
 import {connect} from "react-redux";
 import FooterView from "../components/FooterView";
 import {pageStyle} from "./styles/page";
-import {modifyPassword} from "../actions/user";
+import {modifyPasswordAction} from "../actions/user";
 import ModifyPasswordView from "../components/ModifyPasswordView";
 import {modifyStyle} from "./styles/modifyPassword";
 import {goToLoginPage} from "../../util/router";
@@ -53,7 +53,7 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        modifyPassword: (account, pwd, newPwd) => modifyPassword(dispatch, account, pwd, newPwd),
+        modifyPassword: (account, pwd, newPwd) => dispatch(modifyPasswordAction(account, pwd, newPwd)),
     }
 }
 

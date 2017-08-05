@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Form, Input} from "antd";
 import {homeStyle} from "./styles/home";
-import {createUser} from "../actions/user";
+import {createUserAction} from "../actions/user";
 import {connect} from "react-redux";
 import {MSG_ACCOUNT} from "../constants/stringConstant";
 
@@ -76,7 +76,7 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        createUser: (account) => createUser(dispatch, account, localStorage.uId),
+        createUser: (account) => dispatch(createUserAction(account, localStorage.uId)),
     }
 }
 
