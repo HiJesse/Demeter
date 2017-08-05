@@ -1,5 +1,10 @@
 import React from "react";
-import {changeSearchInput, changeSearchVisible, deleteUser, fetchUserList} from "../actions/userList";
+import {
+    changeSearchInputAction,
+    changeSearchVisibleAction,
+    deleteUserAction,
+    fetchUserListAction
+} from "../actions/userList";
 import {connect} from "react-redux";
 import {Button, Icon, Input, Popconfirm, Table} from "antd";
 import TextEditableItemView, {TextEditableMode, TextEditableStatus} from "../components/TextEditableItemView";
@@ -235,12 +240,12 @@ function select(state) {
 function mapDispatchToProps(dispatch) {
     return {
         fetchUserList: (pageSize, pageNum, accountSearch) => {
-            dispatch(fetchUserList(localStorage.uId, pageSize, pageNum, accountSearch));
+            dispatch(fetchUserListAction(localStorage.uId, pageSize, pageNum, accountSearch));
         },
-        changeSearchInput: (search) => dispatch(changeSearchInput(search)),
-        changeSearchVisible: (visible) => dispatch(changeSearchVisible(visible)),
+        changeSearchInput: (search) => dispatch(changeSearchInputAction(search)),
+        changeSearchVisible: (visible) => dispatch(changeSearchVisibleAction(visible)),
         resetPassword: (account) => resetPassword(dispatch, account, localStorage.uId),
-        deleteUser: (account) => dispatch(deleteUser(localStorage.uId, account)),
+        deleteUser: (account) => dispatch(deleteUserAction(localStorage.uId, account)),
     }
 }
 

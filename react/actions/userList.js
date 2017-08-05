@@ -1,5 +1,4 @@
 // user list actions
-import {actionAjax, AJAX_METHOD} from "../../util/ajax";
 import {
     ACTION_CHANGE_SEARCH_INPUT,
     ACTION_CHANGE_SEARCH_INPUT_VISIBLE,
@@ -7,13 +6,12 @@ import {
     ACTION_FETCH_USER_LIST,
     ACTION_PAGE_LOADING
 } from "../constants/actionType";
-import {URL_DELETE_USER} from "../constants/url";
 
 /**
  * 是否显示列表加载loading
  * @param pageLoading 是否显示菊花
  */
-export const pageLoading = pageLoading => ({
+export const pageLoadingAction = pageLoading => ({
     type: ACTION_PAGE_LOADING,
     data: {
         pageLoading: pageLoading
@@ -27,7 +25,7 @@ export const pageLoading = pageLoading => ({
  * @param pageNum 获取第几页数据
  * @param accountSearch 根据账号模糊查询
  */
-export const fetchUserList = (uId, pageSize, pageNum, accountSearch) => ({
+export const fetchUserListAction = (uId, pageSize, pageNum, accountSearch) => ({
     type: ACTION_FETCH_USER_LIST,
     data: {
         uId: uId,
@@ -42,7 +40,7 @@ export const fetchUserList = (uId, pageSize, pageNum, accountSearch) => ({
  * @param accountSearch
  * @returns {{type, data: {searchText: *}}}
  */
-export const changeSearchInput = accountSearch => ({
+export const changeSearchInputAction = accountSearch => ({
     type: ACTION_CHANGE_SEARCH_INPUT,
     data: {
         accountSearch: accountSearch
@@ -54,7 +52,7 @@ export const changeSearchInput = accountSearch => ({
  * @param visible
  * @returns {{type, data: {searchInputVisible: *}}}
  */
-export const changeSearchVisible = visible => ({
+export const changeSearchVisibleAction = visible => ({
     type: ACTION_CHANGE_SEARCH_INPUT_VISIBLE,
     data: {
         searchInputVisible: visible
@@ -66,7 +64,7 @@ export const changeSearchVisible = visible => ({
  * @param uId
  * @param account
  */
-export const deleteUser = (uId, account) => ({
+export const deleteUserAction = (uId, account) => ({
     type: ACTION_DELETE_USER,
     data: {
         uId: uId,

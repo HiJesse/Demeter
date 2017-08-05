@@ -15,7 +15,7 @@ import {RES_SUCCEED} from "../../util/status";
  * @param state
  * @param action
  */
-function fetchUserList(state, action) {
+function fetchUserListReducer(state, action) {
     const succeed = action.status === RES_SUCCEED;
     if (!succeed) {
         message.error(action.msg);
@@ -63,7 +63,7 @@ function fetchUserList(state, action) {
  * @param action
  * @returns {*}
  */
-function deleteUser(state, action) {
+function deleteUserReducer(state, action) {
     const succeed = action.status === RES_SUCCEED;
     if (!succeed) {
         message.error(action.msg);
@@ -98,7 +98,7 @@ export function userList(state = initialUserListState, action) {
     let newState = state;
     switch (action.type) {
         case ACTION_FETCH_USER_LIST_FULFILLED:
-            newState = fetchUserList(state, action.data);
+            newState = fetchUserListReducer(state, action.data);
             break;
         case ACTION_PAGE_LOADING:
             newState = {
@@ -119,7 +119,7 @@ export function userList(state = initialUserListState, action) {
             };
             break;
         case ACTION_DELETE_USER_FULFILLED:
-            newState = deleteUser(state, action.data);
+            newState = deleteUserReducer(state, action.data);
             break;
         default:
     }

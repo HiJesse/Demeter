@@ -26,7 +26,7 @@ export const fetchUserListEpic = action$ =>
  * 删除用户 epic
  * @param action$
  */
-export const deleteUser = action$ =>
+export const deleteUserEpic = action$ =>
     action$.ofType(ACTION_DELETE_USER)
         .mergeMap(action => ajaxRequest({
             actionType: ACTION_DELETE_USER_FULFILLED,
@@ -40,5 +40,5 @@ export const deleteUser = action$ =>
  */
 export const userListEpics = combineEpics(
     fetchUserListEpic,
-    deleteUser
+    deleteUserEpic
 );
