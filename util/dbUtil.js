@@ -1,6 +1,7 @@
 // db util
 import Mongoose from "mongoose";
 import UserModel from "../models/user";
+import PlatformModel from "../models/platform";
 import * as Config from "../config";
 import {md5} from "./encrypt";
 
@@ -8,8 +9,8 @@ import {md5} from "./encrypt";
  * 判断默认的管理员账号是否存在
  * @returns {Promise}
  */
-function isDefaultAdminExist() {
-    return new Promise((resolve, reject) => {
+const isDefaultAdminExist = () =>
+    new Promise((resolve, reject) => {
         UserModel.find({
             account: 'admin'
         }, (err, data) => {
@@ -20,12 +21,11 @@ function isDefaultAdminExist() {
             }
         });
     });
-}
 
 /**
  * 初始化默认管理员账号
  */
-function initAdminAccount() {
+const initAdminAccount = () => {
     isDefaultAdminExist().then(() => {
         console.log('default admin account is exit!');
     }).catch((error) => {
@@ -40,17 +40,53 @@ function initAdminAccount() {
             console.log(`create default admin account ${error ? 'failed' : 'succeed'}!`);
         });
     })
-}
+};
+
+/**
+ * 是否已经存在初始化平台相关信息
+ */
+const isDefaultPlatformExist = () =>
+    new Promise((resolve, reject) => {
+        PlatformModel.find({}, (err, data) => {
+            if (data.length === 2) {
+                resolve({isDefaultPlatformExit: true});
+            } else {
+                reject({isDefaultPlatformExit: false})
+            }
+        });
+    });
+
+const createPlatform = (id, des) => {
+    PlatformModel.create({
+        platformId: id,
+        des: des
+    }, (error) => {
+        console.log(`create default platform ${des} ${error ? 'failed' : 'succeed'}!`);
+    });
+};
+
+/**
+ * 初始化平台相关信息
+ */
+const initDefaultPlatform = () => {
+    isDefaultPlatformExist().then(() => {
+        console.log('default platform info is exit!');
+    }).catch(() => {
+        createPlatform(0, 'Android');
+        createPlatform(1, 'IOS');
+    })
+};
 
 /**
  * 连接DB, 并监听成功和失败
  */
 export function connectDB() {
-    Mongoose.connect(Config.env.DATABASE, {useMongoClient:true});
+    Mongoose.connect(Config.env.DATABASE, {useMongoClient: true});
 
     Mongoose.connection.on("open", function () {
         console.info('Open MongoDB ' + Config.env.DATABASE + ' Succeed!');
         initAdminAccount();
+        initDefaultPlatform();
     });
 
     Mongoose.connection.on('error', function () {
