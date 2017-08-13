@@ -19,19 +19,22 @@ export const MENU_USER_CENTER = {
     }]
 };
 
+export const PROJECT_MANAGER_LIST = 'project_manager_list';
+export const PROJECT_MANAGER_CREATE = 'project_manager_create';
+export const PROJECT_MANAGER_DELETE = 'project_manager_delete';
 // 菜单项目管理
 export const MENU_PROJECT_MANAGER = {
     key: 'project_manager',
     value: '项目管理',
     icon: 'appstore-o',
     MENU_SUB: [{
-        key: 'project_manager_list',
+        key: PROJECT_MANAGER_LIST,
         value: '项目列表',
     }, {
-        key: 'project_manager_create',
+        key: PROJECT_MANAGER_CREATE,
         value: '新建项目',
     }, {
-        key: 'project_manager_delete',
+        key: PROJECT_MANAGER_DELETE,
         value: '删除项目',
     }]
 };

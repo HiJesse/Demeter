@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+// express server
 
 /**
  * Module dependencies.
@@ -6,12 +6,13 @@
 import app from '../server';
 const debug = require('debug')('demeter:server');
 const http = require('http');
+import * as Config from "../config";
 
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(Config.env.SERVER_PORT || '3000');
 app.set('port', port);
 
 /**
