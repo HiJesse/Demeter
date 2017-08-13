@@ -94,7 +94,7 @@ const initialUserListState = {
  * @param action
  * @returns {*}
  */
-export function userList(state = initialUserListState, action) {
+export function userManager(state = initialUserListState, action) {
     let newState = state;
     switch (action.type) {
         case ACTION_FETCH_USER_LIST_FULFILLED:

@@ -3,8 +3,8 @@ import {
     changeSearchInputAction,
     changeSearchVisibleAction,
     deleteUserAction,
-    fetchUserListAction
-} from "../actions/userList";
+    fetchUserListAction, pageLoadingAction
+} from "../actions/userManager";
 import {connect} from "react-redux";
 import {Button, Icon, Input, Popconfirm, Table} from "antd";
 import TextEditableItemView, {TextEditableMode, TextEditableStatus} from "../components/TextEditableItemView";
@@ -16,11 +16,13 @@ import {resetPasswordAction} from "../actions/user";
 class UserListView extends React.Component {
 
     componentDidMount() {
+        this.props.pageLoadingVisible(true);
         this.props.fetchUserList(this.props.pageSize, this.props.pageNum, this.props.accountSearch);
     }
 
     render() {
         if (this.props.needRefreshData) {
+            this.props.pageLoadingVisible(true);
             this.props.fetchUserList(this.props.pageSize, this.props.pageNum, this.props.accountSearch)
         }
         const data = this.props.userList;
@@ -48,6 +50,7 @@ class UserListView extends React.Component {
                         current: this.props.pageNum
                     }}
                     onChange={(pagination) => {
+                        this.props.pageLoadingVisible(true);
                         this.props.fetchUserList(pagination.pageSize, pagination.current, this.props.accountSearch);
                     }}/>
             </div>
@@ -221,24 +224,27 @@ class UserListView extends React.Component {
      */
     _onSearch() {
         this.props.changeSearchVisible(false);
+        this.props.pageLoadingVisible(true);
         this.props.fetchUserList(this.props.pageSize, 1, this.props.accountSearch);
     }
 }
 function select(state) {
+    const userManager = state.userManager;
     return {
-        needRefreshData: state.userList.needRefreshData, // 是否需要刷新数据, 有数据变化时为true
-        userList: state.userList.userList, // 用户列表
-        pageSize: state.userList.pageSize, // 分页容量
-        pageNum: state.userList.pageNum, // 当前页码
-        userCount: state.userList.userCount, // 用户总数
-        pageLoading: state.userList.pageLoading, // 分页loading
-        accountSearch: state.userList.accountSearch, // 搜索账号输入
-        searchInputVisible: state.userList.searchInputVisible, //搜索框是否可见
+        needRefreshData: userManager.needRefreshData, // 是否需要刷新数据, 有数据变化时为true
+        userList: userManager.userList, // 用户列表
+        pageSize: userManager.pageSize, // 分页容量
+        pageNum: userManager.pageNum, // 当前页码
+        userCount: userManager.userCount, // 用户总数
+        pageLoading: userManager.pageLoading, // 分页loading
+        accountSearch: userManager.accountSearch, // 搜索账号输入
+        searchInputVisible: userManager.searchInputVisible, //搜索框是否可见
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
+        pageLoadingVisible: isLoading => dispatch(pageLoadingAction(isLoading)),
         fetchUserList: (pageSize, pageNum, accountSearch) => {
             dispatch(fetchUserListAction(localStorage.uId, pageSize, pageNum, accountSearch));
         },

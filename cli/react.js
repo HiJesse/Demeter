@@ -1,6 +1,4 @@
 // react server
-import * as RootConfig from "../config";
-
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const Config = require('../webpack.config');
@@ -10,7 +8,7 @@ new WebpackDevServer(webpack(Config), {
     hot: true,
     noInfo: false,
     historyApiFallback: true
-}).listen(RootConfig.env.REACT_PORT, RootConfig.env.REACT_IP, function (err, result) {
+}).listen(3001, '127.0.0.1', function (err, result) {
     if (err) {
         console.log(err);
     }
