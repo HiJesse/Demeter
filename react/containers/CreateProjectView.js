@@ -3,7 +3,7 @@ import {Button, Form, Icon, Input, Modal, Upload} from "antd";
 import {homeStyle} from "./styles/home";
 import {connect} from "react-redux";
 import {MSG_PROJECT_DES, MSG_PROJECT_NAME} from "../constants/stringConstant";
-import {showLogoPreviewAction, uploadLogoAction} from "../actions/projectManager";
+import {createProject, getLogoFile, showLogoPreviewAction, uploadLogoAction} from "../actions/projectManager";
 
 const FormItem = Form.Item;
 const {TextArea} = Input;
@@ -33,11 +33,12 @@ class CreateProjectView extends React.Component {
                         {getFieldDecorator('projectLogo')(
                             <div>
                                 <Upload
-                                    action="//jsonplaceholder.typicode.com/posts/"
+                                    action={''}
                                     listType="picture-card"
                                     fileList={logo}
                                     onPreview={file => this.props.showLogoPreview(true, file)}
                                     onChange={this.onLogoChange}
+                                    beforeUpload={file => this.props.getLogoFile(file)}
                                 >
                                     {logo.length >= 1 ? null : uploadButton}
                                 </Upload>
@@ -95,7 +96,7 @@ class CreateProjectView extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                this.props.createUser(values.account);
+                this.props.createProject(values.projectName, values.projectDes, this.props.logoFile);
             }
         });
     }
@@ -108,6 +109,7 @@ function select(state) {
         previewVisible: state.projectManager.previewVisible,
         previewImage: state.projectManager.previewImage,
         logo: state.projectManager.logo,
+        logoFile: state.projectManager.logoFile
     };
 }
 
@@ -115,6 +117,9 @@ function mapDispatchToProps(dispatch) {
     return {
         showLogoPreview: (previewVisible, file) => dispatch(showLogoPreviewAction(previewVisible, file)),
         uploadLogo: file => dispatch(uploadLogoAction(file)),
+        getLogoFile: file => dispatch(getLogoFile(file)),
+        createProject: (projectName, projectDes, projectLogo) =>
+            dispatch(createProject(projectName, projectDes, projectLogo)),
     }
 }
 

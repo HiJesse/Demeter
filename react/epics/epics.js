@@ -1,10 +1,10 @@
 // epics
 import {combineEpics} from "redux-observable";
-import {userListEpics} from "./userList";
+import {userManagerEpics} from "./userManager";
 import {userEpics} from "./user";
 
 
 export const epics = combineEpics(
     userEpics,
-    userListEpics
+    userManagerEpics
 );

@@ -38,7 +38,7 @@ export const deleteUserEpic = action$ =>
 /**
  * user list相关 epic方法汇总
  */
-export const userListEpics = combineEpics(
+export const userManagerEpics = combineEpics(
     fetchUserListEpic,
     deleteUserEpic
 );

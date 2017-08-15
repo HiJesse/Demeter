@@ -1,5 +1,10 @@
 //project manager reducer
-import {ACTION_SHOW_LOGO_PREVIEW, ACTION_UPLOAD_LOGO} from "../constants/actionType";
+import {
+    ACTION_CREATE_PROJECT,
+    ACTION_GET_LOGO_FILE,
+    ACTION_SHOW_LOGO_PREVIEW,
+    ACTION_UPLOAD_LOGO
+} from "../constants/actionType";
 import * as Config from "../../config";
 
 /**
@@ -25,6 +30,7 @@ const showLogoPreviewReducer = (state, action) => {
 const initialProjectManagerState = {
     previewVisible: false,
     previewImage: '',
+    logoFile: null,
     logo: [{
         uid: -1,
         name: 'xxx.png',
@@ -50,6 +56,15 @@ export function projectManager(state = initialProjectManagerState, action) {
                 ... state,
                 logo: action.data.file
             });
+            break;
+        case ACTION_GET_LOGO_FILE:
+            newState = ({
+                ... state,
+                logoFile: action.data.file
+            });
+            break;
+        case ACTION_CREATE_PROJECT:
+            console.log('jesse', action.data);
             break;
         default:
     }
