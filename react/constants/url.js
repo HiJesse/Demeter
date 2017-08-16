@@ -2,7 +2,8 @@ const URL_DOMAIN = 'http://localhost:3000/';
 const URL_VERSION = 'api/v1/';
 
 const URL_MODULE = {
-    USER: 'user/'
+    USER: 'user/',
+    PROJECT: 'project/'
 };
 
 // 登录
@@ -21,3 +22,6 @@ export const URL_RESET_PASSWORD = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + '
 export const URL_FETCH_USER_LIST = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'fetchUserList';
 // 删除用户
 export const URL_DELETE_USER = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'deleteUser';
+
+// 创建项目
+export const URL_CREATE_PROJECT = URL_DOMAIN + URL_VERSION + URL_MODULE.PROJECT + 'createProject';

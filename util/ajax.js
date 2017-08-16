@@ -6,7 +6,8 @@ import {RES_FAILED, RES_SUCCEED} from "./status";
 
 export const AJAX_METHOD = {
     GET: 'GET',
-    POST: 'POST'
+    POST: 'POST',
+    POST_FORM: 'POST_FORM'
 };
 
 /**
@@ -101,7 +102,7 @@ export const ajaxGet = (url, params) => {
 };
 
 /**
- * post请求, 返回Observable promise 对象
+ * post请求json内容, 返回Observable promise 对象
  * @param url
  * @param params
  * @returns {Observable.<T>|*}
@@ -115,7 +116,30 @@ export const ajaxPost = (url, params) => {
             "Content-Type": "application/json",
             "Content-Length": content.length.toString()
         },
-        body: JSON.stringify(params)
+        body: content
+    };
+
+    return buildRequestObservable(fetch(url, data));
+};
+
+/**
+ * post请求form内容, 返回Observable promise 对象
+ * @param url
+ * @param params
+ * @returns {Observable.<T>|*}
+ */
+export const ajaxPostForm = (url, params) => {
+    const formData = new FormData();
+    for (const key in params) {
+        formData.append(key, params[key]);
+    }
+    const data = {
+        method: AJAX_METHOD.POST,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+            'Authorization': `Bearer ${localStorage.token}`,
+        },
+        body: formData
     };
 
     return buildRequestObservable(fetch(url, data));
@@ -135,6 +159,9 @@ export const ajaxRequest = requestParams => {
             break;
         case AJAX_METHOD.GET:
             observable = ajaxGet(url, params);
+            break;
+        case AJAX_METHOD.POST_FORM:
+            observable = ajaxPostForm(url, params);
             break;
         default:
             observable = ajaxGet(url, params);

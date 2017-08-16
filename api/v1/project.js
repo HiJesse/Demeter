@@ -5,5 +5,5 @@ import {
 } from "../../util/status";
 
 export const createProject = (req, res) => {
-    console.log()
+    console.log(req.body)
 };

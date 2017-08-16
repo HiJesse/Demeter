@@ -1,5 +1,6 @@
 import express from 'express';
 import * as user from "./v1/user";
+import * as project from "./v1/project";
 
 const router = express.Router();
 
@@ -26,5 +27,8 @@ router.get('/user/fetchUserList', user.fetchUserList);
 
 // 删除用户
 router.post('/user/deleteUser', user.deleteUser);
+
+// 新建项目
+router.post('/project/createProject', project.createProject);
 
 export default router;
