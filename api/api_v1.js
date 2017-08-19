@@ -1,6 +1,7 @@
 import express from 'express';
 import * as user from "./v1/user";
 import * as project from "./v1/project";
+import {ProjectLogoMulter} from "../util/multer";
 
 const router = express.Router();
 
@@ -29,6 +30,6 @@ router.get('/user/fetchUserList', user.fetchUserList);
 router.post('/user/deleteUser', user.deleteUser);
 
 // 新建项目
-router.post('/project/createProject', project.createProject);
+router.post('/project/createProject', ProjectLogoMulter.single('projectLogo'), project.createProject);
 
 export default router;

@@ -16,3 +16,6 @@ yarn-error.log*
 
 # idea
 .idea/
+
+# upload
+public/upload

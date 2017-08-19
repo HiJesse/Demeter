@@ -7,7 +7,8 @@ import {RES_FAILED, RES_SUCCEED} from "./status";
 export const AJAX_METHOD = {
     GET: 'GET',
     POST: 'POST',
-    POST_FORM: 'POST_FORM'
+    POST_FORM: 'POST_FORM',
+    POST_MULTI_FORM: 'POST_MULTI_FORM',
 };
 
 /**
@@ -124,21 +125,26 @@ export const ajaxPost = (url, params) => {
 
 /**
  * post请求form内容, 返回Observable promise 对象
+ * @param method 根据method决定Content type
  * @param url
  * @param params
  * @returns {Observable.<T>|*}
  */
-export const ajaxPostForm = (url, params) => {
+export const ajaxPostForm = (method, url, params) => {
     const formData = new FormData();
+    let headers = {
+        'Authorization': `Bearer ${localStorage.token}`
+    };
+
+    if (method === AJAX_METHOD.POST_FORM) {
+        headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+    }
     for (const key in params) {
         formData.append(key, params[key]);
     }
     const data = {
         method: AJAX_METHOD.POST,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-            'Authorization': `Bearer ${localStorage.token}`,
-        },
+        headers: headers,
         body: formData
     };
 
@@ -161,7 +167,10 @@ export const ajaxRequest = requestParams => {
             observable = ajaxGet(url, params);
             break;
         case AJAX_METHOD.POST_FORM:
-            observable = ajaxPostForm(url, params);
+            observable = ajaxPostForm(AJAX_METHOD.POST_FORM, url, params);
+            break;
+        case AJAX_METHOD.POST_MULTI_FORM:
+            observable = ajaxPostForm(AJAX_METHOD.POST_MULTI_FORM, url, params);
             break;
         default:
             observable = ajaxGet(url, params);

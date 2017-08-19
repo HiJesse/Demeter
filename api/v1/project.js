@@ -5,5 +5,7 @@ import {
 } from "../../util/status";
 
 export const createProject = (req, res) => {
-    console.log(req.body)
+    console.log(req.file);
+    console.log(req.body.projectName);
+    console.log(req.body.projectDes);
 };

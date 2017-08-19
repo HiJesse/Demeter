@@ -12,7 +12,7 @@ export const createProjectEpic = action$ =>
     action$.ofType(ACTION_CREATE_PROJECT)
         .mergeMap(action => ajaxRequest({
             actionType: ACTION_CREATE_PROJECT_FULFILLED,
-            method: AJAX_METHOD.POST_FORM,
+            method: AJAX_METHOD.POST_MULTI_FORM,
             url: URL_CREATE_PROJECT,
             params: action.data
         }));
