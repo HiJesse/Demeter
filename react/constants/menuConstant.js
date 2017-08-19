@@ -21,7 +21,6 @@ export const MENU_USER_CENTER = {
 
 export const PROJECT_MANAGER_LIST = 'project_manager_list';
 export const PROJECT_MANAGER_CREATE = 'project_manager_create';
-export const PROJECT_MANAGER_DELETE = 'project_manager_delete';
 // 菜单项目管理
 export const MENU_PROJECT_MANAGER = {
     key: 'project_manager',
@@ -33,9 +32,6 @@ export const MENU_PROJECT_MANAGER = {
     }, {
         key: PROJECT_MANAGER_CREATE,
         value: '新建项目',
-    }, {
-        key: PROJECT_MANAGER_DELETE,
-        value: '删除项目',
     }]
 };
 

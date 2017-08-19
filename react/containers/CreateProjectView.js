@@ -39,6 +39,10 @@ class CreateProjectView extends React.Component {
                                     onPreview={file => this.props.showLogoPreview(true, file)}
                                     onChange={this.onLogoChange}
                                     beforeUpload={file => this.props.getLogoFile(file)}
+                                    onRemove={() => {
+                                        this.props.getLogoFile(undefined);
+                                        return true;
+                                    }}
                                 >
                                     {logo.length >= 1 ? null : uploadButton}
                                 </Upload>
