@@ -37,3 +37,13 @@ export const RES_MSG_COUNT_USER = '查询用户总数失败';
 // 删除用户失败
 export const RES_FAILED_DELETE_USER = 1008;
 export const RES_MSG_DELETE_USER = '删除用户失败';
+
+// 创建项目失败
+export const RES_FAILED_CREATE_PROJECT = 2000;
+export const RES_MSG_CREATE_PROJECT = '创建项目失败';
+export const RES_FAILED_PROJECT_NOT_EXIST = 2001;
+export const RES_MSG_PROJECT_NOT_EXIST = '项目不存在';
+export const RES_FAILED_PLATFORM_NOT_EXIST = 2002;
+export const RES_MSG_PLATFORM_NOT_EXIST = '平台不存在';
+export const RES_FAILED_CREATE_PROJECT_PLATFORMS = 2003;
+export const RES_MSG_CREATE_PROJECT_PLATFORMS = '创建项目平台信息失败';
