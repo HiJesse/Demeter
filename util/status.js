@@ -47,3 +47,7 @@ export const RES_FAILED_PLATFORM_NOT_EXIST = 2002;
 export const RES_MSG_PLATFORM_NOT_EXIST = '平台不存在';
 export const RES_FAILED_CREATE_PROJECT_PLATFORMS = 2003;
 export const RES_MSG_CREATE_PROJECT_PLATFORMS = '创建项目平台信息失败';
+export const RES_FAILED_DELETE_PROJECT = 2004;
+export const RES_MSG_DELETE_PROJECT = '删除项目失败';
+export const RES_FAILED_DELETE_PROJECT_PLATFORMS = 2005;
+export const RES_MSG_DELETE_PROJECT_PLATFORMS = '删除项目平台信息失败';

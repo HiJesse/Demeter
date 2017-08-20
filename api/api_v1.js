@@ -32,4 +32,7 @@ router.post('/user/deleteUser', user.deleteUser);
 // 新建项目
 router.post('/project/createProject', ProjectLogoMulter.single('projectLogo'), project.createProject);
 
+// 删除项目
+router.post('/project/deleteProject', project.deleteProject);
+
 export default router;

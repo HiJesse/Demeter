@@ -91,7 +91,7 @@ function isUserExist(params) {
  * @param params
  * @returns {Promise}
  */
-function isAdmin(params) {
+export function isAdmin(params) {
     return new Promise((resolve, reject) => {
         UserModel.find(params, (err, data) => {
             if (!isArrayEmpty(data) && data.length === 1 && data[0].isAdmin) {
