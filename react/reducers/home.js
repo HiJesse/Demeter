@@ -20,13 +20,13 @@ export function home(state = initialHomeState, action) {
     switch (action.type) {
         case ACTION_COLLAPSE_MENU:
             newState = {
-                ... state,
+                ...state,
                 isCollapsed: action.data.isCollapsed
             };
             break;
         case ACTION_FILL_MENU_VALUES:
             newState = {
-                ... state,
+                ...state,
                 menuValue: action.data.menuValue,
                 menuValueIcon: action.data.menuValueIcon,
                 subMenuValue: action.data.subMenuValue
@@ -34,7 +34,7 @@ export function home(state = initialHomeState, action) {
             break;
         case ACTION_FILL_PAGE_CONTENT:
             newState = {
-                ... state,
+                ...state,
                 pageContent: action.data.pageContent
             };
             break;

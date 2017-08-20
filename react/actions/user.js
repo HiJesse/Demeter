@@ -95,7 +95,7 @@ export const createUserAction = (account, uId) => ({
  * @param account
  * @param uId
  */
-export const resetPasswordAction = (account, uId) =>({
+export const resetPasswordAction = (account, uId) => ({
     type: ACTION_RESET_PASSWORD,
     data: {
         account: account,

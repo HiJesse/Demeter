@@ -21,14 +21,14 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(Logger('dev'));
-app.use(JWT({ secret: Config.env.JWT.secret}).unless({path: Config.env.JWT.whiteList}));
+app.use(JWT({secret: Config.env.JWT.secret}).unless({path: Config.env.JWT.whiteList}));
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({extended: false}));
 app.use(CookieParser('sessionSecret'));
 app.use(ExpressSession({
     secret: 'sessionSecret',
     resave: true,
-    saveUninitialized:true
+    saveUninitialized: true
 }));
 
 app.use(Express.static(Path.join(__dirname, 'public')));
@@ -38,14 +38,14 @@ app.use('/api/v1', api_v1);
 // catch 404 and forward to error handler
 // 重定向到/public/index.html页面
 app.use(function (req, res) {
-    FS.readFile(__dirname + '/public/index.html', function(err, data){
-        if(err){
+    FS.readFile(__dirname + '/public/index.html', function (err, data) {
+        if (err) {
             console.log(err);
             res.send('500 error' + err);
         } else {
             res.writeHead(200, {
                 'Content-type': 'text/html',
-                'Connection':'keep-alive'
+                'Connection': 'keep-alive'
             });
             res.end(data);
         }

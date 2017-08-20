@@ -56,7 +56,7 @@ class HomePage extends React.Component {
                     onCollapse={(collapsed) => this.props.collapseMenu(collapsed)}>
                     <div style={homeStyle.view_logo}>
                         {this.props.isCollapsed ? 'D' : 'Demeter'}
-                        </div>
+                    </div>
                     <Menu
                         theme="dark"
                         defaultSelectedKeys={['1']}

@@ -1,5 +1,5 @@
 // multipart form data util
-import Multer from 'multer';
+import Multer from "multer";
 import {UPLOAD_PATH, UPLOAD_PROJECT_LOGO} from "../react/constants/pathConstant";
 
 /**

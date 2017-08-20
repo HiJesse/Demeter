@@ -1,5 +1,5 @@
 // user list epics
-import { combineEpics } from 'redux-observable';
+import {combineEpics} from "redux-observable";
 import {
     ACTION_DELETE_USER,
     ACTION_DELETE_USER_FULFILLED,

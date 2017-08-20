@@ -3,7 +3,8 @@ import {
     changeSearchInputAction,
     changeSearchVisibleAction,
     deleteUserAction,
-    fetchUserListAction, pageLoadingAction
+    fetchUserListAction,
+    pageLoadingAction
 } from "../actions/userManager";
 import {connect} from "react-redux";
 import {Button, Icon, Input, Popconfirm, Table} from "antd";

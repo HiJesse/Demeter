@@ -103,7 +103,7 @@ const createProjectPlatforms = (projectId, platforms) => new Promise((resolve, r
         platformId: item.platformId,
         appId: md5(projectId + item.platformId)
     }));
-    
+
     ProjectPlatformModel.create(params, (error) => {
         if (!error) {
             resolve({projectPlatformsCreated: true});

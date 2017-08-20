@@ -1,12 +1,11 @@
 // express server
-
 /**
  * Module dependencies.
  */
-import app from '../server';
+import app from "../server";
+import * as Config from "../config";
 const debug = require('debug')('demeter:server');
 const http = require('http');
-import * as Config from "../config";
 
 /**
  * Get port from environment and store in Express.

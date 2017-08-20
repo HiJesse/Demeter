@@ -20,7 +20,7 @@ function fetchUserListReducer(state, action) {
     if (!succeed) {
         message.error(action.msg);
         return {
-            ... state,
+            ...state,
             pageLoading: false
         };
     }
@@ -102,19 +102,19 @@ export function userManager(state = initialUserListState, action) {
             break;
         case ACTION_PAGE_LOADING:
             newState = {
-                ... state,
+                ...state,
                 pageLoading: action.data.pageLoading
             };
             break;
         case ACTION_CHANGE_SEARCH_INPUT:
             newState = {
-                ... state,
+                ...state,
                 accountSearch: action.data.accountSearch
             };
             break;
         case ACTION_CHANGE_SEARCH_INPUT_VISIBLE:
             newState = {
-                ... state,
+                ...state,
                 searchInputVisible: action.data.searchInputVisible
             };
             break;

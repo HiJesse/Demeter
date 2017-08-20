@@ -86,7 +86,7 @@ class CreateProjectView extends React.Component {
     /**
      * logo 变化
      */
-    onLogoChange = (({ fileList }) => {
+    onLogoChange = (({fileList}) => {
         this.setState({});
         this.props.uploadLogo(fileList)
     });

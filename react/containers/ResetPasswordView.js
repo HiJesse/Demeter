@@ -58,7 +58,7 @@ const ResetPasswordViewForm = Form.create()(ResetPasswordView);
 
 function select(state) {
     return {
-        ... state
+        ...state
     };
 }
 

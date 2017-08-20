@@ -54,7 +54,7 @@ class LoginPage extends React.Component {
                             )}
                             <a
                                 style={loginStyle.text_modify_password}
-                                onClick={()=> goToModifyPasswordPage(this.props.history)}>
+                                onClick={() => goToModifyPasswordPage(this.props.history)}>
                                 {'修改密码'}
                             </a>
                             <Button type="primary" htmlType="submit" style={loginStyle.button_login}>

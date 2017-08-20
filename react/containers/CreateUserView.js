@@ -70,7 +70,7 @@ const CreateUserViewFrom = Form.create()(CreateUserView);
 
 function select(state) {
     return {
-        ... state
+        ...state
     };
 }
 

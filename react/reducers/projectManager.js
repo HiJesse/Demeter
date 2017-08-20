@@ -23,7 +23,7 @@ const showLogoPreviewReducer = (state, action) => {
         image = action.file.url || action.file.thumbUrl;
     }
     return {
-        ... state,
+        ...state,
         previewVisible: visible,
         previewImage: image,
     }
@@ -73,13 +73,13 @@ export function projectManager(state = initialProjectManagerState, action) {
             break;
         case ACTION_UPLOAD_LOGO:
             newState = ({
-                ... state,
+                ...state,
                 logo: action.data.file
             });
             break;
         case ACTION_GET_LOGO_FILE:
             newState = ({
-                ... state,
+                ...state,
                 logoFile: action.data.file
             });
             break;

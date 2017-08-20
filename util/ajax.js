@@ -1,6 +1,5 @@
-import fetch from 'isomorphic-fetch'
-import 'rxjs';
-import * as Config from "../config";
+import fetch from "isomorphic-fetch";
+import "rxjs";
 import {Observable} from "rxjs";
 import {RES_FAILED, RES_SUCCEED} from "./status";
 
@@ -63,17 +62,16 @@ export function buildResponse(status, params, msg) {
 const buildRequestObservable = fetch => {
     const request = new Promise((resolve, reject) => {
         fetch.then((response) => {
-            if (response.ok) {
-                response.json().then((data) => {
-                    if (data.status === RES_SUCCEED) {
-                        resolve(data);
-                    } else {
-                        reject(data)
-                    }
-                });
-            } else {
-                reject(buildErrorInfo(RES_FAILED, 'response code error'))
+            if (!response.ok) {
+                reject(buildErrorInfo(RES_FAILED, 'response code error'));
             }
+            response.json().then((data) => {
+                if (data.status === RES_SUCCEED) {
+                    resolve(data);
+                } else {
+                    reject(data)
+                }
+            });
         }).catch((e) => {
             reject(buildErrorInfo(RES_FAILED, e.toString()));
         });

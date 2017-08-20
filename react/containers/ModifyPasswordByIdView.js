@@ -28,7 +28,7 @@ function mapDispatchToProps(dispatch) {
 
 function select(state) {
     return {
-        ... state
+        ...state
     };
 }
 
