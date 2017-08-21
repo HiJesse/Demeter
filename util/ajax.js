@@ -130,7 +130,7 @@ export const ajaxPost = (url, params) => {
  */
 export const ajaxPostForm = (method, url, params) => {
     const formData = new FormData();
-    let headers = {
+    const headers = {
         'Authorization': `Bearer ${localStorage.token}`
     };
 
@@ -138,7 +138,9 @@ export const ajaxPostForm = (method, url, params) => {
         headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
     }
     for (const key in params) {
-        formData.append(key, params[key]);
+        if (params.hasOwnProperty(key)) {
+            formData.append(key, params[key]);
+        }
     }
     const data = {
         method: AJAX_METHOD.POST,

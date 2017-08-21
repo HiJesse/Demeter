@@ -86,7 +86,7 @@ class UserListView extends React.Component {
             onFilterDropdownVisibleChange: (visible) => {
                 this.props.changeSearchVisible(visible);
             },
-            render: (text, record, index) => (<div>{text}</div>),
+            render: (text) => (<div>{text}</div>),
         }, {
             title: '昵称',
             dataIndex: 'nickname',
@@ -96,12 +96,12 @@ class UserListView extends React.Component {
             title: '权限',
             dataIndex: 'auth',
             width: '15%',
-            render: (text, record, index) => (<div>{text}</div>),
+            render: (text) => (<div>{text}</div>),
         }, {
             title: '所属项目',
             dataIndex: 'projects',
             width: '15%',
-            render: (text, record, index) => (<div>{text}</div>),
+            render: (text) => (<div>{text}</div>),
         }, {
             title: '行为',
             dataIndex: 'operation',
