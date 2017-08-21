@@ -35,9 +35,9 @@ const showLogoPreviewReducer = (state, action) => {
  * @param action
  * @returns {{}}
  */
-const createProject = (state, action) => {
+const createProjectReducer = (state, action) => {
     if (action.status === RES_SUCCEED) {
-        message.success('创建项目成功');
+        message.success('创建项目成功', 1.5, () => location.reload());
     } else {
         message.error(action.msg);
     }
@@ -84,7 +84,7 @@ export function projectManager(state = initialProjectManagerState, action) {
             });
             break;
         case ACTION_CREATE_PROJECT_FULFILLED:
-            newState = createProject(state, action.data);
+            newState = createProjectReducer(state, action.data);
             break;
         default:
     }

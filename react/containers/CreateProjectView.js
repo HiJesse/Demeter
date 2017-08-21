@@ -3,7 +3,12 @@ import {Button, Form, Icon, Input, Modal, Upload} from "antd";
 import {homeStyle} from "./styles/home";
 import {connect} from "react-redux";
 import {MSG_PROJECT_DES, MSG_PROJECT_NAME} from "../constants/stringConstant";
-import {createProject, getLogoFile, showLogoPreviewAction, uploadLogoAction} from "../actions/projectManager";
+import {
+    createProjectAction,
+    getLogoFileAction,
+    showLogoPreviewAction,
+    uploadLogoAction
+} from "../actions/projectManager";
 
 const FormItem = Form.Item;
 const {TextArea} = Input;
@@ -121,9 +126,9 @@ function mapDispatchToProps(dispatch) {
     return {
         showLogoPreview: (previewVisible, file) => dispatch(showLogoPreviewAction(previewVisible, file)),
         uploadLogo: file => dispatch(uploadLogoAction(file)),
-        getLogoFile: file => dispatch(getLogoFile(file)),
+        getLogoFile: file => dispatch(getLogoFileAction(file)),
         createProject: (projectName, projectDes, projectLogo) =>
-            dispatch(createProject(projectName, projectDes, projectLogo)),
+            dispatch(createProjectAction(projectName, projectDes, projectLogo)),
     }
 }
 

@@ -13,6 +13,7 @@ import {
     MENU_USER_CENTER,
     MENU_USER_MANAGER,
     PROJECT_MANAGER_CREATE,
+    PROJECT_MANAGER_LIST,
     USER_CENTER_INFO,
     USER_CENTER_PASSWORD,
     USER_MANAGER_CREATE,
@@ -28,6 +29,7 @@ import CreateUserView from "./CreateUserView";
 import ResetPasswordView from "./ResetPasswordView";
 import UserListView from "./UserListView";
 import CreateProjectView from "./CreateProjectView";
+import ProjectListView from "./ProjectListView";
 
 const confirm = Modal.confirm;
 const {Header, Content, Footer, Sider} = Layout;
@@ -221,6 +223,11 @@ class HomePage extends React.Component {
             case PROJECT_MANAGER_CREATE:
                 content = (
                     <CreateProjectView />
+                );
+                break;
+            case PROJECT_MANAGER_LIST:
+                content = (
+                    <ProjectListView />
                 );
                 break;
             default:

@@ -34,7 +34,7 @@ export const uploadLogoAction = file => ({
  * 获取logo文件, 上传用
  * @param file
  */
-export const getLogoFile = file => ({
+export const getLogoFileAction = file => ({
     type: ACTION_GET_LOGO_FILE,
     data: {
         file: file
@@ -47,7 +47,7 @@ export const getLogoFile = file => ({
  * @param projectDes
  * @param logo
  */
-export const createProject = (projectName, projectDes, logo) => ({
+export const createProjectAction = (projectName, projectDes, logo) => ({
     type: ACTION_CREATE_PROJECT,
     data: {
         projectName: projectName,
