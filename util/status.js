@@ -56,3 +56,15 @@ export const RES_MSG_DELETE_PROJECT = '删除项目失败';
 // 删除项目平台信息失败
 export const RES_FAILED_DELETE_PROJECT_PLATFORMS = 2005;
 export const RES_MSG_DELETE_PROJECT_PLATFORMS = '删除项目平台信息失败';
+// 获取项目列表失败
+export const RES_FAILED_FETCH_PROJECT_LIST = 2006;
+export const RES_MSG_FETCH_PROJECT_LIST = '获取项目列表失败';
+// 查询项目总数失败
+export const RES_FAILED_COUNT_PROJECT = 2007;
+export const RES_MSG_COUNT_PROJECT = '查询项目总数失败';
+// 查询项目总数失败
+export const RES_FAILED_FETCH_PROJECT_PLATFORM = 2008;
+export const RES_MSG_FETCH_PROJECT_PLATFORM = '查询项目平台信息失败';
+// 查询项目总数为0
+export const RES_FAILED_COUNT_PROJECT_EMPTY = 2009;
+export const RES_MSG_COUNT_PROJECT_EMPTY = '未查询到相关项目';

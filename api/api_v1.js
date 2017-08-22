@@ -35,4 +35,7 @@ router.post('/project/createProject', ProjectLogoMulter.single('projectLogo'), p
 // 删除项目
 router.post('/project/deleteProject', project.deleteProject);
 
+// 获取项目列表
+router.get('/project/fetchProjectList', project.fetchProjectList);
+
 export default router;
