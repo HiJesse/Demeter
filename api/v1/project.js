@@ -32,6 +32,7 @@ import {buildResponse} from "../../util/ajax";
 import {isAdmin} from "./user";
 import {isObjectEmpty, isStringEmpty} from "../../util/checker";
 import {concatProjectAndPlatformInfo} from "../../util/arrayUtil";
+import {URL_PROJECT_LOGO, URL_PROJECT_LOGO_DEFAULT} from "../../util/pathUtil";
 
 /**
  * 根据项目名称说明和logo建立项目信息
@@ -204,7 +205,9 @@ const findProjectsByPage = (pageSize, pageNum, params) => new Promise((resolve, 
             return {
                 projectId: item._id.toString(),
                 projectName: item.projectName,
-                avatar: item.avatar,
+                avatar: isStringEmpty(item.avatar) ?
+                    URL_PROJECT_LOGO_DEFAULT :
+                    URL_PROJECT_LOGO + item.avatar,
                 des: item.des,
                 createdDate: item.createdDate
             };

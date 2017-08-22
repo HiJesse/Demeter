@@ -3,17 +3,18 @@ import {connect} from "react-redux";
 import {Icon, Popconfirm, Table} from "antd";
 import {homeStyle} from "./styles/home";
 import {projectListView} from "./styles/projectListView";
-import {projectPageLoadingAction} from "../actions/projectList";
+import {fetchProjectListAction, projectPageLoadingAction} from "../actions/projectList";
+import {isStringEmpty} from "../../util/checker";
 
 // 用户管理-用户列表
 class ProjectListView extends React.Component {
 
     componentDidMount() {
-        // unused
+        this.props.pageLoadingVisible(true);
+        this.props.fetchProjectList(this.props.pageSize, this.props.pageNum, '');
     }
 
     render() {
-
         const columns = this._buildColumns();
 
         return (
@@ -45,15 +46,20 @@ class ProjectListView extends React.Component {
             title: '项目',
             dataIndex: 'project',
             width: '15%',
-            render: (text) => (<div>{text}</div>),
+            render: (text) => this._buildProjectInfoView(text),
         }, {
             title: '平台',
             dataIndex: 'platform',
             width: '15%',
-            render: (text, record, index) => this._buildPlatformView(index),
+            render: (text) => this._buildPlatformView(text),
         }, {
             title: '简介',
             dataIndex: 'des',
+            width: '15%',
+            render: (text) => (<div>{text}</div>),
+        }, {
+            title: '创建日期',
+            dataIndex: 'createdDate',
             width: '15%',
             render: (text) => (<div>{text}</div>),
         }, {
@@ -82,12 +88,29 @@ class ProjectListView extends React.Component {
     }
 
     /**
-     * 构建平台column
-     * @param index 数据index
+     * 构建项目名称和logo column
+     * @param info
      * @returns {XML}
      * @private
      */
-    _buildPlatformView(index) {
+    _buildProjectInfoView(info) {
+        return (
+            <div>
+                <img
+                    src={isStringEmpty(info.logo) ? '' : info.logo}
+                />
+                {info.name}
+            </div>
+        )
+    }
+
+    /**
+     * 构建平台column
+     * @param info 平台相关数据
+     * @returns {XML}
+     * @private
+     */
+    _buildPlatformView(info) {
         return (
             <div style={projectListView.view_platform}>
                 <Icon type={'android'}/>
@@ -110,6 +133,8 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
+        fetchProjectList: (pageSize, pageNum, projectName) =>
+            dispatch(fetchProjectListAction(localStorage.uId, pageSize, pageNum, projectName)),
         pageLoadingVisible: isLoading => dispatch(projectPageLoadingAction(isLoading)),
         deleteProject: projectId => dispatch()
     }

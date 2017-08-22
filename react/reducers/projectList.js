@@ -1,5 +1,48 @@
 //project list reducer
-import {ACTION_PROJECT_PAGE_LOADING} from "../constants/actionType";
+import {ACTION_FETCH_PROJECT_LIST_FULFILLED, ACTION_PROJECT_PAGE_LOADING} from "../constants/actionType";
+import {RES_SUCCEED} from "../../util/status";
+import {message} from "antd";
+
+/**
+ * 获取项目列表
+ * @param state
+ * @param action
+ * @returns {*}
+ */
+const fetchProjectListReducer = (state, action) => {
+    const succeed = action.status === RES_SUCCEED;
+    if (!succeed) {
+        message.error(action.msg);
+        return {
+            ...state,
+            pageLoading: false
+        };
+    }
+
+    const projectList = action.data.projectList.map(function (item, index) {
+        return {
+            key: index,
+            project: {
+                logo: item.avatar,
+                name: item.projectName
+            },
+            platform: {
+                android: item.androidAppId,
+                ios: item.iosAppId
+            },
+            des: item.des,
+            createdDate: item.createdDate
+        };
+    });
+
+    return {
+        ...state,
+        projectList: projectList,
+        projectCount: action.data.userCount,
+        pageNum: action.data.pageNum,
+        pageLoading: false,
+    };
+};
 
 const initialProjectListState = {
     projectCount: 0,
@@ -23,6 +66,9 @@ export function projectList(state = initialProjectListState, action) {
                 ...state,
                 pageLoading: action.data.pageLoading
             };
+            break;
+        case ACTION_FETCH_PROJECT_LIST_FULFILLED:
+            newState = fetchProjectListReducer(state, action.data);
             break;
         default:
     }
