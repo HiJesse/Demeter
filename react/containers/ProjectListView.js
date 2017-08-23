@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
-import {Icon, Popconfirm, Table} from "antd";
+import {Icon, Popconfirm, Popover, Table} from "antd";
 import {homeStyle} from "./styles/home";
 import {projectListViewStyle} from "./styles/projectListView";
 import {fetchProjectListAction, projectPageLoadingAction} from "../actions/projectList";
@@ -50,7 +50,7 @@ class ProjectListView extends React.Component {
         }, {
             title: '平台',
             dataIndex: 'platform',
-            width: '15%',
+            width: '8%',
             render: (text) => this._buildPlatformView(text),
         }, {
             title: '简介',
@@ -115,13 +115,18 @@ class ProjectListView extends React.Component {
     _buildPlatformView(info) {
         return (
             <div style={projectListViewStyle.view_platform}>
-                <Icon type={'android'}/>
-                <Icon type={'apple'}/>
+                <Popover content={info.android} title="Android AppID">
+                    <Icon type={'android'}/>
+                </Popover>
+
+                <Popover content={info.ios} title="IOS AppID">
+                    <Icon type={'apple'}/>
+                </Popover>
             </div>
         )
     }
-
 }
+
 function select(state) {
     const projectList = state.projectList;
     return {

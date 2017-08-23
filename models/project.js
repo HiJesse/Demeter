@@ -1,4 +1,6 @@
-import Mongoose from 'mongoose';
+// project models
+import Mongoose from "mongoose";
+import {getDate} from "../util/timeUtil";
 const Schema = Mongoose.Schema;
 
 /**
@@ -8,7 +10,7 @@ const ProjectSchema = new Schema({
     projectName: {type: String, unique: true},
     avatar: {type: String},
     des: {type: String, default: '什么都没写'},
-    createdDate: {type: Date, default: Date.now},
+    createdDate: {type: String, default: getDate()},
 });
 
 export default Mongoose.model('Project', ProjectSchema);

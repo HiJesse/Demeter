@@ -33,6 +33,7 @@ import {isAdmin} from "./user";
 import {isObjectEmpty, isStringEmpty} from "../../util/checker";
 import {concatProjectAndPlatformInfo} from "../../util/arrayUtil";
 import {URL_PROJECT_LOGO, URL_PROJECT_LOGO_DEFAULT} from "../../util/pathUtil";
+import {getTimeStamp} from "../../util/timeUtil";
 
 /**
  * 根据项目名称说明和logo建立项目信息
@@ -72,6 +73,7 @@ const deleteProjectInfo = (projectId) => new Promise((resolve, reject) => {
         }
     });
 });
+
 /**
  * 根据参数查找项目信息
  * @param params
@@ -112,7 +114,7 @@ const createProjectPlatforms = (projectId, platforms) => new Promise((resolve, r
     const params = platforms.map((item) => ({
         projectId: projectId,
         platformId: item.platformId,
-        appId: md5(projectId + item.platformId)
+        appId: md5(projectId + item.platformId + getTimeStamp())
     }));
 
     ProjectPlatformModel.create(params, (error) => {
