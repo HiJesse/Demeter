@@ -2,7 +2,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {Icon, Popconfirm, Table} from "antd";
 import {homeStyle} from "./styles/home";
-import {projectListView} from "./styles/projectListView";
+import {projectListViewStyle} from "./styles/projectListView";
 import {fetchProjectListAction, projectPageLoadingAction} from "../actions/projectList";
 import {isStringEmpty} from "../../util/checker";
 
@@ -77,7 +77,7 @@ class ProjectListView extends React.Component {
      */
     _buildOperationColumn(index) {
         return (
-            <span style={projectListView.view_operation}>
+            <span style={projectListViewStyle.view_operation}>
                 <Popconfirm
                     title="确认删除项目?"
                     onConfirm={() => this.props.deleteProject('')}>
@@ -95,11 +95,13 @@ class ProjectListView extends React.Component {
      */
     _buildProjectInfoView(info) {
         return (
-            <div>
+            <div style={projectListViewStyle.view_project}>
                 <img
-                    src={isStringEmpty(info.logo) ? '' : info.logo}
-                />
-                {info.name}
+                    style={projectListViewStyle.image_logo}
+                    src={isStringEmpty(info.logo) ? '' : info.logo}/>
+                <div style={projectListViewStyle.text_project_name}>
+                    {info.name}
+                </div>
             </div>
         )
     }
@@ -112,7 +114,7 @@ class ProjectListView extends React.Component {
      */
     _buildPlatformView(info) {
         return (
-            <div style={projectListView.view_platform}>
+            <div style={projectListViewStyle.view_platform}>
                 <Icon type={'android'}/>
                 <Icon type={'apple'}/>
             </div>

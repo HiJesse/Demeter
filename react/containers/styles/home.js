@@ -36,6 +36,13 @@ export const homeStyle = {
         color: '#47a5e9',
         fontFamily: "Impact"
     },
+    view_logout: {
+        flex: 1,
+        paddingRight: 12,
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center'
+    },
     button_logout: {
         fontSize: 16,
         marginLeft: 5

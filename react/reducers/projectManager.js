@@ -6,8 +6,8 @@ import {
     ACTION_UPLOAD_LOGO
 } from "../constants/actionType";
 import {message} from "antd";
-import * as Config from "../../config";
 import {RES_SUCCEED} from "../../util/status";
+import {URL_PROJECT_LOGO_DEFAULT} from "../../util/pathUtil";
 
 /**
  * 是否显示logo预览框, 如果要显示则填充preview image
@@ -55,7 +55,7 @@ const initialProjectManagerState = {
         uid: -1,
         name: 'xxx.png',
         status: 'done',
-        url: Config.env.SERVER + ':' + Config.env.SERVER_PORT + '/image/project_logo.png',
+        url: URL_PROJECT_LOGO_DEFAULT,
     }],
 };
 

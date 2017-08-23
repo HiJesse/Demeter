@@ -82,13 +82,7 @@ class HomePage extends React.Component {
                             {`账号权限: ${this.props.isAdmin ? '管理员' : '普通用户'}`}
                         </div>
 
-                        <div style={{
-                            flex: 1,
-                            paddingRight: 12,
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                            alignItems: 'center'
-                        }}>
+                        <div style={homeStyle.view_logout}>
                             <Button
                                 type="primary"
                                 onClick={this._showConfirmDialog.bind(this)}>

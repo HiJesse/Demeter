@@ -16,7 +16,8 @@ const dev = {
             '/login',
             '/modifyPassword',
             // 资源白名单
-            '/public/image/*.*',
+            /^\/upload\/project_logo\/.*/,
+            /^\/image\/.*/,
             // 接口白名单
             '/api/v1/user/login',
             '/api/v1/user/modifyPassword'

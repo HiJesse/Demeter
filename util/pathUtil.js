@@ -6,9 +6,9 @@ const URL_BASE = Config.env.SERVER + ':' + Config.env.SERVER_PORT + '/';
 // public url eg. http://localhost:3000/public/
 const URL_PUBLIC = URL_BASE + Config.env.PUBLIC_PATH + '/';
 // image url eg. http://localhost:3000/public/
-const URL_PUBLIC_IMAGE = URL_BASE + Config.env.PUBLIC_PATH + '/image/';
+const URL_PUBLIC_IMAGE = URL_BASE + 'image/';
 // upload url eg. http://localhost:3000/upload/
-const URL_PUBLIC_UPLOAD = URL_BASE + Config.env.PUBLIC_PATH + '/upload/';
+const URL_PUBLIC_UPLOAD = URL_BASE + 'upload/';
 
 
 
