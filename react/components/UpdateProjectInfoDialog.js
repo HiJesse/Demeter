@@ -1,0 +1,91 @@
+import React from "react";
+import {Icon, Input, Modal, Upload} from "antd";
+import {connect} from "react-redux";
+import {getLogoFileAction, updateProjectLoadingAction, uploadLogoAction} from "../actions/projectManager";
+
+const {TextArea} = Input;
+
+const style = {
+    view_content: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+    }
+};
+
+// 更新项目信息弹窗
+export class UpdateProjectInfoDialog extends React.Component {
+
+    render() {
+        const logo = this.props.logo;
+        const uploadButton = (
+            <div>
+                <Icon type="plus"/>
+                <div className="ant-upload-text">Upload</div>
+            </div>
+        );
+        return (
+            <Modal title="更新项目信息"
+                   visible={this.props.dialogVisible}
+                   onOk={this._confirmDialog.bind(this)}
+                   confirmLoading={this.props.confirmLoading}
+                   onCancel={() => this.props.onDismiss()}
+            >
+                <div style={style.view_content}>
+                    <Upload
+                        action={''}
+                        listType="picture-card"
+                        fileList={logo}
+                        onChange={({fileList}) => {
+                            this.setState({});
+                            this.props.uploadLogo(fileList);
+                        }}
+                        beforeUpload={file => this.props.getLogoFile(file)}
+                        onRemove={() => {
+                            this.props.getLogoFile(undefined);
+                            return true;
+                        }}
+                    >
+                        {logo.length >= 1 ? null : uploadButton}
+                    </Upload>
+                    <div>
+                        <div>{'项目描述'}</div>
+                        <TextArea autosize={{minRows: 2, maxRows: 3}}/>
+                    </div>
+                </div>
+            </Modal>
+        );
+    }
+
+    /**
+     * 弹窗确认, 打开按钮菊花并请求接口
+     * @private
+     */
+    _confirmDialog() {
+        this.props.showConfirmLoading(true);
+    }
+}
+
+function select(state) {
+    const projectManager = state.projectManager;
+    return {
+        logo: projectManager.logo,
+        logoFile: projectManager.logoFile,
+        confirmLoading: projectManager.confirmLoading
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        showConfirmLoading: visible => dispatch(updateProjectLoadingAction(visible)),
+        uploadLogo: file => dispatch(uploadLogoAction(file)),
+        getLogoFile: file => dispatch(getLogoFileAction(file))
+    }
+}
+
+export default connect(select, mapDispatchToProps)(UpdateProjectInfoDialog);
+
+UpdateProjectInfoDialog.PropTypes = {
+    dialogVisible: React.PropTypes.bool.isRequired, // 是否显示弹窗
+    onDismiss: React.PropTypes.func.isRequired, // 关闭弹窗回调
+};

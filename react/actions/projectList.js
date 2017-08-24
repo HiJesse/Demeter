@@ -1,5 +1,9 @@
 // project list actions
-import {ACTION_FETCH_PROJECT_LIST, ACTION_PROJECT_PAGE_LOADING} from "../constants/actionType";
+import {
+    ACTION_FETCH_PROJECT_LIST,
+    ACTION_PROJECT_PAGE_LOADING,
+    ACTION_UPDATE_PROJECT_DIALOG_VISIBLE
+} from "../constants/actionType";
 
 /**
  * 是否显示项目列表加载loading
@@ -28,3 +32,14 @@ export const fetchProjectListAction = (uId, pageSize, pageNum, projectName) => (
         projectName: projectName
     }
 });
+
+/**
+ * 是否显示更新项目信息弹窗
+ * @param visible
+ */
+export const showUpdateDialogAction = visible => ({
+    type: ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
+    data: {
+        updateDialogVisible: visible
+    }
+})

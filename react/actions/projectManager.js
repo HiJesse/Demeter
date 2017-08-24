@@ -1,5 +1,6 @@
 // project manager actions
 import {
+    ACTION_UPDATE_PROJECT_LOADING,
     ACTION_CREATE_PROJECT,
     ACTION_GET_LOGO_FILE,
     ACTION_SHOW_LOGO_PREVIEW,
@@ -53,5 +54,16 @@ export const createProjectAction = (projectName, projectDes, logo) => ({
         projectName: projectName,
         projectDes: projectDes,
         projectLogo: logo
+    }
+});
+
+/**
+ * 更新项目信息时菊花状态
+ * @param visible
+ */
+export const updateProjectLoadingAction = visible => ({
+    type: ACTION_UPDATE_PROJECT_LOADING,
+    data: {
+        confirmLoading: visible
     }
 });

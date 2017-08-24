@@ -3,8 +3,9 @@ import {connect} from "react-redux";
 import {Icon, Popconfirm, Popover, Table} from "antd";
 import {homeStyle} from "./styles/home";
 import {projectListViewStyle} from "./styles/projectListView";
-import {fetchProjectListAction, projectPageLoadingAction} from "../actions/projectList";
+import {fetchProjectListAction, projectPageLoadingAction, showUpdateDialogAction} from "../actions/projectList";
 import {isStringEmpty} from "../../util/checker";
+import UpdateProjectInfoDialog from "../components/UpdateProjectInfoDialog";
 
 // 用户管理-用户列表
 class ProjectListView extends React.Component {
@@ -19,6 +20,9 @@ class ProjectListView extends React.Component {
 
         return (
             <div style={homeStyle.view_content}>
+                <UpdateProjectInfoDialog
+                    dialogVisible={this.props.updateDialogVisible}
+                    onDismiss={() => this.props.showUpdateDialog(false)}/>
                 <Table
                     bordered
                     dataSource={this.props.projectList}
@@ -78,6 +82,7 @@ class ProjectListView extends React.Component {
     _buildOperationColumn(index) {
         return (
             <span style={projectListViewStyle.view_operation}>
+                <a href="#" onClick={() => this.props.showUpdateDialog(true)}>{'更新信息'}</a>
                 <Popconfirm
                     title="确认删除项目?"
                     onConfirm={() => this.props.deleteProject('')}>
@@ -135,6 +140,7 @@ function select(state) {
         pageNum: projectList.pageNum, // 当前页码
         projectCount: projectList.projectCount, // 项目总数
         pageLoading: projectList.pageLoading, // 分页loading
+        updateDialogVisible: projectList.updateDialogVisible, // 是否显示更新项目信息弹窗
     };
 }
 
@@ -143,7 +149,8 @@ function mapDispatchToProps(dispatch) {
         fetchProjectList: (pageSize, pageNum, projectName) =>
             dispatch(fetchProjectListAction(localStorage.uId, pageSize, pageNum, projectName)),
         pageLoadingVisible: isLoading => dispatch(projectPageLoadingAction(isLoading)),
-        deleteProject: projectId => dispatch()
+        deleteProject: projectId => dispatch(),
+        showUpdateDialog: visible => dispatch(showUpdateDialogAction(visible))
     }
 }
 

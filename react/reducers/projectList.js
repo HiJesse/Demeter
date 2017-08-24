@@ -1,5 +1,9 @@
 //project list reducer
-import {ACTION_FETCH_PROJECT_LIST_FULFILLED, ACTION_PROJECT_PAGE_LOADING} from "../constants/actionType";
+import {
+    ACTION_FETCH_PROJECT_LIST_FULFILLED,
+    ACTION_PROJECT_PAGE_LOADING,
+    ACTION_UPDATE_PROJECT_DIALOG_VISIBLE
+} from "../constants/actionType";
 import {RES_SUCCEED} from "../../util/status";
 import {message} from "antd";
 
@@ -50,6 +54,7 @@ const initialProjectListState = {
     pageNum: 1,
     pageSize: 10,
     pageLoading: false,
+    updateDialogVisible: false
 };
 
 /**
@@ -69,6 +74,12 @@ export function projectList(state = initialProjectListState, action) {
             break;
         case ACTION_FETCH_PROJECT_LIST_FULFILLED:
             newState = fetchProjectListReducer(state, action.data);
+            break;
+        case ACTION_UPDATE_PROJECT_DIALOG_VISIBLE:
+            newState = {
+                ...state,
+                updateDialogVisible: action.data.updateDialogVisible
+            };
             break;
         default:
     }

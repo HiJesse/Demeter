@@ -3,6 +3,7 @@ import {
     ACTION_CREATE_PROJECT_FULFILLED,
     ACTION_GET_LOGO_FILE,
     ACTION_SHOW_LOGO_PREVIEW,
+    ACTION_UPDATE_PROJECT_LOADING,
     ACTION_UPLOAD_LOGO
 } from "../constants/actionType";
 import {message} from "antd";
@@ -57,6 +58,7 @@ const initialProjectManagerState = {
         status: 'done',
         url: URL_PROJECT_LOGO_DEFAULT,
     }],
+    confirmLoading: false
 };
 
 /**
@@ -85,6 +87,12 @@ export function projectManager(state = initialProjectManagerState, action) {
             break;
         case ACTION_CREATE_PROJECT_FULFILLED:
             newState = createProjectReducer(state, action.data);
+            break;
+        case ACTION_UPDATE_PROJECT_LOADING:
+            newState = ({
+                ...state,
+                confirmLoading: action.data.confirmLoading
+            });
             break;
         default:
     }
