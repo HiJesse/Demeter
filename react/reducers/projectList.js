@@ -2,7 +2,8 @@
 import {
     ACTION_FETCH_PROJECT_LIST_FULFILLED,
     ACTION_PROJECT_PAGE_LOADING,
-    ACTION_UPDATE_PROJECT_DIALOG_VISIBLE
+    ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
+    ACTION_UPDATING_PROJECT_INFO
 } from "../constants/actionType";
 import {RES_SUCCEED} from "../../util/status";
 import {message} from "antd";
@@ -27,6 +28,7 @@ const fetchProjectListReducer = (state, action) => {
         return {
             key: index,
             project: {
+                id: item.projectId,
                 logo: item.avatar,
                 name: item.projectName
             },
@@ -48,13 +50,38 @@ const fetchProjectListReducer = (state, action) => {
     };
 };
 
+/**
+ * 获取当前选中要更新的项目的信息
+ * @param state
+ * @param action
+ * @returns {{updateProjectInfo: {}}}
+ */
+const setUpdatingProjectInfoReducer = (state, action) => {
+    const index = action.updateProjectIndex;
+    let updateProjectInfo = {};
+
+    if (index >= 0 && state.projectList.length > index) {
+        const info = state.projectList[index];
+        updateProjectInfo.id = info.project.id;
+        updateProjectInfo.logo = info.project.logo;
+        updateProjectInfo.name = info.project.name;
+        updateProjectInfo.des = info.des;
+    }
+
+    return {
+        ...state,
+        updateProjectInfo: updateProjectInfo
+    }
+};
+
 const initialProjectListState = {
     projectCount: 0,
     projectList: [],
     pageNum: 1,
     pageSize: 10,
     pageLoading: false,
-    updateDialogVisible: false
+    updateDialogVisible: false,
+    updateProjectInfo: {},
 };
 
 /**
@@ -80,6 +107,9 @@ export function projectList(state = initialProjectListState, action) {
                 ...state,
                 updateDialogVisible: action.data.updateDialogVisible
             };
+            break;
+        case ACTION_UPDATING_PROJECT_INFO:
+            newState = setUpdatingProjectInfoReducer(state, action.data);
             break;
         default:
     }

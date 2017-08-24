@@ -3,7 +3,12 @@ import {connect} from "react-redux";
 import {Icon, Popconfirm, Popover, Table} from "antd";
 import {homeStyle} from "./styles/home";
 import {projectListViewStyle} from "./styles/projectListView";
-import {fetchProjectListAction, projectPageLoadingAction, showUpdateDialogAction} from "../actions/projectList";
+import {
+    fetchProjectListAction,
+    projectPageLoadingAction,
+    setUpdatingProjectInfoAction,
+    showUpdateDialogAction
+} from "../actions/projectList";
 import {isStringEmpty} from "../../util/checker";
 import UpdateProjectInfoDialog from "../components/UpdateProjectInfoDialog";
 
@@ -21,8 +26,12 @@ class ProjectListView extends React.Component {
         return (
             <div style={homeStyle.view_content}>
                 <UpdateProjectInfoDialog
+                    data={this.props.updateProjectInfo}
                     dialogVisible={this.props.updateDialogVisible}
-                    onDismiss={() => this.props.showUpdateDialog(false)}/>
+                    onDismiss={() => {
+                        this.props.setUpdatingProjectInfo(-1);
+                        this.props.showUpdateDialog(false);
+                    }}/>
                 <Table
                     bordered
                     dataSource={this.props.projectList}
@@ -82,7 +91,10 @@ class ProjectListView extends React.Component {
     _buildOperationColumn(index) {
         return (
             <span style={projectListViewStyle.view_operation}>
-                <a href="#" onClick={() => this.props.showUpdateDialog(true)}>{'更新信息'}</a>
+                <a href="#" onClick={() => {
+                    this.props.setUpdatingProjectInfo(index);
+                    this.props.showUpdateDialog(true);
+                }}>{'更新信息'}</a>
                 <Popconfirm
                     title="确认删除项目?"
                     onConfirm={() => this.props.deleteProject('')}>
@@ -141,6 +153,7 @@ function select(state) {
         projectCount: projectList.projectCount, // 项目总数
         pageLoading: projectList.pageLoading, // 分页loading
         updateDialogVisible: projectList.updateDialogVisible, // 是否显示更新项目信息弹窗
+        updateProjectInfo: projectList.updateProjectInfo, // 要更新的项目信息
     };
 }
 
@@ -150,7 +163,8 @@ function mapDispatchToProps(dispatch) {
             dispatch(fetchProjectListAction(localStorage.uId, pageSize, pageNum, projectName)),
         pageLoadingVisible: isLoading => dispatch(projectPageLoadingAction(isLoading)),
         deleteProject: projectId => dispatch(),
-        showUpdateDialog: visible => dispatch(showUpdateDialogAction(visible))
+        showUpdateDialog: visible => dispatch(showUpdateDialogAction(visible)),
+        setUpdatingProjectInfo: index => dispatch(setUpdatingProjectInfoAction(index)),
     }
 }
 

@@ -2,7 +2,8 @@
 import {
     ACTION_FETCH_PROJECT_LIST,
     ACTION_PROJECT_PAGE_LOADING,
-    ACTION_UPDATE_PROJECT_DIALOG_VISIBLE
+    ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
+    ACTION_UPDATING_PROJECT_INFO
 } from "../constants/actionType";
 
 /**
@@ -42,4 +43,15 @@ export const showUpdateDialogAction = visible => ({
     data: {
         updateDialogVisible: visible
     }
-})
+});
+
+/**
+ * 设置要更新的项目信息
+ * @param index
+ */
+export const setUpdatingProjectInfoAction = index => ({
+    type: ACTION_UPDATING_PROJECT_INFO,
+    data: {
+        updateProjectIndex: index
+    }
+});

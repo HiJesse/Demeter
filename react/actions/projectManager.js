@@ -1,9 +1,10 @@
 // project manager actions
 import {
-    ACTION_UPDATE_PROJECT_LOADING,
     ACTION_CREATE_PROJECT,
     ACTION_GET_LOGO_FILE,
     ACTION_SHOW_LOGO_PREVIEW,
+    ACTION_UPDATE_PROJECT_DES,
+    ACTION_UPDATE_PROJECT_LOADING,
     ACTION_UPLOAD_LOGO
 } from "../constants/actionType";
 
@@ -65,5 +66,16 @@ export const updateProjectLoadingAction = visible => ({
     type: ACTION_UPDATE_PROJECT_LOADING,
     data: {
         confirmLoading: visible
+    }
+});
+
+/**
+ * 更新项目简介内容, 只是view
+ * @param des
+ */
+export const updateProjectDesAction = des => ({
+    type: ACTION_UPDATE_PROJECT_DES,
+    data: {
+        des: des
     }
 });

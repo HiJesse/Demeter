@@ -1,7 +1,13 @@
 import React from "react";
 import {Icon, Input, Modal, Upload} from "antd";
 import {connect} from "react-redux";
-import {getLogoFileAction, updateProjectLoadingAction, uploadLogoAction} from "../actions/projectManager";
+import {
+    getLogoFileAction,
+    updateProjectDesAction,
+    updateProjectLoadingAction,
+    uploadLogoAction
+} from "../actions/projectManager";
+import {isStringEmpty} from "../../util/checker";
 
 const {TextArea} = Input;
 
@@ -16,8 +22,22 @@ const style = {
 // 更新项目信息弹窗
 export class UpdateProjectInfoDialog extends React.Component {
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.dialogVisible && !this.props.dialogVisible) {
+            this.props.updateDes(nextProps.data.des);
+            this.props.uploadLogo([{
+                uid: -1,
+                name: 'xxx.png',
+                status: 'done',
+                url: nextProps.data.logo,
+            }]);
+        }
+    }
+
     render() {
         const logo = this.props.logo;
+        const data = this.props.data;
+
         const uploadButton = (
             <div>
                 <Icon type="plus"/>
@@ -25,7 +45,7 @@ export class UpdateProjectInfoDialog extends React.Component {
             </div>
         );
         return (
-            <Modal title="更新项目信息"
+            <Modal title={`更新 ${isStringEmpty(data.name) ? '' : data.name} 信息`}
                    visible={this.props.dialogVisible}
                    onOk={this._confirmDialog.bind(this)}
                    confirmLoading={this.props.confirmLoading}
@@ -50,7 +70,10 @@ export class UpdateProjectInfoDialog extends React.Component {
                     </Upload>
                     <div>
                         <div>{'项目描述'}</div>
-                        <TextArea autosize={{minRows: 2, maxRows: 3}}/>
+                        <TextArea
+                            autosize={{minRows: 2, maxRows: 3}}
+                            value={this.props.des}
+                            onChange={(event) => this.props.updateDes(event.target.value)}/>
                     </div>
                 </div>
             </Modal>
@@ -71,6 +94,7 @@ function select(state) {
     return {
         logo: projectManager.logo,
         logoFile: projectManager.logoFile,
+        des: projectManager.des,
         confirmLoading: projectManager.confirmLoading
     };
 }
@@ -79,7 +103,8 @@ function mapDispatchToProps(dispatch) {
     return {
         showConfirmLoading: visible => dispatch(updateProjectLoadingAction(visible)),
         uploadLogo: file => dispatch(uploadLogoAction(file)),
-        getLogoFile: file => dispatch(getLogoFileAction(file))
+        getLogoFile: file => dispatch(getLogoFileAction(file)),
+        updateDes: des => dispatch(updateProjectDesAction(des)),
     }
 }
 
@@ -88,4 +113,5 @@ export default connect(select, mapDispatchToProps)(UpdateProjectInfoDialog);
 UpdateProjectInfoDialog.PropTypes = {
     dialogVisible: React.PropTypes.bool.isRequired, // 是否显示弹窗
     onDismiss: React.PropTypes.func.isRequired, // 关闭弹窗回调
+    data: React.PropTypes.object.isRequired, // 要更新的项目数据
 };
