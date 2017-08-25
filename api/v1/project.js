@@ -14,6 +14,8 @@ import {
     RES_FAILED_NOT_ADMIN,
     RES_FAILED_PLATFORM_NOT_EXIST,
     RES_FAILED_PROJECT_NOT_EXIST,
+    RES_FAILED_UPDATE_PROJECT_DES,
+    RES_FAILED_UPDATE_PROJECT_INFO,
     RES_MSG_COUNT_PROJECT,
     RES_MSG_COUNT_PROJECT_EMPTY,
     RES_MSG_CREATE_PROJECT,
@@ -25,6 +27,8 @@ import {
     RES_MSG_NOT_ADMIN,
     RES_MSG_PLATFORM_NOT_EXIST,
     RES_MSG_PROJECT_NOT_EXIST,
+    RES_MSG_UPDATE_PROJECT_DES,
+    RES_MSG_UPDATE_PROJECT_INFO,
     RES_SUCCEED
 } from "../../util/status";
 import {md5} from "../../util/encrypt";
@@ -374,3 +378,44 @@ export const fetchProjectList = (req, res) => {
         res.json(buildResponse(status, {}, msg));
     });
 };
+
+/**
+ * 更新项目信息, 项目简介和项目logo
+ * @param req
+ * @param res
+ */
+export function updateProjectInfo(req, res) {
+    const projectId = req.body.projectId;
+    const projectDes = req.body.projectDes;
+    const projectLogo = req.file;
+
+    let status = RES_FAILED_UPDATE_PROJECT_INFO;
+    let msg = RES_MSG_UPDATE_PROJECT_INFO;
+
+    if (isStringEmpty(projectDes) || projectDes.length < 3) {
+        status = RES_FAILED_UPDATE_PROJECT_DES;
+        msg = RES_MSG_UPDATE_PROJECT_DES;
+        res.json(buildResponse(status, {}, msg));
+        return;
+    }
+
+    const params = {
+        des: projectDes
+    };
+
+    if (!isObjectEmpty(projectLogo) && !isStringEmpty(projectLogo.filename)) {
+        params.avatar = projectLogo.filename;
+    }
+
+    ProjectModel.update({
+        _id: projectId
+    }, {
+        $set: params
+    }, {upsert: false}, (error) => {
+        if (!error) {
+            status = RES_SUCCEED;
+            msg = null;
+        }
+        res.json(buildResponse(status, {}, msg));
+    });
+}

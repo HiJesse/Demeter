@@ -4,6 +4,7 @@ import {
     ACTION_GET_LOGO_FILE,
     ACTION_SHOW_LOGO_PREVIEW,
     ACTION_UPDATE_PROJECT_DES,
+    ACTION_UPDATE_PROJECT_INFO,
     ACTION_UPDATE_PROJECT_LOADING,
     ACTION_UPLOAD_LOGO
 } from "../constants/actionType";
@@ -77,5 +78,20 @@ export const updateProjectDesAction = des => ({
     type: ACTION_UPDATE_PROJECT_DES,
     data: {
         des: des
+    }
+});
+
+/**
+ * 更新项目信息
+ * @param projectId 项目id
+ * @param logo 项目logo文件
+ * @param projectDes 项目简介
+ */
+export const updateProjectInfoAction = (projectId, logo, projectDes) => ({
+    type: ACTION_UPDATE_PROJECT_INFO,
+    data: {
+        projectId: projectId,
+        projectDes: projectDes,
+        projectLogo: logo
     }
 });

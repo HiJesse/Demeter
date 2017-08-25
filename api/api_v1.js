@@ -38,4 +38,7 @@ router.post('/project/deleteProject', project.deleteProject);
 // 获取项目列表
 router.get('/project/fetchProjectList', project.fetchProjectList);
 
+// 更新项目信息
+router.post('/project/updateProjectInfo', ProjectLogoMulter.single('projectLogo'), project.updateProjectInfo);
+
 export default router;

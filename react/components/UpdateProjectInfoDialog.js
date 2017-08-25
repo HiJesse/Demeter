@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import {
     getLogoFileAction,
     updateProjectDesAction,
+    updateProjectInfoAction,
     updateProjectLoadingAction,
     uploadLogoAction
 } from "../actions/projectManager";
@@ -86,6 +87,7 @@ export class UpdateProjectInfoDialog extends React.Component {
      */
     _confirmDialog() {
         this.props.showConfirmLoading(true);
+        this.props.updateInfo(this.props.data.id, this.props.logoFile, this.props.des);
     }
 }
 
@@ -105,6 +107,7 @@ function mapDispatchToProps(dispatch) {
         uploadLogo: file => dispatch(uploadLogoAction(file)),
         getLogoFile: file => dispatch(getLogoFileAction(file)),
         updateDes: des => dispatch(updateProjectDesAction(des)),
+        updateInfo: (projectId, logo, des) => dispatch(updateProjectInfoAction(projectId, logo, des))
     }
 }
 

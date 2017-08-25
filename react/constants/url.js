@@ -25,4 +25,7 @@ export const URL_DELETE_USER = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'del
 
 // 创建项目
 export const URL_CREATE_PROJECT = URL_DOMAIN + URL_VERSION + URL_MODULE.PROJECT + 'createProject';
+// 获取用户列表
 export const URL_FETCH_PROJECT_LIST = URL_DOMAIN + URL_VERSION + URL_MODULE.PROJECT + 'fetchProjectList';
+// 更新项目信息
+export const URL_UPDATE_PROJECT_INFO = URL_DOMAIN + URL_VERSION + URL_MODULE.PROJECT + 'updateProjectInfo';

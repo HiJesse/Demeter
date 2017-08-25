@@ -68,3 +68,9 @@ export const RES_MSG_FETCH_PROJECT_PLATFORM = '查询项目平台信息失败';
 // 查询项目总数为0
 export const RES_FAILED_COUNT_PROJECT_EMPTY = 2009;
 export const RES_MSG_COUNT_PROJECT_EMPTY = '未查询到相关项目';
+// 更新项目信息失败
+export const RES_FAILED_UPDATE_PROJECT_INFO = 2010;
+export const RES_MSG_UPDATE_PROJECT_INFO = '更新项目信息失败';
+// 更新项目信息失败
+export const RES_FAILED_UPDATE_PROJECT_DES = 2011;
+export const RES_MSG_UPDATE_PROJECT_DES = '项目描述不能低于三个字符';
