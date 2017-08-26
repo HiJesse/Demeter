@@ -1,6 +1,6 @@
 // project manager actions
 import {
-    ACTION_CREATE_PROJECT,
+    ACTION_CREATE_PROJECT, ACTION_DELETE_PROJECT_LOADING,
     ACTION_GET_LOGO_FILE,
     ACTION_SHOW_LOGO_PREVIEW,
     ACTION_UPDATE_PROJECT_DES,
@@ -60,7 +60,7 @@ export const createProjectAction = (projectName, projectDes, logo) => ({
 });
 
 /**
- * 更新项目信息时菊花状态
+ * 更新项目信息弹窗信息时菊花状态
  * @param visible
  */
 export const updateProjectLoadingAction = visible => ({
@@ -93,5 +93,16 @@ export const updateProjectInfoAction = (projectId, logo, projectDes) => ({
         projectId: projectId,
         projectDes: projectDes,
         projectLogo: logo
+    }
+});
+
+/**
+ * 删除项目弹窗时菊花状态
+ * @param visible
+ */
+export const deleteProjectLoadingAction = visible => ({
+    type: ACTION_DELETE_PROJECT_LOADING,
+    data: {
+        confirmDeletingLoading: visible
     }
 });

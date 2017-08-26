@@ -1,6 +1,7 @@
 // project list actions
 import {
     ACTION_DELETE_PROJECT,
+    ACTION_DELETE_PROJECT_DIALOG_VISIBLE,
     ACTION_FETCH_PROJECT_LIST,
     ACTION_PROJECT_PAGE_LOADING,
     ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
@@ -43,6 +44,17 @@ export const showUpdateDialogAction = visible => ({
     type: ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
     data: {
         updateDialogVisible: visible
+    }
+});
+
+/**
+ * 是否显示删除项目弹窗
+ * @param visible
+ */
+export const showDeletingDialogAction = visible => ({
+    type: ACTION_DELETE_PROJECT_DIALOG_VISIBLE,
+    data: {
+        deleteDialogVisible: visible
     }
 });
 

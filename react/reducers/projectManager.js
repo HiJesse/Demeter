@@ -2,6 +2,7 @@
 import {
     ACTION_CREATE_PROJECT_FULFILLED,
     ACTION_DELETE_PROJECT_FULFILLED,
+    ACTION_DELETE_PROJECT_LOADING,
     ACTION_GET_LOGO_FILE,
     ACTION_SHOW_LOGO_PREVIEW,
     ACTION_UPDATE_PROJECT_DES,
@@ -74,9 +75,19 @@ const updateProjectReducer = (state, action) => {
  * 删除新项目
  * @param state
  * @param action
- * @returns {{updateProjectInfo: {}}}
+ * @returns {{confirmDeletingLoading: boolean}}
  */
 const deleteProjectReducer = (state, action) => {
+    if (action.status === RES_SUCCEED) {
+        message.success('删除项目成功');
+    } else {
+        message.error(action.msg);
+    }
+
+    return {
+        ...state,
+        confirmDeletingLoading: false
+    };
 };
 
 const initialProjectManagerState = {
@@ -90,6 +101,7 @@ const initialProjectManagerState = {
         url: URL_PROJECT_LOGO_DEFAULT,
     }],
     confirmLoading: -1,
+    confirmDeletingLoading: -1,
     des: '',
 };
 
@@ -126,6 +138,12 @@ export function projectManager(state = initialProjectManagerState, action) {
                 confirmLoading: action.data.confirmLoading
             });
             break;
+        case ACTION_DELETE_PROJECT_LOADING:
+            newState = ({
+                ...state,
+                confirmDeletingLoading: action.data.confirmDeletingLoading
+            });
+            break;
         case ACTION_UPDATE_PROJECT_DES:
             newState = ({
                 ...state,
@@ -136,6 +154,7 @@ export function projectManager(state = initialProjectManagerState, action) {
             newState = updateProjectReducer(state, action.data);
             break;
         case ACTION_DELETE_PROJECT_FULFILLED:
+            newState = deleteProjectReducer(state, action.data);
             break;
         default:
     }

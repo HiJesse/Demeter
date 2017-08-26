@@ -1,5 +1,6 @@
 //project list reducer
 import {
+    ACTION_DELETE_PROJECT_DIALOG_VISIBLE,
     ACTION_FETCH_PROJECT_LIST_FULFILLED,
     ACTION_PROJECT_PAGE_LOADING,
     ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
@@ -20,6 +21,7 @@ const fetchProjectListReducer = (state, action) => {
         message.error(action.msg);
         return {
             ...state,
+            projectList: [],
             pageLoading: false
         };
     }
@@ -81,6 +83,7 @@ const initialProjectListState = {
     pageSize: 10,
     pageLoading: false,
     updateDialogVisible: false,
+    deleteDialogVisible: false,
     updateProjectInfo: {},
 };
 
@@ -110,6 +113,12 @@ export function projectList(state = initialProjectListState, action) {
             break;
         case ACTION_UPDATING_PROJECT_INFO:
             newState = setUpdatingProjectInfoReducer(state, action.data);
+            break;
+        case ACTION_DELETE_PROJECT_DIALOG_VISIBLE:
+            newState = {
+                ...state,
+                deleteDialogVisible: action.data.deleteDialogVisible
+            };
             break;
         default:
     }

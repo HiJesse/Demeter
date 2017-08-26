@@ -1,17 +1,18 @@
 import React from "react";
 import {connect} from "react-redux";
-import {Icon, Popconfirm, Popover, Table} from "antd";
+import {Icon, Popover, Table} from "antd";
 import {homeStyle} from "./styles/home";
 import {projectListViewStyle} from "./styles/projectListView";
 import {
-    deleteProjectAction,
     fetchProjectListAction,
     projectPageLoadingAction,
     setUpdatingProjectInfoAction,
+    showDeletingDialogAction,
     showUpdateDialogAction
 } from "../actions/projectList";
 import {isStringEmpty} from "../../util/checker";
 import UpdateProjectInfoDialog from "../components/UpdateProjectInfoDialog";
+import DeleteProjectDialog from "../components/DeleteProjectDialog";
 
 // 用户管理-用户列表
 class ProjectListView extends React.Component {
@@ -35,6 +36,18 @@ class ProjectListView extends React.Component {
                     onConfirm={() => {
                         this.props.setUpdatingProjectInfo(-1);
                         this.props.showUpdateDialog(false);
+                        this._refreshPage();
+                    }}/>
+                <DeleteProjectDialog
+                    data={this.props.updateProjectInfo}
+                    dialogVisible={this.props.deleteDialogVisible}
+                    onDismiss={() => {
+                        this.props.setUpdatingProjectInfo(-1);
+                        this.props.showDeleteDialog(false);
+                    }}
+                    onConfirm={() => {
+                        this.props.setUpdatingProjectInfo(-1);
+                        this.props.showDeleteDialog(false);
                         this._refreshPage();
                     }}/>
                 <Table
@@ -100,11 +113,11 @@ class ProjectListView extends React.Component {
                     this.props.setUpdatingProjectInfo(index);
                     this.props.showUpdateDialog(true);
                 }}>{'更新信息'}</a>
-                <Popconfirm
-                    title="确认删除项目?"
-                    onConfirm={() => this.props.deleteProject(this.props.projectList[i].project.id)}>
-                    <a href="#">{'删除项目'}</a>
-                </Popconfirm>
+
+                <a href="#" onClick={() => {
+                    this.props.setUpdatingProjectInfo(index);
+                    this.props.showDeleteDialog(true);
+                }}>{'删除项目'}</a>
             </span>
         )
     }
@@ -167,6 +180,7 @@ function select(state) {
         projectCount: projectList.projectCount, // 项目总数
         pageLoading: projectList.pageLoading, // 分页loading
         updateDialogVisible: projectList.updateDialogVisible, // 是否显示更新项目信息弹窗
+        deleteDialogVisible: projectList.deleteDialogVisible, // 是否显示更新项目信息弹窗
         updateProjectInfo: projectList.updateProjectInfo, // 要更新的项目信息
     };
 }
@@ -176,8 +190,8 @@ function mapDispatchToProps(dispatch) {
         fetchProjectList: (pageSize, pageNum, projectName) =>
             dispatch(fetchProjectListAction(localStorage.uId, pageSize, pageNum, projectName)),
         pageLoadingVisible: isLoading => dispatch(projectPageLoadingAction(isLoading)),
-        deleteProject: projectId => dispatch(deleteProjectAction(localStorage.uId, projectId)),
         showUpdateDialog: visible => dispatch(showUpdateDialogAction(visible)),
+        showDeleteDialog: visible => dispatch(showDeletingDialogAction(visible)),
         setUpdatingProjectInfo: index => dispatch(setUpdatingProjectInfoAction(index)),
     }
 }

@@ -49,7 +49,7 @@ export class UpdateProjectInfoDialog extends React.Component {
         if (this.props.confirmLoading === false) {
             this.props.onConfirm();
             this.props.showConfirmLoading(-1);
-            return;
+            return null;
         }
         return (
             <Modal title={`更新 ${isStringEmpty(data.name) ? '' : data.name} 信息`}

@@ -21,6 +21,7 @@ function fetchUserListReducer(state, action) {
         message.error(action.msg);
         return {
             ...state,
+            userList: [],
             pageLoading: false
         };
     }

@@ -3,6 +3,7 @@ import {combineEpics} from "redux-observable";
 import {
     ACTION_CREATE_PROJECT,
     ACTION_CREATE_PROJECT_FULFILLED,
+    ACTION_DELETE_PROJECT,
     ACTION_DELETE_PROJECT_FULFILLED,
     ACTION_FETCH_PROJECT_LIST,
     ACTION_FETCH_PROJECT_LIST_FULFILLED,
@@ -61,7 +62,7 @@ export const updateProjectInfoEpic = action$ =>
  * @param action$
  */
 export const deleteProjectInfoEpic = action$ =>
-    action$.ofType(ACTION_UPDATE_PROJECT_INFO)
+    action$.ofType(ACTION_DELETE_PROJECT)
         .mergeMap(action => ajaxRequest({
             actionType: ACTION_DELETE_PROJECT_FULFILLED,
             method: AJAX_METHOD.POST,

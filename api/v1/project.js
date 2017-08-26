@@ -68,7 +68,7 @@ const createProjectInfo = (name, des, logo) => {
  */
 const deleteProjectInfo = (projectId) => new Promise((resolve, reject) => {
     ProjectModel.remove({
-        projectId: projectId
+        _id: projectId
     }, (err) => {
         if (err) {
             reject({projectDeleted: false});
