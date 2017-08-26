@@ -45,11 +45,17 @@ export class UpdateProjectInfoDialog extends React.Component {
                 <div className="ant-upload-text">Upload</div>
             </div>
         );
+
+        if (this.props.confirmLoading === false) {
+            this.props.onConfirm();
+            this.props.showConfirmLoading(-1);
+            return;
+        }
         return (
             <Modal title={`更新 ${isStringEmpty(data.name) ? '' : data.name} 信息`}
                    visible={this.props.dialogVisible}
                    onOk={this._confirmDialog.bind(this)}
-                   confirmLoading={this.props.confirmLoading}
+                   confirmLoading={this.props.confirmLoading === -1 ? false : this.props.confirmLoading}
                    onCancel={() => this.props.onDismiss()}
             >
                 <div style={style.view_content}>
@@ -107,7 +113,7 @@ function mapDispatchToProps(dispatch) {
         uploadLogo: file => dispatch(uploadLogoAction(file)),
         getLogoFile: file => dispatch(getLogoFileAction(file)),
         updateDes: des => dispatch(updateProjectDesAction(des)),
-        updateInfo: (projectId, logo, des) => dispatch(updateProjectInfoAction(projectId, logo, des))
+        updateInfo: (projectId, logo, des) => dispatch(updateProjectInfoAction(projectId, logo, des)),
     }
 }
 
@@ -117,4 +123,5 @@ UpdateProjectInfoDialog.PropTypes = {
     dialogVisible: React.PropTypes.bool.isRequired, // 是否显示弹窗
     onDismiss: React.PropTypes.func.isRequired, // 关闭弹窗回调
     data: React.PropTypes.object.isRequired, // 要更新的项目数据
+    onConfirm: React.PropTypes.func.isRequired, // 有更新数据成功时回调
 };

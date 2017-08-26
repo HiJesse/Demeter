@@ -4,6 +4,7 @@ import {Icon, Popconfirm, Popover, Table} from "antd";
 import {homeStyle} from "./styles/home";
 import {projectListViewStyle} from "./styles/projectListView";
 import {
+    deleteProjectAction,
     fetchProjectListAction,
     projectPageLoadingAction,
     setUpdatingProjectInfoAction,
@@ -16,8 +17,7 @@ import UpdateProjectInfoDialog from "../components/UpdateProjectInfoDialog";
 class ProjectListView extends React.Component {
 
     componentDidMount() {
-        this.props.pageLoadingVisible(true);
-        this.props.fetchProjectList(this.props.pageSize, this.props.pageNum, '');
+        this._refreshPage();
     }
 
     render() {
@@ -31,6 +31,11 @@ class ProjectListView extends React.Component {
                     onDismiss={() => {
                         this.props.setUpdatingProjectInfo(-1);
                         this.props.showUpdateDialog(false);
+                    }}
+                    onConfirm={() => {
+                        this.props.setUpdatingProjectInfo(-1);
+                        this.props.showUpdateDialog(false);
+                        this._refreshPage();
                     }}/>
                 <Table
                     bordered
@@ -97,7 +102,7 @@ class ProjectListView extends React.Component {
                 }}>{'更新信息'}</a>
                 <Popconfirm
                     title="确认删除项目?"
-                    onConfirm={() => this.props.deleteProject('')}>
+                    onConfirm={() => this.props.deleteProject(this.props.projectList[i].project.id)}>
                     <a href="#">{'删除项目'}</a>
                 </Popconfirm>
             </span>
@@ -142,6 +147,15 @@ class ProjectListView extends React.Component {
             </div>
         )
     }
+
+    /**
+     * 刷新当前列表数据
+     * @private
+     */
+    _refreshPage() {
+        this.props.pageLoadingVisible(true);
+        this.props.fetchProjectList(this.props.pageSize, this.props.pageNum, '');
+    }
 }
 
 function select(state) {
@@ -162,7 +176,7 @@ function mapDispatchToProps(dispatch) {
         fetchProjectList: (pageSize, pageNum, projectName) =>
             dispatch(fetchProjectListAction(localStorage.uId, pageSize, pageNum, projectName)),
         pageLoadingVisible: isLoading => dispatch(projectPageLoadingAction(isLoading)),
-        deleteProject: projectId => dispatch(),
+        deleteProject: projectId => dispatch(deleteProjectAction(localStorage.uId, projectId)),
         showUpdateDialog: visible => dispatch(showUpdateDialogAction(visible)),
         setUpdatingProjectInfo: index => dispatch(setUpdatingProjectInfoAction(index)),
     }

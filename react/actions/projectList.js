@@ -1,5 +1,6 @@
 // project list actions
 import {
+    ACTION_DELETE_PROJECT,
     ACTION_FETCH_PROJECT_LIST,
     ACTION_PROJECT_PAGE_LOADING,
     ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
@@ -53,5 +54,18 @@ export const setUpdatingProjectInfoAction = index => ({
     type: ACTION_UPDATING_PROJECT_INFO,
     data: {
         updateProjectIndex: index
+    }
+});
+
+/**
+ * 根据项目列表index 删除该index的项目
+ * @param uId
+ * @param projectId
+ */
+export const deleteProjectAction = (uId, projectId) => ({
+    type: ACTION_DELETE_PROJECT,
+    data: {
+        uId: uId,
+        projectId: projectId
     }
 });

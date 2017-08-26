@@ -3,13 +3,19 @@ import {combineEpics} from "redux-observable";
 import {
     ACTION_CREATE_PROJECT,
     ACTION_CREATE_PROJECT_FULFILLED,
+    ACTION_DELETE_PROJECT_FULFILLED,
     ACTION_FETCH_PROJECT_LIST,
     ACTION_FETCH_PROJECT_LIST_FULFILLED,
     ACTION_UPDATE_PROJECT_INFO,
     ACTION_UPDATE_PROJECT_INFO_FULFILLED
 } from "../constants/actionType";
 import {AJAX_METHOD, ajaxRequest} from "../../util/ajax";
-import {URL_CREATE_PROJECT, URL_FETCH_PROJECT_LIST, URL_UPDATE_PROJECT_INFO} from "../constants/url";
+import {
+    URL_CREATE_PROJECT,
+    URL_DELETE_PROJECT,
+    URL_FETCH_PROJECT_LIST,
+    URL_UPDATE_PROJECT_INFO
+} from "../constants/url";
 
 /**
  * 创建项目epic
@@ -51,10 +57,24 @@ export const updateProjectInfoEpic = action$ =>
         }));
 
 /**
+ * 删除项目epic
+ * @param action$
+ */
+export const deleteProjectInfoEpic = action$ =>
+    action$.ofType(ACTION_UPDATE_PROJECT_INFO)
+        .mergeMap(action => ajaxRequest({
+            actionType: ACTION_DELETE_PROJECT_FULFILLED,
+            method: AJAX_METHOD.POST,
+            url: URL_DELETE_PROJECT,
+            params: action.data
+        }));
+
+/**
  * user list相关 epic方法汇总
  */
 export const projectManagerEpics = combineEpics(
     createProjectEpic,
     fetchProjectListEpic,
-    updateProjectInfoEpic
+    updateProjectInfoEpic,
+    deleteProjectInfoEpic
 );
