@@ -61,6 +61,7 @@ export class UpdateProjectInfoDialog extends React.Component {
                 <div style={style.view_content}>
                     <Upload
                         action={''}
+                        accept={'image/*'}
                         listType="picture-card"
                         fileList={logo}
                         onChange={({fileList}) => {

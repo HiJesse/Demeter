@@ -9,12 +9,17 @@ import {
     showLogoPreviewAction,
     uploadLogoAction
 } from "../actions/projectManager";
+import {PROJECT_LOGO} from "../constants/fileConstant";
 
 const FormItem = Form.Item;
 const {TextArea} = Input;
 
 // 项目管理-新建项目
 class CreateProjectView extends React.Component {
+
+    componentDidMount() {
+        this.props.uploadLogo(PROJECT_LOGO);
+    }
 
     render() {
         const {getFieldDecorator} = this.props.form;
@@ -39,6 +44,7 @@ class CreateProjectView extends React.Component {
                             <div>
                                 <Upload
                                     action={''}
+                                    accept={'image/*'}
                                     listType="picture-card"
                                     fileList={logo}
                                     onPreview={file => this.props.showLogoPreview(true, file)}
@@ -114,11 +120,12 @@ class CreateProjectView extends React.Component {
 const CreateProjectViewFrom = Form.create()(CreateProjectView);
 
 function select(state) {
+    const projectManager = state.projectManager;
     return {
-        previewVisible: state.projectManager.previewVisible,
-        previewImage: state.projectManager.previewImage,
-        logo: state.projectManager.logo,
-        logoFile: state.projectManager.logoFile
+        previewVisible: projectManager.previewVisible,
+        previewImage: projectManager.previewImage,
+        logo: projectManager.logo,
+        logoFile: projectManager.logoFile
     };
 }
 

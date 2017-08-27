@@ -11,9 +11,7 @@ class DeleteProjectDialog extends React.Component {
 
     render() {
         const data = this.props.data;
-        console.log(this.props.confirmLoading)
         if (this.props.confirmLoading === false) {
-            console.log('jesse', 'finish')
             this.props.onConfirm();
             this.props.showConfirmLoading(-1);
             return null;

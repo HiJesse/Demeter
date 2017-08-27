@@ -12,7 +12,7 @@ import {
 } from "../constants/actionType";
 import {message} from "antd";
 import {RES_SUCCEED} from "../../util/status";
-import {URL_PROJECT_LOGO_DEFAULT} from "../../util/pathUtil";
+import {PROJECT_LOGO} from "../constants/fileConstant";
 
 /**
  * 是否显示logo预览框, 如果要显示则填充preview image
@@ -94,12 +94,7 @@ const initialProjectManagerState = {
     previewVisible: false,
     previewImage: '',
     logoFile: null,
-    logo: [{
-        uid: -1,
-        name: 'xxx.png',
-        status: 'done',
-        url: URL_PROJECT_LOGO_DEFAULT,
-    }],
+    logo: PROJECT_LOGO,
     confirmLoading: -1,
     confirmDeletingLoading: -1,
     des: '',
@@ -111,8 +106,13 @@ const initialProjectManagerState = {
  * @param action
  * @returns {*}
  */
-export function projectManager(state = initialProjectManagerState, action) {
+export function projectManager(state, action) {
     let newState = state;
+    console.log('reducer', state)
+    if (state === undefined) {
+        return initialProjectManagerState
+    }
+
     switch (action.type) {
         case ACTION_SHOW_LOGO_PREVIEW:
             newState = showLogoPreviewReducer(state, action.data);
