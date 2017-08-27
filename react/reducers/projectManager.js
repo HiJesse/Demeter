@@ -106,12 +106,8 @@ const initialProjectManagerState = {
  * @param action
  * @returns {*}
  */
-export function projectManager(state, action) {
+export function projectManager(state = initialProjectManagerState, action) {
     let newState = state;
-    console.log('reducer', state)
-    if (state === undefined) {
-        return initialProjectManagerState
-    }
 
     switch (action.type) {
         case ACTION_SHOW_LOGO_PREVIEW:

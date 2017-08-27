@@ -1,5 +1,5 @@
 import React from "react";
-import {Icon, Input, Modal, Upload} from "antd";
+import {Icon, Input, message, Modal, Upload} from "antd";
 import {connect} from "react-redux";
 import {
     getLogoFileAction,
@@ -8,7 +8,7 @@ import {
     updateProjectLoadingAction,
     uploadLogoAction
 } from "../actions/projectManager";
-import {isStringEmpty} from "../../util/checker";
+import {isStringEmpty, isStringLengthLeast} from "../../util/checker";
 
 const {TextArea} = Input;
 
@@ -93,6 +93,10 @@ export class UpdateProjectInfoDialog extends React.Component {
      * @private
      */
     _confirmDialog() {
+        if (!isStringLengthLeast(this.props.nickname, 3)) {
+            message.error('项目描述长度最少为3位');
+            return;
+        }
         this.props.showConfirmLoading(true);
         this.props.updateInfo(this.props.data.id, this.props.logoFile, this.props.des);
     }

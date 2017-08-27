@@ -4,21 +4,22 @@ import {
     changeSearchVisibleAction,
     deleteUserAction,
     fetchUserListAction,
-    pageLoadingAction
+    pageLoadingAction,
+    setUpdatingUserInfoAction,
+    showUpdatingUserDialogAction
 } from "../actions/userManager";
 import {connect} from "react-redux";
 import {Button, Icon, Input, Popconfirm, Table} from "antd";
-import TextEditableItemView, {TextEditableMode, TextEditableStatus} from "../components/TextEditableItemView";
 import {homeStyle} from "./styles/home";
 import {userListView} from "./styles/userListView";
 import {resetPasswordAction} from "../actions/user";
+import UpdateUserInfoDialog from "../components/UpdateUserInfoDialog";
 
 // 用户管理-用户列表
 class UserListView extends React.Component {
 
     componentDidMount() {
-        this.props.pageLoadingVisible(true);
-        this.props.fetchUserList(this.props.pageSize, this.props.pageNum, this.props.accountSearch);
+        this._refreshPage();
     }
 
     render() {
@@ -26,22 +27,26 @@ class UserListView extends React.Component {
             this.props.pageLoadingVisible(true);
             this.props.fetchUserList(this.props.pageSize, this.props.pageNum, this.props.accountSearch)
         }
-        const data = this.props.userList;
-        const dataSource = data.map((item) => {
-            const obj = {};
-            Object.keys(item).forEach((key) => {
-                obj[key] = key === 'key' ? item[key] : item[key].value;
-            });
-            return obj;
-        });
 
         const columns = this._buildColumns();
 
         return (
             <div style={homeStyle.view_content}>
+                <UpdateUserInfoDialog
+                    data={this.props.updateUserInfo}
+                    dialogVisible={this.props.updateDialogVisible}
+                    onDismiss={() => {
+                        this.props.setUpdatingUserInfo(-1);
+                        this.props.showUpdateDialog(false);
+                    }}
+                    onConfirm={() => {
+                        this.props.setUpdatingUserInfo(-1);
+                        this.props.showUpdateDialog(false);
+                        this._refreshPage();
+                    }}/>
                 <Table
                     bordered
-                    dataSource={dataSource}
+                    dataSource={this.props.userList}
                     columns={columns}
                     loading={this.props.pageLoading}
                     scroll={{y: true}}
@@ -56,6 +61,15 @@ class UserListView extends React.Component {
                     }}/>
             </div>
         );
+    }
+
+    /**
+     * 刷新当前列表
+     * @private
+     */
+    _refreshPage() {
+        this.props.pageLoadingVisible(true);
+        this.props.fetchUserList(this.props.pageSize, this.props.pageNum, this.props.accountSearch);
     }
 
     /**
@@ -91,7 +105,7 @@ class UserListView extends React.Component {
             title: '昵称',
             dataIndex: 'nickname',
             width: '15%',
-            render: (text, record, index) => this._buildTextInputColumnItem(this.props.userList, index, 'nickname', text),
+            render: (text) => (<div>{text}</div>),
         }, {
             title: '权限',
             dataIndex: 'auth',
@@ -106,8 +120,7 @@ class UserListView extends React.Component {
             title: '行为',
             dataIndex: 'operation',
             render: (text, record, index) => {
-                const {editable} = this.props.userList[index].account;
-                return this._buildOperationColumn(index, editable)
+                return this._buildOperationColumn(index)
             },
         }];
     }
@@ -115,108 +128,28 @@ class UserListView extends React.Component {
     /**
      * 构建表格中行为列
      * @param index
-     * @param editable
      * @returns {XML}
      * @private
      */
-    _buildOperationColumn(index, editable) {
-        let column;
-        if (editable) {
-            column = (
-                <span style={userListView.view_operation}>
-                    <a onClick={() => this._updateNickname(index, TextEditableStatus.SAVE)}>{'更新'}</a>
-                    <Popconfirm
-                        title="确定取消吗?"
-                        onConfirm={() => this._updateNickname(index, TextEditableStatus.CANCEL)}>
-                        <a>{'取消'}</a>
-                    </Popconfirm>
-                </span>
-            );
-        } else {
-            column = (
-                <span style={userListView.view_operation}>
-                    <a onClick={() => this._editItem(index)}>{'修改昵称'}</a>
+    _buildOperationColumn(index) {
+        return (
+            <span style={userListView.view_operation}>
+                    <a onClick={() => {
+                        this.props.setUpdatingUserInfo(index);
+                        this.props.showUpdateDialog(true);
+                    }}>{'修改昵称'}</a>
                     <Popconfirm
                         title="确认重置密码?"
-                        onConfirm={() => this.props.resetPassword(this.props.userList[index].account.value)}>
+                        onConfirm={() => this.props.resetPassword(this.props.userList[index].account)}>
                         <a href="#">{'重置密码'}</a>
                     </Popconfirm>
                     <Popconfirm
                         title="确认删除用户?"
-                        onConfirm={() => this.props.deleteUser(this.props.userList[index].account.value)}>
+                        onConfirm={() => this.props.deleteUser(this.props.userList[index].account)}>
                         <a href="#">{'删除用户'}</a>
                     </Popconfirm>
                 </span>
-            );
-        }
-        return column;
-    }
-
-    /**
-     * 构建表格最小元素, 模式为 text/input
-     * @param data
-     * @param index
-     * @param key
-     * @param text
-     * @returns {*}
-     * @private
-     */
-    _buildTextInputColumnItem(data, index, key, text) {
-        const {editable, status, value} = data[index][key];
-        if (typeof editable === 'undefined') {
-            return text;
-        }
-
-        return (
-            <TextEditableItemView
-                editable={editable}
-                mode={TextEditableMode.INPUT}
-                value={value}
-                status={status}
-                onChange={value => {
-                    const data = this.props.userList;
-                    data[index][key].value = value;
-                    this.setState({data});
-                }}
-            />);
-    }
-
-    /**
-     * 保存或取消昵称的修改
-     * @param index
-     * @param type
-     * @private
-     */
-    _updateNickname(index, type) {
-        const data = this.props.userList;
-        Object.keys(data[index]).forEach((item) => {
-            if (data[index][item] && typeof data[index][item].editable !== 'undefined') {
-                data[index][item].editable = false;
-                data[index][item].status = type;
-            }
-        });
-        this.setState({data}, () => {
-            Object.keys(data[index]).forEach((item) => {
-                if (data[index][item] && typeof data[index][item].editable !== 'undefined') {
-                    delete data[index][item].status;
-                }
-            });
-        });
-    }
-
-    /**
-     * 根据index 修改行数据
-     * @param index
-     * @private
-     */
-    _editItem(index) {
-        const data = this.props.userList;
-        Object.keys(data[index]).forEach((item) => {
-            if (data[index][item] && typeof data[index][item].editable !== 'undefined') {
-                data[index][item].editable = true;
-            }
-        });
-        this.setState({data});
+        );
     }
 
     /**
@@ -240,6 +173,8 @@ function select(state) {
         pageLoading: userManager.pageLoading, // 分页loading
         accountSearch: userManager.accountSearch, // 搜索账号输入
         searchInputVisible: userManager.searchInputVisible, //搜索框是否可见
+        updateDialogVisible: userManager.updateDialogVisible, // 是否显示更新用户信息弹窗
+        updateUserInfo: userManager.updateUserInfo, // 要更新的用户信息
     };
 }
 
@@ -253,6 +188,8 @@ function mapDispatchToProps(dispatch) {
         changeSearchVisible: (visible) => dispatch(changeSearchVisibleAction(visible)),
         deleteUser: (account) => dispatch(deleteUserAction(localStorage.uId, account)),
         resetPassword: (account) => dispatch(resetPasswordAction(account, localStorage.uId)),
+        showUpdateDialog: visible => dispatch(showUpdatingUserDialogAction(visible)),
+        setUpdatingUserInfo: index => dispatch(setUpdatingUserInfoAction(index)),
     }
 }
 

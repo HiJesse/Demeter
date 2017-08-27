@@ -4,7 +4,11 @@ import {
     ACTION_CHANGE_SEARCH_INPUT_VISIBLE,
     ACTION_DELETE_USER,
     ACTION_FETCH_USER_LIST,
-    ACTION_PAGE_LOADING
+    ACTION_PAGE_LOADING,
+    ACTION_UPDATE_USER_DIALOG_VISIBLE,
+    ACTION_UPDATE_USER_INFO_LOADING,
+    ACTION_UPDATE_USER_NICKNAME,
+    ACTION_UPDATING_USER_INFO
 } from "../constants/actionType";
 
 /**
@@ -69,5 +73,50 @@ export const deleteUserAction = (uId, account) => ({
     data: {
         uId: uId,
         account: account
+    }
+});
+
+
+/**
+ * 是否显示用户信息更新弹窗
+ * @param visible
+ */
+export const showUpdatingUserDialogAction = visible => ({
+    type: ACTION_UPDATE_USER_DIALOG_VISIBLE,
+    data: {
+        updateDialogVisible: visible
+    }
+});
+
+/**
+ * 设置要更新的用户信息
+ * @param index 列表index
+ */
+export const setUpdatingUserInfoAction = index => ({
+    type: ACTION_UPDATING_USER_INFO,
+    data: {
+        updateUserIndex: index
+    }
+});
+
+/**
+ * 更新用户信息弹窗信息时菊花状态
+ * @param visible
+ */
+export const updateUserInfoLoadingAction = visible => ({
+    type: ACTION_UPDATE_USER_INFO_LOADING,
+    data: {
+        confirmUpdatingUserInfoLoading: visible
+    }
+});
+
+/**
+ * 更新用户昵称, 只是view
+ * @param nickname
+ */
+export const updateUserNicknameAction = nickname => ({
+    type: ACTION_UPDATE_USER_NICKNAME,
+    data: {
+        nickname: nickname
     }
 });

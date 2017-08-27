@@ -5,7 +5,10 @@ import {
     ACTION_CHANGE_SEARCH_INPUT_VISIBLE,
     ACTION_DELETE_USER_FULFILLED,
     ACTION_FETCH_USER_LIST_FULFILLED,
-    ACTION_PAGE_LOADING
+    ACTION_PAGE_LOADING,
+    ACTION_UPDATE_USER_DIALOG_VISIBLE,
+    ACTION_UPDATE_USER_NICKNAME,
+    ACTION_UPDATING_USER_INFO
 } from "../constants/actionType";
 import {RES_SUCCEED} from "../../util/status";
 
@@ -29,22 +32,10 @@ function fetchUserListReducer(state, action) {
     const userList = action.data.userList.map(function (item, index) {
         return {
             key: index,
-            account: {
-                editable: false,
-                value: item.account,
-            },
-            nickname: {
-                editable: false,
-                value: item.nickName,
-            },
-            auth: {
-                editable: false,
-                value: item.isAdmin ? '管理员' : '普通用户',
-            },
-            projects: {
-                editable: false,
-                value: 'xxx',
-            }
+            account: item.account,
+            nickname: item.nickName,
+            auth: item.isAdmin ? '管理员' : '普通用户',
+            projects: 'xxx'
         };
     });
 
@@ -78,6 +69,28 @@ function deleteUserReducer(state, action) {
     };
 }
 
+/**
+ * 获取当前选中要更新的用户的信息
+ * @param state
+ * @param action
+ * @returns {{updateUserInfo: {}}}
+ */
+const setUpdatingUserInfoReducer = (state, action) => {
+    const index = action.updateUserIndex;
+    let updateUserInfo = {};
+
+    if (index >= 0 && state.userList.length > index) {
+        const info = state.userList[index];
+        updateUserInfo.account = info.account;
+        updateUserInfo.nickname = info.nickname;
+    }
+
+    return {
+        ...state,
+        updateUserInfo: updateUserInfo
+    }
+};
+
 const initialUserListState = {
     userCount: 0,
     userList: [],
@@ -87,6 +100,10 @@ const initialUserListState = {
     accountSearch: null,
     searchInputVisible: false,
     needRefreshData: false,
+    updateDialogVisible: false,
+    updateUserInfo: {},
+    confirmUpdatingUserInfoLoading: -1,
+    nickname: '',
 };
 
 /**
@@ -121,6 +138,21 @@ export function userManager(state = initialUserListState, action) {
             break;
         case ACTION_DELETE_USER_FULFILLED:
             newState = deleteUserReducer(state, action.data);
+            break;
+        case ACTION_UPDATE_USER_DIALOG_VISIBLE:
+            newState = {
+                ...state,
+                updateDialogVisible: action.data.updateDialogVisible
+            };
+            break;
+        case ACTION_UPDATING_USER_INFO:
+            newState = setUpdatingUserInfoReducer(state, action.data);
+            break;
+        case ACTION_UPDATE_USER_NICKNAME:
+            newState = {
+                ...state,
+                nickname: action.data.nickname
+            };
             break;
         default:
     }
