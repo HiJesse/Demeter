@@ -37,6 +37,9 @@ export const RES_MSG_COUNT_USER = '查询用户总数失败';
 // 删除用户失败
 export const RES_FAILED_DELETE_USER = 1008;
 export const RES_MSG_DELETE_USER = '删除用户失败';
+// 查询用户总数失败
+export const RES_FAILED_MATCHED_USER_LIST = 1009;
+export const RES_MSG_MATCHED_USER_LIST = '没有查询到满足条件的用户列表';
 
 // 创建项目失败
 export const RES_FAILED_CREATE_PROJECT = 2000;

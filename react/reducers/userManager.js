@@ -25,7 +25,8 @@ function fetchUserListReducer(state, action) {
         return {
             ...state,
             userList: [],
-            pageLoading: false
+            pageLoading: false,
+            needRefreshData: false
         };
     }
 

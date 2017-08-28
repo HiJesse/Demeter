@@ -7,6 +7,7 @@ import {
     RES_FAILED_CREATE_USER,
     RES_FAILED_DELETE_USER,
     RES_FAILED_FETCH_USER_LIST,
+    RES_FAILED_MATCHED_USER_LIST,
     RES_FAILED_MODIFY_PWD,
     RES_FAILED_NOT_ADMIN,
     RES_FAILED_RESET_PASSWORD,
@@ -17,6 +18,7 @@ import {
     RES_MSG_CREATE_USER,
     RES_MSG_DELETE_USER,
     RES_MSG_FETCH_USER_LIST,
+    RES_MSG_MATCHED_USER_LIST,
     RES_MSG_MODIFY_PWD,
     RES_MSG_NOT_ADMIN,
     RES_MSG_RESET_PASSWORD,
@@ -27,7 +29,7 @@ import {
     RES_SUCCEED
 } from "../../util/status";
 import {createJsonWebToken} from "../../util/webToken";
-import {isArrayEmpty, isStringEmpty} from "../../util/checker";
+import {isArrayEmpty, isObjectEmpty, isStringEmpty} from "../../util/checker";
 import {md5} from "../../util/encrypt";
 
 /**
@@ -124,7 +126,7 @@ function findUsersByPage(pageSize, pageNum, accountSearch) {
         query.limit(pageSize);
         query.exec((err, data) => {
             if (data.length < 1) {
-                reject();
+                reject({hasMatchedUser: false});
                 return;
             }
 
@@ -155,7 +157,6 @@ function countUsers(accountSearch) {
         UserModel.count(findParams, (err, count) => {
             if (err) {
                 reject({userCount: -1});
-                return;
             }
             resolve({userCount: count});
         });
@@ -389,12 +390,18 @@ export function fetchUserList(req, res) {
             pageNum: pageNum
         }, msg));
     }).catch((error) => {
-        if (error.isAdmin === false) {
+        if (isObjectEmpty(error)) {
+            status = RES_FAILED_FETCH_USER_LIST;
+            msg = RES_MSG_FETCH_USER_LIST;
+        } else if (error.isAdmin === false) {
             status = RES_FAILED_NOT_ADMIN;
             msg = RES_MSG_NOT_ADMIN;
         } else if (error.userCount === -1) {
             status = RES_FAILED_COUNT_USER;
             msg = RES_MSG_COUNT_USER;
+        } else if (error.hasMatchedUser === false) {
+            status = RES_FAILED_MATCHED_USER_LIST;
+            msg = RES_MSG_MATCHED_USER_LIST;
         }
         res.json(buildResponse(status, {}, msg));
     });
