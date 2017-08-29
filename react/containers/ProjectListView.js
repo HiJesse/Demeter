@@ -1,9 +1,11 @@
 import React from "react";
 import {connect} from "react-redux";
-import {Icon, Popover, Table} from "antd";
+import {Button, Icon, Input, Popover, Table} from "antd";
 import {homeStyle} from "./styles/home";
 import {projectListViewStyle} from "./styles/projectListView";
 import {
+    changeSearchInputAction,
+    changeSearchVisibleAction,
     fetchProjectListAction,
     projectPageLoadingAction,
     setUpdatingProjectInfoAction,
@@ -57,12 +59,13 @@ class ProjectListView extends React.Component {
                     loading={this.props.pageLoading}
                     scroll={{y: true}}
                     pagination={{
-                        total: this.props.userCount,
+                        total: this.props.projectCount,
                         pageSize: this.props.pageSize,
                         current: this.props.pageNum
                     }}
                     onChange={(pagination) => {
                         this.props.pageLoadingVisible(true);
+                        this.props.fetchProjectList(pagination.pageSize, pagination.current, this.props.projectSearch);
                     }}/>
             </div>
         );
@@ -77,6 +80,25 @@ class ProjectListView extends React.Component {
             title: '项目',
             dataIndex: 'project',
             width: '15%',
+            filterDropdown: (
+                <div style={projectListViewStyle.view_search}>
+                    <Input
+                        placeholder="项目"
+                        value={this.props.projectSearch}
+                        onChange={(e) => this.props.changeSearchInput(e.target.value)}
+                        onPressEnter={this._onSearch.bind(this)}
+                    />
+                    <Button
+                        type="primary"
+                        style={projectListViewStyle.button_search}
+                        onClick={this._onSearch.bind(this)}>搜索</Button>
+                </div>
+            ),
+            filterIcon: <Icon type="search" style={projectListViewStyle.icon_search}/>,
+            filterDropdownVisible: this.props.searchInputVisible,
+            onFilterDropdownVisibleChange: (visible) => {
+                this.props.changeSearchVisible(visible);
+            },
             render: (text) => this._buildProjectInfoView(text),
         }, {
             title: '平台',
@@ -167,7 +189,17 @@ class ProjectListView extends React.Component {
      */
     _refreshPage() {
         this.props.pageLoadingVisible(true);
-        this.props.fetchProjectList(this.props.pageSize, this.props.pageNum, '');
+        this.props.fetchProjectList(this.props.pageSize, this.props.pageNum, this.props.projectSearch);
+    }
+
+    /**
+     * 搜索回调
+     * @private
+     */
+    _onSearch() {
+        this.props.changeSearchVisible(false);
+        this.props.pageLoadingVisible(true);
+        this.props.fetchProjectList(this.props.pageSize, 1, this.props.projectSearch);
     }
 }
 
@@ -182,6 +214,8 @@ function select(state) {
         updateDialogVisible: projectList.updateDialogVisible, // 是否显示更新项目信息弹窗
         deleteDialogVisible: projectList.deleteDialogVisible, // 是否显示更新项目信息弹窗
         updateProjectInfo: projectList.updateProjectInfo, // 要更新的项目信息
+        projectSearch: projectList.projectSearch, // 搜索账号输入
+        searchInputVisible: projectList.searchInputVisible, //搜索框是否可见
     };
 }
 
@@ -193,6 +227,8 @@ function mapDispatchToProps(dispatch) {
         showUpdateDialog: visible => dispatch(showUpdateDialogAction(visible)),
         showDeleteDialog: visible => dispatch(showDeletingDialogAction(visible)),
         setUpdatingProjectInfo: index => dispatch(setUpdatingProjectInfoAction(index)),
+        changeSearchInput: (search) => dispatch(changeSearchInputAction(search)),
+        changeSearchVisible: (visible) => dispatch(changeSearchVisibleAction(visible)),
     }
 }
 

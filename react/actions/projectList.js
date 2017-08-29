@@ -1,5 +1,7 @@
 // project list actions
 import {
+    ACTION_CHANGE_SEARCH_PROJECT_INPUT,
+    ACTION_CHANGE_SEARCH_PROJECT_INPUT_VISIBLE,
     ACTION_DELETE_PROJECT,
     ACTION_DELETE_PROJECT_DIALOG_VISIBLE,
     ACTION_FETCH_PROJECT_LIST,
@@ -79,5 +81,29 @@ export const deleteProjectAction = (uId, projectId) => ({
     data: {
         uId: uId,
         projectId: projectId
+    }
+});
+
+/**
+ * 输入搜索项目变化
+ * @param projectSearch
+ * @returns {{type, data: {projectSearch: *}}}
+ */
+export const changeSearchInputAction = projectSearch => ({
+    type: ACTION_CHANGE_SEARCH_PROJECT_INPUT,
+    data: {
+        projectSearch: projectSearch
+    }
+});
+
+/**
+ * 搜索框是否可见
+ * @param visible
+ * @returns {{type, data: {searchInputVisible: *}}}
+ */
+export const changeSearchVisibleAction = visible => ({
+    type: ACTION_CHANGE_SEARCH_PROJECT_INPUT_VISIBLE,
+    data: {
+        searchInputVisible: visible
     }
 });

@@ -1,5 +1,7 @@
 //project list reducer
 import {
+    ACTION_CHANGE_SEARCH_PROJECT_INPUT,
+    ACTION_CHANGE_SEARCH_PROJECT_INPUT_VISIBLE,
     ACTION_DELETE_PROJECT_DIALOG_VISIBLE,
     ACTION_FETCH_PROJECT_LIST_FULFILLED,
     ACTION_PROJECT_PAGE_LOADING,
@@ -46,7 +48,7 @@ const fetchProjectListReducer = (state, action) => {
     return {
         ...state,
         projectList: projectList,
-        projectCount: action.data.userCount,
+        projectCount: action.data.projectCount,
         pageNum: action.data.pageNum,
         pageLoading: false,
     };
@@ -85,6 +87,8 @@ const initialProjectListState = {
     updateDialogVisible: false,
     deleteDialogVisible: false,
     updateProjectInfo: {},
+    projectSearch: null,
+    searchInputVisible: false,
 };
 
 /**
@@ -118,6 +122,18 @@ export function projectList(state = initialProjectListState, action) {
             newState = {
                 ...state,
                 deleteDialogVisible: action.data.deleteDialogVisible
+            };
+            break;
+        case ACTION_CHANGE_SEARCH_PROJECT_INPUT:
+            newState = {
+                ...state,
+                projectSearch: action.data.projectSearch
+            };
+            break;
+        case ACTION_CHANGE_SEARCH_PROJECT_INPUT_VISIBLE:
+            newState = {
+                ...state,
+                searchInputVisible: action.data.searchInputVisible
             };
             break;
         default:
