@@ -12,7 +12,6 @@ import {
     RES_FAILED_NOT_ADMIN,
     RES_FAILED_RESET_PASSWORD,
     RES_FAILED_UPDATE_USER_INFO,
-    RES_FAILED_USER_ERR_PWD,
     RES_FAILED_USER_NONE,
     RES_MSG_COUNT_USER,
     RES_MSG_CREATE_USER,
@@ -23,152 +22,20 @@ import {
     RES_MSG_NOT_ADMIN,
     RES_MSG_RESET_PASSWORD,
     RES_MSG_UPDATE_USER_INFO,
-    RES_MSG_USER_ERR_PWD,
     RES_MSG_USER_NONE,
-    RES_MSG_USER_NONE_PWD,
     RES_SUCCEED
 } from "../../util/status";
 import {createJsonWebToken} from "../../util/webToken";
-import {isArrayEmpty, isObjectEmpty, isStringEmpty} from "../../util/checker";
+import {isObjectEmpty, isStringEmpty} from "../../util/checker";
 import {md5} from "../../util/encrypt";
-
-/**
- * 验证账号密码是否存在, 并返回不同状态, 兼容根据uId和account查询
- * @param isLogin 是否登录, true account, false uId
- * @param account | uId
- * @param password
- * @param callback
- */
-function verifyUser(isLogin, account, password, callback) {
-    let status = RES_FAILED;
-    let msg = null;
-    let userData = {};
-    const params = {};
-    if (isLogin) {
-        params._id = account;
-    } else {
-        params.account = account;
-    }
-
-    UserModel.find(params, (err, data) => {
-        if (data.length === 1) {
-            const pwd = data[0].pwd;
-            if (pwd === password) {
-                status = RES_SUCCEED;
-                userData = data[0];
-            } else {
-                status = RES_FAILED_USER_ERR_PWD;
-                msg = RES_MSG_USER_ERR_PWD;
-            }
-        } else {
-            status = RES_FAILED_USER_NONE;
-            msg = isLogin ? RES_MSG_USER_NONE_PWD : RES_MSG_USER_NONE;
-        }
-
-        callback({
-            status: status,
-            msg: msg,
-            data: userData
-        })
-    });
-}
-
-/**
- * 根据params参数判读该用户是否存在
- * @param params
- * @returns {Promise}
- */
-function isUserExist(params) {
-    return new Promise((resolve, reject) => {
-        UserModel.find(params, (err, data) => {
-            if (data.length === 1) {
-                resolve({isUserExist: true});
-            } else {
-                reject({isUserExist: false});
-            }
-        });
-    });
-}
-
-/**
- * 根据params参数判断该用户是否为管理员
- * @param params
- * @returns {Promise}
- */
-export function isAdmin(params) {
-    return new Promise((resolve, reject) => {
-        UserModel.find(params, (err, data) => {
-            if (!isArrayEmpty(data) && data.length === 1 && data[0].isAdmin) {
-                resolve({isAdmin: true});
-            } else {
-                reject({isAdmin: false});
-            }
-        });
-    });
-}
-
-/**
- * 分页获取用户信息, 并支持基于账号的模糊搜索
- * @param pageSize
- * @param pageNum
- * @param accountSearch
- * @returns {Promise}
- */
-function findUsersByPage(pageSize, pageNum, accountSearch) {
-    const findParams = {};
-    if (!isStringEmpty(accountSearch) && accountSearch !== 'null') {
-        findParams.account = new RegExp(accountSearch, 'i');
-    }
-
-    return new Promise((resolve, reject) => {
-        const query = UserModel.find(findParams);
-        query.skip((pageNum - 1) * pageSize);
-        query.limit(pageSize);
-        query.exec((err, data) => {
-            if (data.length < 1) {
-                reject({hasMatchedUser: false});
-                return;
-            }
-
-            const allUserInfo = data.map(function (item) {
-                return {
-                    account: item.account,
-                    nickName: item.nickName,
-                    isAdmin: item.isAdmin,
-                };
-            });
-            resolve(allUserInfo);
-        });
-    });
-}
-
-/**
- * 获取根据参数的用户总数, 失败的话返回-1
- * @param accountSearch 模糊查找
- * @returns {Promise}
- */
-function countUsers(accountSearch) {
-    const findParams = {};
-    if (!isStringEmpty(accountSearch) && accountSearch !== 'null') {
-        findParams.account = new RegExp(accountSearch, 'i');
-    }
-
-    return new Promise((resolve, reject) => {
-        UserModel.count(findParams, (err, count) => {
-            if (err) {
-                reject({userCount: -1});
-            }
-            resolve({userCount: count});
-        });
-    });
-}
+import {countUsers, findUsersByPage, isAdmin, isUserExist, verifyUser} from "./base/baseUserApi";
 
 /**
  * 登录接口, status == 0 成功返回token; -1000 账号不存在; -1001 密码错误
  * @param req account/password
  * @param res
  */
-export function login(req, res) {
+export const login = (req, res) => {
     const account = req.body.account;
     const password = req.body.password;
     verifyUser(false, account, password, (val) => {
@@ -179,14 +46,14 @@ export function login(req, res) {
             uId: data._id
         }, val.msg));
     });
-}
+};
 
 /**
  * 修改密码接口, 兼容未登录模式和登录模式
  * @param req (account | uId)/password/newPassword
  * @param res
  */
-export function modifyPassword(req, res) {
+export const modifyPassword = (req, res) => {
     let isLogin = false;
     let account = req.body.account;
     const password = req.body.password;
@@ -220,14 +87,14 @@ export function modifyPassword(req, res) {
             res.json(buildResponse(status, {}, msg));
         });
     });
-}
+};
 
 /**
  * 根据uId获取用户信息
  * @param req
  * @param res
  */
-export function getUserInfo(req, res) {
+export const getUserInfo = (req, res) => {
     const uId = req.query.uId;
     let status = RES_FAILED;
     let msg = null;
@@ -250,14 +117,14 @@ export function getUserInfo(req, res) {
             account: userData.account
         }, msg));
     });
-}
+};
 
 /**
  * 根据uId更新用户基本信息
  * @param req
  * @param res
  */
-export function updateUserInfo(req, res) {
+export const updateUserInfo = (req, res) => {
     const uId = req.body.uId;
     const nickName = req.body.nickName;
 
@@ -275,14 +142,14 @@ export function updateUserInfo(req, res) {
         }
         res.json(buildResponse(status, {}, msg));
     });
-}
+};
 
 /**
  * 根据account创建新用户
  * @param req
  * @param res
  */
-export function createUser(req, res) {
+export const createUser = (req, res) => {
     const account = req.body.account;
     const uId = req.body.uId;
 
@@ -312,14 +179,14 @@ export function createUser(req, res) {
         }
         res.json(buildResponse(status, {}, msg));
     });
-}
+};
 
 /**
  * 根据account重置用户密码
  * @param req
  * @param res
  */
-export function resetPassword(req, res) {
+export const resetPassword = (req, res) => {
     const account = req.body.account;
     const uId = req.body.uId;
     const params = {
@@ -354,7 +221,7 @@ export function resetPassword(req, res) {
         }
         res.json(buildResponse(status, {}, msg));
     });
-}
+};
 
 /**
  * 根据页码和页面容量获取用户列表
@@ -362,7 +229,7 @@ export function resetPassword(req, res) {
  * @param req
  * @param res
  */
-export function fetchUserList(req, res) {
+export const fetchUserList = (req, res) => {
     const uId = req.query.uId;
     const pageSize = Number(req.query.pageSize);
     const pageNum = Number(req.query.pageNum);
@@ -405,14 +272,14 @@ export function fetchUserList(req, res) {
         }
         res.json(buildResponse(status, {}, msg));
     });
-}
+};
 
 /**
  * 删除用户
  * @param req
  * @param res
  */
-export function deleteUser(req, res) {
+export const deleteUser = (req, res) => {
     const uId = req.body.uId;
     const account = req.body.account;
     const adminParams = {
@@ -440,4 +307,4 @@ export function deleteUser(req, res) {
         }
         res.json(buildResponse(status, {}, msg));
     });
-}
+};

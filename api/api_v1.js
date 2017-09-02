@@ -1,6 +1,6 @@
 import express from "express";
-import * as user from "./v1/user";
-import * as project from "./v1/project";
+import * as user from "./v1/userApi";
+import * as project from "./v1/projectApi";
 import {ProjectLogoMulter} from "../util/multer";
 
 const router = express.Router();
