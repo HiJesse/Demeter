@@ -1,7 +1,9 @@
 import React from "react";
-import {Modal} from "antd";
+import {Button, Icon, Input, Modal} from "antd";
 import {connect} from "react-redux";
 import {isStringEmpty} from "../../util/checker";
+import {addUserAction, changeUserAccountAction} from "../actions/projectUserManager";
+import {projectUserDialogStyle} from "./styles/projectUserManagerDialog";
 
 
 // 项目成员管理弹窗
@@ -21,6 +23,25 @@ class ProjectUserManagerDialog extends React.Component {
                 visible={this.props.dialogVisible}
                 onCancel={() => this.props.onDismiss()}
             >
+                <div>
+                    <div>{'添加用户'}</div>
+                    <div style={projectUserDialogStyle.view_add_user}>
+                        <Input
+                            style={projectUserDialogStyle.input_account}
+                            placeholder="输入要添加的用户账号"
+                            prefix={<Icon type="user"/>}
+                            onChange={(e) => this.props.changeUserAccount(e.target.value)}
+                        />
+
+                        <Button
+                            type="primary"
+                            style={projectUserDialogStyle.button_add_user}
+                            loading={this.props.addUserLoading}
+                            onClick={() => this.props.addUser(this.props.data.id)}>
+                            {'确定'}
+                        </Button>
+                    </div>
+                </div>
 
             </Modal>
         );
@@ -28,11 +49,17 @@ class ProjectUserManagerDialog extends React.Component {
 }
 
 function select(state) {
-    return {};
+    const projectUserManager = state.projectUserManager;
+    return {
+        addUserLoading: projectUserManager.addUserLoading, // 添加用户loading
+    };
 }
 
 function mapDispatchToProps(dispatch) {
-    return {}
+    return {
+        changeUserAccount: account => dispatch(changeUserAccountAction(account)), // 实时改变用户account
+        addUser: (projectId) => dispatch(addUserAction(localStorage.uId, projectId)), // 向项目中添加用户
+    }
 }
 
 export default connect(select, mapDispatchToProps)(ProjectUserManagerDialog);
