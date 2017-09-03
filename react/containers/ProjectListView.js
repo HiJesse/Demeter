@@ -10,11 +10,13 @@ import {
     projectPageLoadingAction,
     setUpdatingProjectInfoAction,
     showDeletingDialogAction,
-    showUpdateDialogAction
+    showUpdateDialogAction,
+    showUserManagerDialogAction
 } from "../actions/projectList";
 import {isStringEmpty} from "../../util/checker";
 import UpdateProjectInfoDialog from "../components/UpdateProjectInfoDialog";
 import DeleteProjectDialog from "../components/DeleteProjectDialog";
+import ProjectUserManagerDialog from "../components/ProjectUserManagerDialog";
 
 // 用户管理-用户列表
 class ProjectListView extends React.Component {
@@ -52,6 +54,10 @@ class ProjectListView extends React.Component {
                         this.props.showDeleteDialog(false);
                         this._refreshPage();
                     }}/>
+                <ProjectUserManagerDialog
+                    data={this.props.updateProjectInfo}
+                    dialogVisible={this.props.userManagerVisible}
+                    onDismiss={() => this.props.showUserManagerDialog(false)}/>
                 <Table
                     bordered
                     dataSource={this.props.projectList}
@@ -138,6 +144,11 @@ class ProjectListView extends React.Component {
 
                 <a href="#" onClick={() => {
                     this.props.setUpdatingProjectInfo(index);
+                    this.props.showUserManagerDialog(true);
+                }}>{'成员管理'}</a>
+
+                <a href="#" onClick={() => {
+                    this.props.setUpdatingProjectInfo(index);
                     this.props.showDeleteDialog(true);
                 }}>{'删除项目'}</a>
             </span>
@@ -213,6 +224,7 @@ function select(state) {
         pageLoading: projectList.pageLoading, // 分页loading
         updateDialogVisible: projectList.updateDialogVisible, // 是否显示更新项目信息弹窗
         deleteDialogVisible: projectList.deleteDialogVisible, // 是否显示更新项目信息弹窗
+        userManagerVisible: projectList.userManagerVisible, // 是否显示用户管理弹窗
         updateProjectInfo: projectList.updateProjectInfo, // 要更新的项目信息
         projectSearch: projectList.projectSearch, // 搜索账号输入
         searchInputVisible: projectList.searchInputVisible, //搜索框是否可见
@@ -226,6 +238,7 @@ function mapDispatchToProps(dispatch) {
         pageLoadingVisible: isLoading => dispatch(projectPageLoadingAction(isLoading)),
         showUpdateDialog: visible => dispatch(showUpdateDialogAction(visible)),
         showDeleteDialog: visible => dispatch(showDeletingDialogAction(visible)),
+        showUserManagerDialog: visible => dispatch(showUserManagerDialogAction(visible)),
         setUpdatingProjectInfo: index => dispatch(setUpdatingProjectInfoAction(index)),
         changeSearchInput: (search) => dispatch(changeSearchInputAction(search)),
         changeSearchVisible: (visible) => dispatch(changeSearchVisibleAction(visible)),

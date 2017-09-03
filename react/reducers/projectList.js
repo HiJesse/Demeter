@@ -4,7 +4,7 @@ import {
     ACTION_CHANGE_SEARCH_PROJECT_INPUT_VISIBLE,
     ACTION_DELETE_PROJECT_DIALOG_VISIBLE,
     ACTION_FETCH_PROJECT_LIST_FULFILLED,
-    ACTION_PROJECT_PAGE_LOADING,
+    ACTION_PROJECT_PAGE_LOADING, ACTION_PROJECT_USER_MANAGER_DIALOG_VISIBLE,
     ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
     ACTION_UPDATING_PROJECT_INFO
 } from "../constants/actionType";
@@ -86,6 +86,7 @@ const initialProjectListState = {
     pageLoading: false,
     updateDialogVisible: false,
     deleteDialogVisible: false,
+    userManagerVisible: false,
     updateProjectInfo: {},
     projectSearch: null,
     searchInputVisible: false,
@@ -134,6 +135,12 @@ export function projectList(state = initialProjectListState, action) {
             newState = {
                 ...state,
                 searchInputVisible: action.data.searchInputVisible
+            };
+            break;
+        case ACTION_PROJECT_USER_MANAGER_DIALOG_VISIBLE:
+            newState = {
+                ...state,
+                userManagerVisible: action.data.userManagerDialogVisible
             };
             break;
         default:

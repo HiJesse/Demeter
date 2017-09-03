@@ -5,7 +5,7 @@ import {
     ACTION_DELETE_PROJECT,
     ACTION_DELETE_PROJECT_DIALOG_VISIBLE,
     ACTION_FETCH_PROJECT_LIST,
-    ACTION_PROJECT_PAGE_LOADING,
+    ACTION_PROJECT_PAGE_LOADING, ACTION_PROJECT_USER_MANAGER_DIALOG_VISIBLE,
     ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
     ACTION_UPDATING_PROJECT_INFO
 } from "../constants/actionType";
@@ -57,6 +57,17 @@ export const showDeletingDialogAction = visible => ({
     type: ACTION_DELETE_PROJECT_DIALOG_VISIBLE,
     data: {
         deleteDialogVisible: visible
+    }
+});
+
+/**
+ * 是否项目用户管理弹窗
+ * @param visible
+ */
+export const showUserManagerDialogAction = visible => ({
+    type: ACTION_PROJECT_USER_MANAGER_DIALOG_VISIBLE,
+    data: {
+        userManagerDialogVisible: visible
     }
 });
 
