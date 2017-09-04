@@ -15,13 +15,15 @@ export const changeUserAccountAction = account => ({
 
 /**
  * 给projectId所属的项目添加账号为addedAccount的用户
- * @param uId
- * @param projectId
+ * @param uId 用户uId
+ * @param projectId 当前项目Id
+ * @param account 要添加的账号
  */
-export const addUserAction = (uId, projectId) => ({
+export const addMemberAction = (uId, projectId, account) => ({
     type: ACTION_PROJECT_USER_ADD_ACCOUNT,
     data: {
         uId: uId,
         projectId: projectId,
+        account: account
     }
 });

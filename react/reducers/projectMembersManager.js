@@ -1,7 +1,12 @@
 //project user manager reducer
 import {message} from "antd";
-import {ACTION_PROJECT_USER_ADD_ACCOUNT, ACTION_PROJECT_USER_MANAGER_CHANGE_ACCOUNT} from "../constants/actionType";
+import {
+    ACTION_PROJECT_USER_ADD_ACCOUNT,
+    ACTION_PROJECT_USER_ADD_ACCOUNT_FULFILLED,
+    ACTION_PROJECT_USER_MANAGER_CHANGE_ACCOUNT
+} from "../constants/actionType";
 import {isStringEmpty} from "../../util/checker";
+import {RES_SUCCEED} from "../../util/status";
 
 /**
  * 添加用户, 校验数据是否合法
@@ -9,7 +14,7 @@ import {isStringEmpty} from "../../util/checker";
  * @param action
  * @returns {{}}
  */
-const addUserReducer = (state, action) => {
+const addMemberReducer = (state, action) => {
     const addedAccount = state.addedAccount;
     const projectId = action.projectId;
     const returnData = {...state};
@@ -24,7 +29,29 @@ const addUserReducer = (state, action) => {
         return returnData;
     }
 
-    return returnData;
+    return {
+        ...state,
+        addUserLoading: true
+    };
+};
+
+/**
+ * 添加项目成员回调 reducer
+ * @param state
+ * @param action
+ * @returns {{addUserLoading: boolean}}
+ */
+const addMemberFulfilledReducer = (state, action) => {
+    if (action.status === RES_SUCCEED) {
+        message.success('添加项目成员成功');
+    } else {
+        message.error(action.msg);
+    }
+
+    return {
+        ...state,
+        addUserLoading: false
+    };
 };
 
 const initialProjectUserManagerState = {
@@ -38,7 +65,7 @@ const initialProjectUserManagerState = {
  * @param action
  * @returns {*}
  */
-export function projectUserManager(state = initialProjectUserManagerState, action) {
+export function projectMembersManager(state = initialProjectUserManagerState, action) {
     let newState = state;
 
     switch (action.type) {
@@ -49,7 +76,10 @@ export function projectUserManager(state = initialProjectUserManagerState, actio
             };
             break;
         case ACTION_PROJECT_USER_ADD_ACCOUNT:
-            newState = addUserReducer(state, action.data);
+            newState = addMemberReducer(state, action.data);
+            break;
+        case ACTION_PROJECT_USER_ADD_ACCOUNT_FULFILLED:
+            newState = addMemberFulfilledReducer(state, action.data);
             break;
         default:
     }

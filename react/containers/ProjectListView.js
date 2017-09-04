@@ -16,7 +16,7 @@ import {
 import {isStringEmpty} from "../../util/checker";
 import UpdateProjectInfoDialog from "../components/UpdateProjectInfoDialog";
 import DeleteProjectDialog from "../components/DeleteProjectDialog";
-import ProjectUserManagerDialog from "../components/ProjectUserManagerDialog";
+import ProjectMembersManagerDialog from "../components/ProjectMembersManagerDialog";
 
 // 用户管理-用户列表
 class ProjectListView extends React.Component {
@@ -54,7 +54,7 @@ class ProjectListView extends React.Component {
                         this.props.showDeleteDialog(false);
                         this._refreshPage();
                     }}/>
-                <ProjectUserManagerDialog
+                <ProjectMembersManagerDialog
                     data={this.props.updateProjectInfo}
                     dialogVisible={this.props.userManagerVisible}
                     onDismiss={() => this.props.showUserManagerDialog(false)}/>

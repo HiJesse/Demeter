@@ -2,8 +2,11 @@
 export const RES_SUCCEED = 0;
 // 失败
 export const RES_FAILED = -1;
+// catch异常
+export const RES_FAILED_EX = -2;
+export const RES_MSG_EX = '服务器异常, 请稍后重试';
 // 没有token无效
-export const RES_FAILED_TOKEN = -2;
+export const RES_FAILED_TOKEN = -3;
 export const RES_MSG_TOKEN = '请先登录';
 
 // 是否是管理员
