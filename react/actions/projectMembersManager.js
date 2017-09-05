@@ -27,3 +27,18 @@ export const addMemberAction = (uId, projectId, account) => ({
         account: account
     }
 });
+
+/**
+ *
+ * @param uId
+ * @param projectId
+ * @param account
+ */
+export const fetchMembersAction = params => ({
+    type: ACTION_PROJECT_USER_ADD_ACCOUNT,
+    data: {
+        uId: params.uId,
+        projectId: projectId,
+        account: account
+    }
+});

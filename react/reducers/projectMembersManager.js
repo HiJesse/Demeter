@@ -57,6 +57,11 @@ const addMemberFulfilledReducer = (state, action) => {
 const initialProjectUserManagerState = {
     addUserLoading: false,
     addedAccount: null,
+    projectMemberLoading: false,
+    projectMemberList: [],
+    projectMembers: 0,
+    pageSize: 3,
+    pageNum: 1,
 };
 
 /**

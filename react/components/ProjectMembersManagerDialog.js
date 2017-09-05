@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Icon, Input, Modal} from "antd";
+import {Button, Icon, Input, Modal, Popconfirm, Table} from "antd";
 import {connect} from "react-redux";
 import {isStringEmpty} from "../../util/checker";
 import {addMemberAction, changeUserAccountAction} from "../actions/projectMembersManager";
@@ -41,10 +41,67 @@ class ProjectMembersManagerDialog extends React.Component {
                             {'确定'}
                         </Button>
                     </div>
+
+                    <Table
+                        bordered
+                        style={projectUserDialogStyle.view_member_table}
+                        dataSource={this.props.projectMemberList}
+                        columns={this._buildColumns()}
+                        loading={this.props.projectMemberLoading}
+                        scroll={{y: true}}
+                        pagination={{
+                            total: this.props.projectMembers,
+                            pageSize: this.props.pageSize,
+                            current: this.props.pageNum
+                        }}
+                        onChange={(pagination) => {
+                            this.props.fetchProjectMembers(pagination.pageSize, pagination.current);
+                        }}/>
                 </div>
 
             </Modal>
         );
+    }
+
+    /**
+     * 构建项目成员列表行属性
+     * @private
+     */
+    _buildColumns() {
+        return [{
+            title: '成员账号',
+            dataIndex: 'account',
+            width: '15%',
+            render: (text) => (<div>{text}</div>),
+        }, {
+            title: '成员昵称',
+            dataIndex: 'nickname',
+            width: '15%',
+            render: (text) => (<div>{text}</div>),
+        }, {
+            title: '操作',
+            dataIndex: 'operation',
+            render: (text, record, index) => this._buildOperationColumn(index),
+        }];
+    }
+
+    /**
+     * 构建列表的操作选项内容和交互
+     * @param index
+     * @returns {XML}
+     * @private
+     */
+    _buildOperationColumn(index) {
+        return (
+            <span style={projectUserDialogStyle.view_operation}>
+                <Popconfirm
+                    title="确认产出该用户?"
+                    onConfirm={() => {
+                    }}>
+                    <a href="#">{'删除'}</a>
+                </Popconfirm>
+            </span>
+        )
     }
 }
 
@@ -53,6 +110,11 @@ function select(state) {
     return {
         addUserLoading: projectMembersManager.addUserLoading, // 添加用户loading
         addedAccount: projectMembersManager.addedAccount, // 要添加的用户账号
+        projectMemberLoading: projectMembersManager.projectMemberLoading, // 项目成员列表loading
+        projectMemberList: projectMembersManager.projectMemberList, // 项目成员列表数据
+        projectMembers: projectMembersManager.projectMembers, // 项目成员数量
+        pageSize: projectMembersManager.pageSize, // 分页容量
+        pageNum: projectMembersManager.pageNum, // 当前页码
     };
 }
 
@@ -60,6 +122,7 @@ function mapDispatchToProps(dispatch) {
     return {
         changeUserAccount: account => dispatch(changeUserAccountAction(account)), // 实时改变用户account
         addUser: (projectId, account) => dispatch(addMemberAction(localStorage.uId, projectId, account)), // 向项目中添加用户
+        fetchProjectMembers: params => dispatch({}), // 获取项目成员列表
     }
 }
 
