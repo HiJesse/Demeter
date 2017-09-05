@@ -8,6 +8,9 @@ export const RES_MSG_EX = '服务器异常, 请稍后重试';
 // 没有token无效
 export const RES_FAILED_TOKEN = -3;
 export const RES_MSG_TOKEN = '请先登录';
+// 参数不合法
+export const RES_FAILED_PARAMS_INVALID = -4;
+export const RES_MSG_PARAMS_INVALID = '请求参数不合法';
 
 // 是否是管理员
 export const RES_FAILED_NOT_ADMIN = 100;
@@ -80,3 +83,9 @@ export const RES_MSG_UPDATE_PROJECT_INFO = '更新项目信息失败';
 // 更新项目信息失败
 export const RES_FAILED_UPDATE_PROJECT_DES = 2011;
 export const RES_MSG_UPDATE_PROJECT_DES = '项目描述不能低于三个字符';
+// 添加项目成员失败
+export const RES_FAILED_PROJECT_ADD_MEMBER = 2012;
+export const RES_MSG_PROJECT_ADD_MEMBER = '添加项目成员失败';
+// 用户已经加入该项目
+export const RES_FAILED_USER_JOINED_PROJECT = 2013;
+export const RES_MSG_USER_JOINED_PROJECT = '用户已经加入该项目';

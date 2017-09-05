@@ -2,6 +2,7 @@
 import ProjectModel from "../../../models/project";
 import PlatformModel from "../../../models/platform";
 import ProjectPlatformModel from "../../../models/projectPlatform";
+import ProjectMemberModel from "../../../models/projectMember";
 import {md5} from "../../../util/encrypt";
 import {isStringEmpty} from "../../../util/checker";
 import {URL_PROJECT_LOGO, URL_PROJECT_LOGO_DEFAULT} from "../../../util/pathUtil";
@@ -204,3 +205,34 @@ export const findProjectsByName = (pageSize, pageNum, projectName) => {
 
     return findProjectsByPage(pageSize, pageNum, findParams);
 };
+
+/**
+ * 根据参数判断用户是否已经加入项目
+ * @param params
+ * @returns {Promise}
+ */
+export const isUserJoinedProject = params =>
+    new Promise((resolve, reject) => {
+        ProjectMemberModel.find(params, (err, data) => {
+            if (data.length === 1) {
+                reject({isUserJoined: true});
+            } else {
+                resolve({isUserJoined: false});
+            }
+        });
+    });
+
+/**
+ * 根据参数创建项目成员信息
+ * @param params
+ */
+export const createProjectMemberInfo = params =>
+    new Promise((resolve, reject) => {
+        ProjectMemberModel.create(params, (error) => {
+            if (!error) {
+                resolve({memberJoined: true});
+            } else {
+                reject({memberJoined: false});
+            }
+        });
+    });

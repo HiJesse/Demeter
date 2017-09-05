@@ -6,7 +6,7 @@ const Schema = Mongoose.Schema;
  */
 const ProjectUserSchema = new Schema({
     projectId: {type: String},
-    userId: {type: String}
+    userAccount: {type: String}
 });
 
 export default Mongoose.model('ProjectUser', ProjectUserSchema);

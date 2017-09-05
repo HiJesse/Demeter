@@ -1,4 +1,4 @@
-// user api
+// project api
 import ProjectModel from "../../models/project";
 import {
     RES_FAILED_COUNT_PROJECT,
@@ -192,7 +192,7 @@ export const fetchProjectList = (req, res) => {
  * @param req
  * @param res
  */
-export function updateProjectInfo(req, res) {
+export const updateProjectInfo = (req, res) => {
     const projectId = req.body.projectId;
     const projectDes = req.body.projectDes;
     const projectLogo = req.file;
@@ -226,4 +226,4 @@ export function updateProjectInfo(req, res) {
         }
         res.json(buildResponse(status, {}, msg));
     });
-}
+};

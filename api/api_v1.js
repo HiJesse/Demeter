@@ -2,6 +2,7 @@ import express from "express";
 import * as user from "./v1/userApi";
 import * as project from "./v1/projectApi";
 import {ProjectLogoMulter} from "../util/multer";
+import * as projectMember from "./v1/projectMemberApi";
 
 const router = express.Router();
 
@@ -40,5 +41,8 @@ router.get('/project/fetchProjectList', project.fetchProjectList);
 
 // 更新项目信息
 router.post('/project/updateProjectInfo', ProjectLogoMulter.single('projectLogo'), project.updateProjectInfo);
+
+// 添加项目成员
+router.post('/project/addMember', projectMember.addProjectMember);
 
 export default router;
