@@ -2,12 +2,23 @@ import React from "react";
 import {Button, Icon, Input, Modal, Popconfirm, Table} from "antd";
 import {connect} from "react-redux";
 import {isStringEmpty} from "../../util/checker";
-import {addMemberAction, changeUserAccountAction} from "../actions/projectMembersManager";
+import {addMemberAction, changeUserAccountAction, fetchMembersAction} from "../actions/projectMembersManager";
 import {projectUserDialogStyle} from "./styles/projectUserManagerDialog";
 
 
 // 项目成员管理弹窗
 class ProjectMembersManagerDialog extends React.Component {
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.data !== this.props.data && nextProps.data.id !== undefined) {
+            this.props.fetchProjectMembers({
+                uId: localStorage.uId,
+                projectId: nextProps.data.id,
+                pageNum: this.props.pageNum,
+                pageSize: this.props.pageSize
+            });
+        }
+    }
 
     render() {
         const data = this.props.data;
@@ -37,7 +48,7 @@ class ProjectMembersManagerDialog extends React.Component {
                             type="primary"
                             style={projectUserDialogStyle.button_add_user}
                             loading={this.props.addUserLoading}
-                            onClick={() => this.props.addUser(this.props.data.id, this.props.addedAccount)}>
+                            onClick={() => this.props.addMember(this.props.data.id, this.props.addedAccount)}>
                             {'确定'}
                         </Button>
                     </div>
@@ -55,7 +66,12 @@ class ProjectMembersManagerDialog extends React.Component {
                             current: this.props.pageNum
                         }}
                         onChange={(pagination) => {
-                            this.props.fetchProjectMembers(pagination.pageSize, pagination.current);
+                            this.props.fetchProjectMembers({
+                                uId: localStorage.uId,
+                                projectId: this.props.data.id,
+                                pageNum: pagination.current,
+                                pageSize: pagination.pageSize
+                            });
                         }}/>
                 </div>
 
@@ -121,8 +137,8 @@ function select(state) {
 function mapDispatchToProps(dispatch) {
     return {
         changeUserAccount: account => dispatch(changeUserAccountAction(account)), // 实时改变用户account
-        addUser: (projectId, account) => dispatch(addMemberAction(localStorage.uId, projectId, account)), // 向项目中添加用户
-        fetchProjectMembers: params => dispatch({}), // 获取项目成员列表
+        addMember: (projectId, account) => dispatch(addMemberAction(localStorage.uId, projectId, account)), // 向项目中添加用户
+        fetchProjectMembers: params => dispatch(fetchMembersAction(params)), // 获取项目成员列表
     }
 }
 

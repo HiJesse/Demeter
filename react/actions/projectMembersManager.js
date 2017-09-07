@@ -1,5 +1,9 @@
 // project user manager actions
-import {ACTION_PROJECT_USER_ADD_ACCOUNT, ACTION_PROJECT_USER_MANAGER_CHANGE_ACCOUNT} from "../constants/actionType";
+import {
+    ACTION_FETCH_PROJECT_MEMBER_LIST,
+    ACTION_PROJECT_USER_ADD_ACCOUNT,
+    ACTION_PROJECT_USER_MANAGER_CHANGE_ACCOUNT
+} from "../constants/actionType";
 
 
 /**
@@ -29,16 +33,15 @@ export const addMemberAction = (uId, projectId, account) => ({
 });
 
 /**
- *
- * @param uId
- * @param projectId
- * @param account
+ * 获取项目成员列表
+ * @param params
  */
 export const fetchMembersAction = params => ({
-    type: ACTION_PROJECT_USER_ADD_ACCOUNT,
+    type: ACTION_FETCH_PROJECT_MEMBER_LIST,
     data: {
         uId: params.uId,
-        projectId: projectId,
-        account: account
+        projectId: params.projectId,
+        pageNum: params.pageNum,
+        pageSize: params.pageSize
     }
 });

@@ -1,6 +1,8 @@
 //project user manager reducer
 import {message} from "antd";
 import {
+    ACTION_FETCH_PROJECT_MEMBER_LIST,
+    ACTION_FETCH_PROJECT_MEMBER_LIST_FULFILLED,
     ACTION_PROJECT_USER_ADD_ACCOUNT,
     ACTION_PROJECT_USER_ADD_ACCOUNT_FULFILLED,
     ACTION_PROJECT_USER_MANAGER_CHANGE_ACCOUNT
@@ -54,6 +56,38 @@ const addMemberFulfilledReducer = (state, action) => {
     };
 };
 
+/**
+ * 获取项目成员列表 reducer
+ * @param state
+ * @param action
+ */
+const fetchMemberListFulfilledReducer = (state, action) => {
+    if (action.status !== RES_SUCCEED) {
+        message.error(action.msg);
+        return {
+            ...state,
+            projectList: [],
+            projectMemberLoading: false
+        };
+    }
+
+    const memberList = action.data.projectMemberList.map(function (item, index) {
+        return {
+            key: index,
+            account: item.account,
+            nickname: item.nickname,
+        };
+    });
+
+    return {
+        ...state,
+        projectMemberList: memberList,
+        projectMembers: action.data.projectMembers,
+        pageNum: action.data.pageNum,
+        projectMemberLoading: false
+    };
+};
+
 const initialProjectUserManagerState = {
     addUserLoading: false,
     addedAccount: null,
@@ -85,6 +119,15 @@ export function projectMembersManager(state = initialProjectUserManagerState, ac
             break;
         case ACTION_PROJECT_USER_ADD_ACCOUNT_FULFILLED:
             newState = addMemberFulfilledReducer(state, action.data);
+            break;
+        case ACTION_FETCH_PROJECT_MEMBER_LIST:
+            newState = {
+                ...state,
+                projectMemberLoading: true
+            };
+            break;
+        case ACTION_FETCH_PROJECT_MEMBER_LIST_FULFILLED:
+            newState = fetchMemberListFulfilledReducer(state, action.data);
             break;
         default:
     }
