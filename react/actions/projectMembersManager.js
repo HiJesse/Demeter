@@ -1,10 +1,18 @@
 // project user manager actions
 import {
     ACTION_FETCH_PROJECT_MEMBER_LIST,
+    ACTION_INIT_PROJECT_MEMBER_DIALOG,
     ACTION_PROJECT_USER_ADD_ACCOUNT,
     ACTION_PROJECT_USER_MANAGER_CHANGE_ACCOUNT
 } from "../constants/actionType";
 
+/**
+ * 初始化弹窗数据
+ */
+export const initDialogDataAction = () => ({
+    type: ACTION_INIT_PROJECT_MEMBER_DIALOG,
+    data: {}
+});
 
 /**
  * 实时改变用户账号

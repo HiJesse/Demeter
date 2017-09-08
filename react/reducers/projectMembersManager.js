@@ -3,6 +3,7 @@ import {message} from "antd";
 import {
     ACTION_FETCH_PROJECT_MEMBER_LIST,
     ACTION_FETCH_PROJECT_MEMBER_LIST_FULFILLED,
+    ACTION_INIT_PROJECT_MEMBER_DIALOG,
     ACTION_PROJECT_USER_ADD_ACCOUNT,
     ACTION_PROJECT_USER_ADD_ACCOUNT_FULFILLED,
     ACTION_PROJECT_USER_MANAGER_CHANGE_ACCOUNT
@@ -52,7 +53,8 @@ const addMemberFulfilledReducer = (state, action) => {
 
     return {
         ...state,
-        addUserLoading: false
+        addUserLoading: false,
+        addedAccountStatus: action.status === RES_SUCCEED
     };
 };
 
@@ -84,13 +86,15 @@ const fetchMemberListFulfilledReducer = (state, action) => {
         projectMemberList: memberList,
         projectMembers: action.data.projectMembers,
         pageNum: action.data.pageNum,
-        projectMemberLoading: false
+        projectMemberLoading: false,
+        addedAccountStatus: false
     };
 };
 
 const initialProjectUserManagerState = {
     addUserLoading: false,
     addedAccount: null,
+    addedAccountStatus: false,
     projectMemberLoading: false,
     projectMemberList: [],
     projectMembers: 0,
@@ -108,6 +112,9 @@ export function projectMembersManager(state = initialProjectUserManagerState, ac
     let newState = state;
 
     switch (action.type) {
+        case ACTION_INIT_PROJECT_MEMBER_DIALOG:
+            newState = initialProjectUserManagerState;
+            break;
         case ACTION_PROJECT_USER_MANAGER_CHANGE_ACCOUNT:
             newState = {
                 ...state,

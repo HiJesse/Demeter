@@ -2,7 +2,12 @@ import React from "react";
 import {Button, Icon, Input, Modal, Popconfirm, Table} from "antd";
 import {connect} from "react-redux";
 import {isStringEmpty} from "../../util/checker";
-import {addMemberAction, changeUserAccountAction, fetchMembersAction} from "../actions/projectMembersManager";
+import {
+    addMemberAction,
+    changeUserAccountAction,
+    fetchMembersAction,
+    initDialogDataAction
+} from "../actions/projectMembersManager";
 import {projectUserDialogStyle} from "./styles/projectUserManagerDialog";
 
 
@@ -11,6 +16,7 @@ class ProjectMembersManagerDialog extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.data !== this.props.data && nextProps.data.id !== undefined) {
+            this.props.initDialogData();
             this.props.fetchProjectMembers({
                 uId: localStorage.uId,
                 projectId: nextProps.data.id,
@@ -22,11 +28,16 @@ class ProjectMembersManagerDialog extends React.Component {
 
     render() {
         const data = this.props.data;
-        if (this.props.confirmLoading === false) {
-            this.props.onConfirm();
-            this.props.showConfirmLoading(-1);
-            return null;
+
+        if (this.props.addedAccountStatus) {
+            this.props.fetchProjectMembers({
+                uId: localStorage.uId,
+                projectId: data.id,
+                pageNum: this.props.pageNum,
+                pageSize: this.props.pageSize
+            });
         }
+
         return (
             <Modal
                 title={`管理 ${isStringEmpty(data.name) ? '' : data.name} 项目成员`}
@@ -41,6 +52,7 @@ class ProjectMembersManagerDialog extends React.Component {
                             style={projectUserDialogStyle.input_account}
                             placeholder="输入要添加的成员账号"
                             prefix={<Icon type="user"/>}
+                            value={this.props.addedAccount}
                             onChange={(e) => this.props.changeUserAccount(e.target.value)}
                         />
 
@@ -126,6 +138,7 @@ function select(state) {
     return {
         addUserLoading: projectMembersManager.addUserLoading, // 添加用户loading
         addedAccount: projectMembersManager.addedAccount, // 要添加的用户账号
+        addedAccountStatus: projectMembersManager.addedAccountStatus, // 添加成员是否成功
         projectMemberLoading: projectMembersManager.projectMemberLoading, // 项目成员列表loading
         projectMemberList: projectMembersManager.projectMemberList, // 项目成员列表数据
         projectMembers: projectMembersManager.projectMembers, // 项目成员数量
@@ -136,6 +149,7 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
+        initDialogData: () => dispatch(initDialogDataAction()), // 初始化弹窗数据
         changeUserAccount: account => dispatch(changeUserAccountAction(account)), // 实时改变用户account
         addMember: (projectId, account) => dispatch(addMemberAction(localStorage.uId, projectId, account)), // 向项目中添加用户
         fetchProjectMembers: params => dispatch(fetchMembersAction(params)), // 获取项目成员列表

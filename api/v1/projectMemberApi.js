@@ -127,6 +127,7 @@ export const fetchProjectMembers = (req, res) => {
             pageNum: pageNum
         }, msg));
     }).catch((error) => {
+        let params = {};
         if (isObjectEmpty(error)) {
             status = RES_FAILED_PARAMS_INVALID;
             msg = RES_MSG_PARAMS_INVALID;
@@ -139,10 +140,18 @@ export const fetchProjectMembers = (req, res) => {
         } else if (error.projectMemberCount === -1) {
             status = RES_FAILED_COUNT_PROJECT_MEMBERS;
             msg = RES_MSG_COUNT_PROJECT_MEMBERS;
+        } else if (error.projectMemberCount === 0) {
+            status = RES_SUCCEED;
+            msg = null;
+            params = {
+                projectMemberList: [],
+                projectMembers: 0,
+                pageNum: pageNum
+            }
         } else if (error.findUsers === false) {
             status = RES_FAILED_FIND_USERS_INFO;
             msg = RES_MSG_FIND_USERS_INFO;
         }
-        res.json(buildResponse(status, {}, msg));
+        res.json(buildResponse(status, params, msg));
     });
 };

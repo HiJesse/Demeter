@@ -57,7 +57,10 @@ class ProjectListView extends React.Component {
                 <ProjectMembersManagerDialog
                     data={this.props.updateProjectInfo}
                     dialogVisible={this.props.userManagerVisible}
-                    onDismiss={() => this.props.showUserManagerDialog(false)}/>
+                    onDismiss={() => {
+                        this.props.setUpdatingProjectInfo(-1);
+                        this.props.showUserManagerDialog(false)
+                    }}/>
                 <Table
                     bordered
                     dataSource={this.props.projectList}
