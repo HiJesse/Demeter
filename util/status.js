@@ -46,6 +46,9 @@ export const RES_MSG_DELETE_USER = '删除用户失败';
 // 查询用户总数失败
 export const RES_FAILED_MATCHED_USER_LIST = 1009;
 export const RES_MSG_MATCHED_USER_LIST = '没有查询到满足条件的用户列表';
+// 查询用户信息失败
+export const RES_FAILED_FIND_USERS_INFO = 1010;
+export const RES_MSG_FIND_USERS_INFO = '查询用户信息失败';
 
 // 创建项目失败
 export const RES_FAILED_CREATE_PROJECT = 2000;
@@ -89,3 +92,9 @@ export const RES_MSG_PROJECT_ADD_MEMBER = '添加项目成员失败';
 // 用户已经加入该项目
 export const RES_FAILED_USER_JOINED_PROJECT = 2013;
 export const RES_MSG_USER_JOINED_PROJECT = '用户已经加入该项目';
+// 查询项目成员列表失败
+export const RES_FAILED_FETCH_PROJECT_MEMBERS = 2014;
+export const RES_MSG_FETCH_PROJECT_MEMBERS = '查询项目成员失败';
+// 查询项目成员总数失败
+export const RES_FAILED_COUNT_PROJECT_MEMBERS = 2015;
+export const RES_MSG_COUNT_PROJECT_MEMBERS = '查询项目成员总数失败';

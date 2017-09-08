@@ -236,3 +236,42 @@ export const createProjectMemberInfo = params =>
             }
         });
     });
+
+/**
+ * 根据参数获取项目成员数量, 失败的话返回-1
+ * @param params
+ * @returns {Promise}
+ */
+export const countProjectMembers = params =>
+    new Promise((resolve, reject) => {
+        ProjectMemberModel.count(params, (err, count) => {
+            if (err) {
+                reject({projectMemberCount: -1});
+            } else if (count === 0) {
+                reject({projectMemberCount: count});
+            } else {
+                resolve({projectMemberCount: count});
+            }
+        });
+    });
+
+
+/**
+ * 根据参数和页码获取项目列表
+ * @param pageSize 第几页
+ * @param pageNum 一页的项目数量
+ * @param params 查询参数
+ */
+export const findProjectMembersByPage = (pageSize, pageNum, params) => new Promise((resolve, reject) => {
+    const query = ProjectMemberModel.find(params);
+    query.skip((pageNum - 1) * pageSize);
+    query.limit(pageSize);
+    query.exec((err, data) => {
+        if (err) {
+            reject({findProjectMembers: false});
+        }
+
+        const projectMembers = data.map(item => ({account: item.userAccount}));
+        resolve(projectMembers);
+    });
+});

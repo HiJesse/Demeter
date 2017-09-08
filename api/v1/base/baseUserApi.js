@@ -142,3 +142,19 @@ export const countUsers = (accountSearch) => {
         });
     });
 };
+
+/**
+ * 根据参数获取用户列表
+ * @param params
+ */
+export const findUsersByAccounts = params =>
+    new Promise((resolve, reject) => {
+        UserModel.find({
+            account: params
+        }, (err, data) => {
+            if (err) {
+                reject({findUsers: false})
+            }
+            resolve(data);
+        });
+    });

@@ -45,4 +45,7 @@ router.post('/project/updateProjectInfo', ProjectLogoMulter.single('projectLogo'
 // 添加项目成员
 router.post('/project/addMember', projectMember.addProjectMember);
 
+// 获取项目成员列表
+router.get('/project/fetchProjectMemberList', projectMember.fetchProjectMembers);
+
 export default router;
