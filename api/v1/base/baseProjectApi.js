@@ -223,6 +223,22 @@ export const isUserJoinedProject = params =>
     });
 
 /**
+ * 根据参数判断用户是否还没有加入项目
+ * @param params
+ * @returns {Promise}
+ */
+export const isUserNotJoinedProject = params =>
+    new Promise((resolve, reject) => {
+        ProjectMemberModel.find(params, (err, data) => {
+            if (data.length === 1) {
+                resolve({isUserNotJoined: false});
+            } else {
+                reject({isUserNotJoined: true});
+            }
+        });
+    });
+
+/**
  * 根据参数创建项目成员信息
  * @param params
  */
@@ -273,5 +289,23 @@ export const findProjectMembersByPage = (pageSize, pageNum, params) => new Promi
 
         const projectMembers = data.map(item => ({account: item.userAccount}));
         resolve(projectMembers);
+    });
+});
+
+/**
+ * 删除项目成员
+ * @param projectId
+ * @param account
+ */
+export const deleteMember = (projectId, account) => new Promise((resolve, reject) => {
+    ProjectMemberModel.remove({
+        projectId: projectId,
+        userAccount: account
+    }, (err) => {
+        if (err) {
+            reject({projectMemberDeleted: false});
+        } else {
+            resolve({projectMemberDeleted: true});
+        }
     });
 });

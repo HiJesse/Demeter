@@ -48,4 +48,7 @@ router.post('/project/addMember', projectMember.addProjectMember);
 // 获取项目成员列表
 router.get('/project/fetchProjectMemberList', projectMember.fetchProjectMembers);
 
+// 删除项目成员
+router.post('/project/deleteMember', projectMember.deleteProjectMember);
+
 export default router;

@@ -98,3 +98,9 @@ export const RES_MSG_FETCH_PROJECT_MEMBERS = '查询项目成员失败';
 // 查询项目成员总数失败
 export const RES_FAILED_COUNT_PROJECT_MEMBERS = 2015;
 export const RES_MSG_COUNT_PROJECT_MEMBERS = '查询项目成员总数失败';
+// 删除项目成员失败
+export const RES_FAILED_DELETE_PROJECT_MEMBER = 2016;
+export const RES_MSG_DELETE_PROJECT_MEMBER = '删除项目成员失败';
+// 该成员还没有加入项目
+export const RES_FAILED_USER_NOT_JOINED_PROJECT = 2017;
+export const RES_MSG_USER_NOT_JOINED_PROJECT = '用户还没有加入该项目';
