@@ -1,12 +1,14 @@
 //project user manager reducer
 import {message} from "antd";
 import {
+    ACTION_DELETE_PROJECT_MEMBER_FULFILLED,
     ACTION_FETCH_PROJECT_MEMBER_LIST,
     ACTION_FETCH_PROJECT_MEMBER_LIST_FULFILLED,
     ACTION_INIT_PROJECT_MEMBER_DIALOG,
     ACTION_PROJECT_USER_ADD_ACCOUNT,
     ACTION_PROJECT_USER_ADD_ACCOUNT_FULFILLED,
-    ACTION_PROJECT_USER_MANAGER_CHANGE_ACCOUNT
+    ACTION_PROJECT_USER_MANAGER_CHANGE_ACCOUNT,
+    ACTION_SELECT_PROJECT_MEMBER
 } from "../constants/actionType";
 import {isStringEmpty} from "../../util/checker";
 import {RES_SUCCEED} from "../../util/status";
@@ -54,7 +56,7 @@ const addMemberFulfilledReducer = (state, action) => {
     return {
         ...state,
         addUserLoading: false,
-        addedAccountStatus: action.status === RES_SUCCEED
+        refreshMembers: action.status === RES_SUCCEED
     };
 };
 
@@ -87,14 +89,51 @@ const fetchMemberListFulfilledReducer = (state, action) => {
         projectMembers: action.data.projectMembers,
         pageNum: action.data.pageNum,
         projectMemberLoading: false,
-        addedAccountStatus: false
+        refreshMembers: false
+    };
+};
+
+/**
+ * 获取选中index成员信息 reducer
+ * @param state
+ * @param action
+ */
+const selectMemberReducer = (state, action) => {
+    const index = action.index;
+    let memberInfo = {};
+
+    if (index >= 0 && state.projectMemberList.length > index) {
+        memberInfo = state.projectMemberList[index];
+    }
+
+    return {
+        ...state,
+        memberInfo: memberInfo
+    }
+};
+
+/**
+ * 删除项目成员 reducer
+ * @param state
+ * @param action
+ */
+const deleteMemberReducer = (state, action) => {
+    if (action.status !== RES_SUCCEED) {
+        message.error(action.msg);
+
+    }
+
+    return {
+        ...state,
+        refreshMembers: action.status === RES_SUCCEED
     };
 };
 
 const initialProjectUserManagerState = {
     addUserLoading: false,
     addedAccount: null,
-    addedAccountStatus: false,
+    refreshMembers: false,
+    memberInfo: {},
     projectMemberLoading: false,
     projectMemberList: [],
     projectMembers: 0,
@@ -135,6 +174,12 @@ export function projectMembersManager(state = initialProjectUserManagerState, ac
             break;
         case ACTION_FETCH_PROJECT_MEMBER_LIST_FULFILLED:
             newState = fetchMemberListFulfilledReducer(state, action.data);
+            break;
+        case ACTION_SELECT_PROJECT_MEMBER:
+            newState = selectMemberReducer(state, action.data);
+            break;
+        case ACTION_DELETE_PROJECT_MEMBER_FULFILLED:
+            newState = deleteMemberReducer(state, action.data);
             break;
         default:
     }

@@ -1,13 +1,15 @@
 // project user manager epics
 import {combineEpics} from "redux-observable";
 import {
+    ACTION_DELETE_PROJECT_MEMBER,
+    ACTION_DELETE_PROJECT_MEMBER_FULFILLED,
     ACTION_FETCH_PROJECT_MEMBER_LIST,
     ACTION_FETCH_PROJECT_MEMBER_LIST_FULFILLED,
     ACTION_PROJECT_USER_ADD_ACCOUNT,
     ACTION_PROJECT_USER_ADD_ACCOUNT_FULFILLED
 } from "../constants/actionType";
 import {AJAX_METHOD, ajaxRequest} from "../../util/ajax";
-import {URL_ADD_MEMBER_TO_PROJECT, URL_FETCH_PROJECT_MEMBER_LIST} from "../constants/url";
+import {URL_ADD_MEMBER_TO_PROJECT, URL_DELETE_PROJECT_MEMBER, URL_FETCH_PROJECT_MEMBER_LIST} from "../constants/url";
 import {isStringEmpty} from "../../util/checker";
 
 /**
@@ -47,9 +49,23 @@ export const fetchProjectMemberListEpic = action$ =>
         }));
 
 /**
+ * 删除项目成员 epic
+ * @param action$
+ */
+export const deleteProjectMemberEpic = action$ =>
+    action$.ofType(ACTION_DELETE_PROJECT_MEMBER)
+        .mergeMap(action => ajaxRequest({
+            actionType: ACTION_DELETE_PROJECT_MEMBER_FULFILLED,
+            method: AJAX_METHOD.POST,
+            url: URL_DELETE_PROJECT_MEMBER,
+            params: action.data
+        }));
+
+/**
  * 项目所属成员管理相关 epic方法汇总
  */
 export const projectMembersManagerEpics = combineEpics(
     addMemberEpic,
-    fetchProjectMemberListEpic
+    fetchProjectMemberListEpic,
+    deleteProjectMemberEpic
 );

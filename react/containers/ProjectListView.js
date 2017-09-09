@@ -125,7 +125,7 @@ class ProjectListView extends React.Component {
             width: '15%',
             render: (text) => (<div>{text}</div>),
         }, {
-            title: '行为',
+            title: '操作',
             dataIndex: 'operation',
             render: (text, record, index) => this._buildOperationColumn(index),
         }];

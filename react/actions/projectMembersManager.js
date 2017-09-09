@@ -1,9 +1,11 @@
 // project user manager actions
 import {
+    ACTION_DELETE_PROJECT_MEMBER,
     ACTION_FETCH_PROJECT_MEMBER_LIST,
     ACTION_INIT_PROJECT_MEMBER_DIALOG,
     ACTION_PROJECT_USER_ADD_ACCOUNT,
-    ACTION_PROJECT_USER_MANAGER_CHANGE_ACCOUNT
+    ACTION_PROJECT_USER_MANAGER_CHANGE_ACCOUNT,
+    ACTION_SELECT_PROJECT_MEMBER
 } from "../constants/actionType";
 
 /**
@@ -51,5 +53,29 @@ export const fetchMembersAction = params => ({
         projectId: params.projectId,
         pageNum: params.pageNum,
         pageSize: params.pageSize
+    }
+});
+
+/**
+ * 获取index成员的信息
+ * @param index
+ */
+export const selectMemberAction = index => ({
+    type: ACTION_SELECT_PROJECT_MEMBER,
+    data: {
+        index: index
+    }
+});
+
+/**
+ * 删除项目成员列表
+ * @param params
+ */
+export const deleteMemberAction = params => ({
+    type: ACTION_DELETE_PROJECT_MEMBER,
+    data: {
+        uId: params.uId,
+        projectId: params.projectId,
+        account: params.account
     }
 });

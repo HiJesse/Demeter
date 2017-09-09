@@ -5,8 +5,10 @@ import {isStringEmpty} from "../../util/checker";
 import {
     addMemberAction,
     changeUserAccountAction,
+    deleteMemberAction,
     fetchMembersAction,
-    initDialogDataAction
+    initDialogDataAction,
+    selectMemberAction
 } from "../actions/projectMembersManager";
 import {projectUserDialogStyle} from "./styles/projectUserManagerDialog";
 
@@ -29,7 +31,7 @@ class ProjectMembersManagerDialog extends React.Component {
     render() {
         const data = this.props.data;
 
-        if (this.props.addedAccountStatus) {
+        if (this.props.refreshMembers) {
             this.props.fetchProjectMembers({
                 uId: localStorage.uId,
                 projectId: data.id,
@@ -125,8 +127,14 @@ class ProjectMembersManagerDialog extends React.Component {
                 <Popconfirm
                     title="确认产出该用户?"
                     onConfirm={() => {
+                        this.props.deleteProjectMember({
+                            uId: localStorage.uId,
+                            projectId: this.props.data.id,
+                            account: this.props.memberInfo.account
+
+                        });
                     }}>
-                    <a href="#">{'删除'}</a>
+                    <a href="#" onClick={() => this.props.selectMember(index)}>{'删除'}</a>
                 </Popconfirm>
             </span>
         )
@@ -138,7 +146,8 @@ function select(state) {
     return {
         addUserLoading: projectMembersManager.addUserLoading, // 添加用户loading
         addedAccount: projectMembersManager.addedAccount, // 要添加的用户账号
-        addedAccountStatus: projectMembersManager.addedAccountStatus, // 添加成员是否成功
+        refreshMembers: projectMembersManager.refreshMembers, // 是否刷新成员列表
+        memberInfo: projectMembersManager.memberInfo, // 选中的项目成员信息
         projectMemberLoading: projectMembersManager.projectMemberLoading, // 项目成员列表loading
         projectMemberList: projectMembersManager.projectMemberList, // 项目成员列表数据
         projectMembers: projectMembersManager.projectMembers, // 项目成员数量
@@ -153,6 +162,8 @@ function mapDispatchToProps(dispatch) {
         changeUserAccount: account => dispatch(changeUserAccountAction(account)), // 实时改变用户account
         addMember: (projectId, account) => dispatch(addMemberAction(localStorage.uId, projectId, account)), // 向项目中添加用户
         fetchProjectMembers: params => dispatch(fetchMembersAction(params)), // 获取项目成员列表
+        selectMember: index => dispatch(selectMemberAction(index)), // 根据index获取选中项目成员信息
+        deleteProjectMember: params => dispatch(deleteMemberAction(params)), // 删除项目成员
     }
 }
 
