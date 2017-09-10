@@ -27,6 +27,9 @@ router.post('/user/resetPassword', user.resetPassword);
 // 获取用户列表
 router.get('/user/fetchUserList', user.fetchUserList);
 
+// 用户列表中更新用户信息
+router.post('/user/updateUser', user.updateUserInfoByAdmin);
+
 // 删除用户
 router.post('/user/deleteUser', user.deleteUser);
 

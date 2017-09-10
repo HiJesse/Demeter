@@ -28,7 +28,14 @@ import {
 import {createJsonWebToken} from "../../util/webToken";
 import {isObjectEmpty, isStringEmpty} from "../../util/checker";
 import {md5} from "../../util/encrypt";
-import {countUsers, findUsersByPage, isAdmin, isUserExist, verifyUser} from "./base/baseUserApi";
+import {
+    countUsers,
+    findUsersByPage,
+    isAdmin,
+    isUserExist,
+    updateUserInfoByIdOrAccount,
+    verifyUser
+} from "./base/baseUserApi";
 
 /**
  * 登录接口, status == 0 成功返回token; -1000 账号不存在; -1001 密码错误
@@ -304,6 +311,45 @@ export const deleteUser = (req, res) => {
         if (error.isAdmin === false) {
             status = RES_FAILED_NOT_ADMIN;
             msg = RES_MSG_NOT_ADMIN;
+        }
+        res.json(buildResponse(status, {}, msg));
+    });
+};
+
+/**
+ * 根据uId更新用户基本信息
+ * 1. 校验admin
+ * 2. account用户是否存在
+ * 3. 更新用户信息
+ * @param req
+ * @param res
+ */
+export const updateUserInfoByAdmin = (req, res) => {
+    const uId = req.body.uId;
+    const account = req.body.account;
+    const nickname = req.body.nickname;
+
+    let status = RES_FAILED_UPDATE_USER_INFO;
+    let msg = RES_MSG_UPDATE_USER_INFO;
+
+    isAdmin({_id: uId}).then(() => {
+        return isUserExist({account: account});
+    }).then(() => {
+        return updateUserInfoByIdOrAccount(null, account, {nickName: nickname})
+    }).then(() => {
+        status = RES_SUCCEED;
+        msg = null;
+        res.json(buildResponse(status, {}, msg));
+    }).catch((error) => {
+        if (isObjectEmpty(error)) {
+            status = RES_FAILED_UPDATE_USER_INFO;
+            msg = RES_MSG_UPDATE_USER_INFO;
+        } else if (error.isAdmin === false) {
+            status = RES_FAILED_NOT_ADMIN;
+            msg = RES_MSG_NOT_ADMIN;
+        } else if (error.isUserExist === false) {
+            status = RES_FAILED_USER_NONE;
+            msg = RES_MSG_USER_NONE;
         }
         res.json(buildResponse(status, {}, msg));
     });

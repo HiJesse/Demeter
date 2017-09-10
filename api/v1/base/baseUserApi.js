@@ -158,3 +158,31 @@ export const findUsersByAccounts = params =>
             resolve(data);
         });
     });
+
+/**
+ * 更新用户信息 可选根据uId和account进行查询
+ * @param uId
+ * @param account
+ * @param params
+ * @returns {Promise}
+ */
+export const updateUserInfoByIdOrAccount = (uId, account, params) => {
+    let findParams = {_id: 'undefined'};
+    if (!isStringEmpty(uId)) {
+        findParams = {_id: uId};
+    } else if (!isStringEmpty(account)) {
+        findParams = {account: account}
+    }
+
+    return new Promise((resolve, reject) => {
+        UserModel.update(findParams, {
+            $set: params
+        }, {upsert: false}, (error) => {
+            if (error) {
+                reject({updateUserInfo: false});
+            } else {
+                resolve({updateUserInfo: true});
+            }
+        });
+    });
+};

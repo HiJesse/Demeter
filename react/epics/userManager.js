@@ -38,7 +38,7 @@ export const deleteUserEpic = action$ =>
         }));
 
 /**
- * 删除用户 epic
+ * 更新用户信息 epic
  * @param action$
  */
 export const updateUserEpic = action$ =>

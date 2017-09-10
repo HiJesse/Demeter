@@ -4,6 +4,7 @@ import {
     RES_FAILED_DELETE_PROJECT_MEMBER,
     RES_FAILED_FETCH_PROJECT_MEMBERS,
     RES_FAILED_FIND_USERS_INFO,
+    RES_FAILED_NOT_ADMIN,
     RES_FAILED_PARAMS_INVALID,
     RES_FAILED_PROJECT_ADD_MEMBER,
     RES_FAILED_PROJECT_NOT_EXIST,
@@ -14,6 +15,7 @@ import {
     RES_MSG_DELETE_PROJECT_MEMBER,
     RES_MSG_FETCH_PROJECT_MEMBERS,
     RES_MSG_FIND_USERS_INFO,
+    RES_MSG_NOT_ADMIN,
     RES_MSG_PARAMS_INVALID,
     RES_MSG_PROJECT_ADD_MEMBER,
     RES_MSG_PROJECT_NOT_EXIST,
@@ -77,6 +79,9 @@ export const addProjectMember = (req, res) => {
         if (isObjectEmpty(error)) {
             status = RES_FAILED_PROJECT_ADD_MEMBER;
             msg = RES_MSG_PROJECT_ADD_MEMBER;
+        } else if (error.isAdmin === false) {
+            status = RES_FAILED_NOT_ADMIN;
+            msg = RES_MSG_NOT_ADMIN;
         } else if (error.isUserExist === false) {
             status = RES_FAILED_USER_NONE;
             msg = RES_MSG_USER_NONE;
