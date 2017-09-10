@@ -2,7 +2,7 @@ import React from "react";
 import {Input, message, Modal} from "antd";
 import {connect} from "react-redux";
 import {isStringEmpty, isStringLengthLeast} from "../../util/checker";
-import {updateUserInfoLoadingAction, updateUserNicknameAction} from "../actions/userManager";
+import {updateUserInfoAction, updateUserInfoLoadingAction, updateUserNicknameAction} from "../actions/userManager";
 
 // 更新用户信息弹窗
 class UpdateUserInfoDialog extends React.Component {
@@ -48,7 +48,11 @@ class UpdateUserInfoDialog extends React.Component {
             return;
         }
         this.props.showConfirmLoading(true);
-        this.props.updateInfo(this.props.data.account, this.props.nickname);
+        this.props.updateInfo({
+            uId: localStorage.uId,
+            account: this.props.data.account,
+            nickname: this.props.nickname
+        });
     }
 }
 
@@ -64,7 +68,7 @@ function mapDispatchToProps(dispatch) {
     return {
         showConfirmLoading: visible => dispatch(updateUserInfoLoadingAction(visible)),
         updateUserNickname: nickname => dispatch(updateUserNicknameAction(nickname)),
-        updateInfo: (account, nickname) => dispatch(),
+        updateInfo: params => dispatch(updateUserInfoAction(params)),
     }
 }
 

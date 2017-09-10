@@ -22,6 +22,8 @@ export const URL_RESET_PASSWORD = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + '
 export const URL_FETCH_USER_LIST = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'fetchUserList';
 // 删除用户
 export const URL_DELETE_USER = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'deleteUser';
+// 更新用户信息
+export const URL_UPDATE_USER = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'updateUserInfo';
 
 // 创建项目
 export const URL_CREATE_PROJECT = URL_DOMAIN + URL_VERSION + URL_MODULE.PROJECT + 'createProject';

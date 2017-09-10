@@ -93,7 +93,7 @@ export class UpdateProjectInfoDialog extends React.Component {
      * @private
      */
     _confirmDialog() {
-        if (!isStringLengthLeast(this.props.nickname, 3)) {
+        if (!isStringLengthLeast(this.props.des, 3)) {
             message.error('项目描述长度最少为3位');
             return;
         }

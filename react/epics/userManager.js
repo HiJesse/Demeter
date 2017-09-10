@@ -1,13 +1,15 @@
 // user list epics
 import {combineEpics} from "redux-observable";
 import {
+    ACTION_ADMIN_UPDATE_USER_INFO,
+    ACTION_ADMIN_UPDATE_USER_INFO_FULFILLED,
     ACTION_DELETE_USER,
     ACTION_DELETE_USER_FULFILLED,
     ACTION_FETCH_USER_LIST,
     ACTION_FETCH_USER_LIST_FULFILLED
 } from "../constants/actionType";
 import {AJAX_METHOD, ajaxRequest} from "../../util/ajax";
-import {URL_DELETE_USER, URL_FETCH_USER_LIST} from "../constants/url";
+import {URL_DELETE_USER, URL_FETCH_USER_LIST, URL_UPDATE_USER} from "../constants/url";
 
 /**
  * 获取用户列表 epic
@@ -36,9 +38,23 @@ export const deleteUserEpic = action$ =>
         }));
 
 /**
+ * 删除用户 epic
+ * @param action$
+ */
+export const updateUserEpic = action$ =>
+    action$.ofType(ACTION_ADMIN_UPDATE_USER_INFO)
+        .mergeMap(action => ajaxRequest({
+            actionType: ACTION_ADMIN_UPDATE_USER_INFO_FULFILLED,
+            method: AJAX_METHOD.POST,
+            url: URL_UPDATE_USER,
+            params: action.data
+        }));
+
+/**
  * user list相关 epic方法汇总
  */
 export const userManagerEpics = combineEpics(
     fetchUserListEpic,
-    deleteUserEpic
+    deleteUserEpic,
+    updateUserEpic
 );

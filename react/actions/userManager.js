@@ -1,5 +1,6 @@
 // user list actions
 import {
+    ACTION_ADMIN_UPDATE_USER_INFO,
     ACTION_CHANGE_SEARCH_INPUT,
     ACTION_CHANGE_SEARCH_INPUT_VISIBLE,
     ACTION_DELETE_USER,
@@ -119,4 +120,13 @@ export const updateUserNicknameAction = nickname => ({
     data: {
         nickname: nickname
     }
+});
+
+/**
+ * 更新用户昵称
+ * @param params
+ */
+export const updateUserInfoAction = params => ({
+    type: ACTION_ADMIN_UPDATE_USER_INFO,
+    data: params
 });
