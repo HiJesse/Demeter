@@ -2,7 +2,6 @@ import React from "react";
 import {Button, Form, Icon, Input, Modal, Upload} from "antd";
 import {homeStyle} from "./styles/home";
 import {connect} from "react-redux";
-import {MSG_PROJECT_DES, MSG_PROJECT_NAME} from "../constants/stringConstant";
 import {
     createProjectAction,
     getLogoFileAction,
@@ -10,6 +9,7 @@ import {
     uploadLogoAction
 } from "../actions/projectManager";
 import {PROJECT_LOGO} from "../constants/fileConstant";
+import {FROM_RULE_PROJECT_DES, FROM_RULE_PROJECT_NAME} from "../constants/formRule";
 
 const FormItem = Form.Item;
 const {TextArea} = Input;
@@ -69,7 +69,7 @@ class CreateProjectView extends React.Component {
                     <FormItem
                         label="项目名称">
                         {getFieldDecorator('projectName', {
-                            rules: [{min: 2, message: MSG_PROJECT_NAME}],
+                            rules: [FROM_RULE_PROJECT_NAME],
                         })(
                             <Input />
                         )}
@@ -77,7 +77,7 @@ class CreateProjectView extends React.Component {
                     <FormItem
                         label="项目描述">
                         {getFieldDecorator('projectDes', {
-                            rules: [{min: 3, message: MSG_PROJECT_DES}],
+                            rules: [FROM_RULE_PROJECT_DES],
                         })(
                             <TextArea autosize={{minRows: 2, maxRows: 3}}/>
                         )}

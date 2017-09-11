@@ -71,6 +71,23 @@ export const isUserExist = params => {
 };
 
 /**
+ * 根据params参数判读该用户是否不存在
+ * @param params
+ * @returns {Promise}
+ */
+export const isUserNotExist = params => {
+    return new Promise((resolve, reject) => {
+        UserModel.find(params, (err, data) => {
+            if (data.length === 1) {
+                reject({isUserNotExist: false});
+            } else {
+                resolve({isUserNotExist: true});
+            }
+        });
+    });
+};
+
+/**
  * 根据params参数判断该用户是否为管理员
  * @param params
  * @returns {Promise}

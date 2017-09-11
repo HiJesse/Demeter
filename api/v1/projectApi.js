@@ -11,6 +11,7 @@ import {
     RES_FAILED_FETCH_PROJECT_PLATFORM,
     RES_FAILED_NOT_ADMIN,
     RES_FAILED_PLATFORM_NOT_EXIST,
+    RES_FAILED_PROJECT_IS_EXIST,
     RES_FAILED_PROJECT_NOT_EXIST,
     RES_FAILED_UPDATE_PROJECT_DES,
     RES_FAILED_UPDATE_PROJECT_INFO,
@@ -24,6 +25,7 @@ import {
     RES_MSG_FETCH_PROJECT_PLATFORM,
     RES_MSG_NOT_ADMIN,
     RES_MSG_PLATFORM_NOT_EXIST,
+    RES_MSG_PROJECT_IS_EXIST,
     RES_MSG_PROJECT_NOT_EXIST,
     RES_MSG_UPDATE_PROJECT_DES,
     RES_MSG_UPDATE_PROJECT_INFO,
@@ -42,14 +44,16 @@ import {
     findProjectPlatforms,
     findProjectsByName,
     getPlatforms,
-    getProjectInfo
+    getProjectInfo,
+    isProjectNotExist
 } from "./base/baseProjectApi";
 
 /**
  * 创建新项目
  * 1. 获取平台信息
- * 2. 创建项目信息
- * 3. 根据平台信息和项目ID创建项目平台信息, 并生成对应的app id
+ * 2. 校验项目是否已存在
+ * 3. 创建项目信息
+ * 4. 根据平台信息和项目ID创建项目平台信息, 并生成对应的app id
  * @param req
  * @param res
  */
@@ -64,6 +68,8 @@ export const createProject = (req, res) => {
 
     getPlatforms().then((data) => {
         platforms = data.platforms;
+        return isProjectNotExist({projectName: projectName});
+    }).then(() => {
         return createProjectInfo(projectName, projectDes, projectLogo);
     }).then(() => {
         return getProjectInfo({
@@ -76,7 +82,13 @@ export const createProject = (req, res) => {
         msg = null;
         res.json(buildResponse(status, {}, msg));
     }).catch(error => {
-        if (error.isProjectExist === false) {
+        if (isObjectEmpty(error)) {
+            status = RES_FAILED_CREATE_PROJECT;
+            msg = RES_MSG_CREATE_PROJECT;
+        } else if (error.isProjectNotExist === false) {
+            status = RES_FAILED_PROJECT_IS_EXIST;
+            msg = RES_MSG_PROJECT_IS_EXIST;
+        } else if (error.isProjectExist === false) {
             status = RES_FAILED_PROJECT_NOT_EXIST;
             msg = RES_MSG_PROJECT_NOT_EXIST;
         } else if (error.isPlatformExist === false) {

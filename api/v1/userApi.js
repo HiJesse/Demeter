@@ -12,6 +12,7 @@ import {
     RES_FAILED_NOT_ADMIN,
     RES_FAILED_RESET_PASSWORD,
     RES_FAILED_UPDATE_USER_INFO,
+    RES_FAILED_USER_IS_EXIST,
     RES_FAILED_USER_NONE,
     RES_MSG_COUNT_USER,
     RES_MSG_CREATE_USER,
@@ -22,6 +23,7 @@ import {
     RES_MSG_NOT_ADMIN,
     RES_MSG_RESET_PASSWORD,
     RES_MSG_UPDATE_USER_INFO,
+    RES_MSG_USER_IS_EXIST,
     RES_MSG_USER_NONE,
     RES_SUCCEED
 } from "../../util/status";
@@ -33,6 +35,7 @@ import {
     findUsersByPage,
     isAdmin,
     isUserExist,
+    isUserNotExist,
     updateUserInfoByIdOrAccount,
     verifyUser
 } from "./base/baseUserApi";
@@ -86,7 +89,7 @@ export const modifyPassword = (req, res) => {
 
         UserModel.update(updateParams, {
             $set: {pwd: newPassword}
-        }, {upsert: true}, (error) => {
+        }, {upsert: false}, (error) => {
             if (!error) {
                 status = RES_SUCCEED;
                 msg = null;
@@ -142,7 +145,7 @@ export const updateUserInfo = (req, res) => {
         _id: uId
     }, {
         $set: {nickName: nickName}
-    }, {upsert: true}, (error) => {
+    }, {upsert: false}, (error) => {
         if (!error) {
             status = RES_SUCCEED;
             msg = null;
@@ -153,6 +156,9 @@ export const updateUserInfo = (req, res) => {
 
 /**
  * 根据account创建新用户
+ * 1. 校验是否为管理员
+ * 2. 校验用户是否存在
+ * 3. 创建用户
  * @param req
  * @param res
  */
@@ -172,6 +178,8 @@ export const createUser = (req, res) => {
     let msg = RES_MSG_CREATE_USER;
 
     isAdmin(adminParams).then(() => {
+        return isUserNotExist({account: account});
+    }).then(() => {
         UserModel.create(params, (error) => {
             if (!error) {
                 status = RES_SUCCEED;
@@ -180,9 +188,15 @@ export const createUser = (req, res) => {
             res.json(buildResponse(status, {}, msg));
         });
     }).catch((error) => {
-        if (error.isAdmin === false) {
+        if (isObjectEmpty(error)) {
+            status = RES_FAILED_CREATE_USER;
+            msg = RES_MSG_CREATE_USER;
+        } else if (error.isAdmin === false) {
             status = RES_FAILED_NOT_ADMIN;
             msg = RES_MSG_NOT_ADMIN;
+        } else if (error.isUserNotExist === false) {
+            status = RES_FAILED_USER_IS_EXIST;
+            msg = RES_MSG_USER_IS_EXIST;
         }
         res.json(buildResponse(status, {}, msg));
     });
@@ -211,7 +225,7 @@ export const resetPassword = (req, res) => {
     }).then(() => {
         UserModel.update(params, {
             $set: {pwd: md5('a123456')}
-        }, {upsert: true}, (error) => {
+        }, {upsert: false}, (error) => {
             if (!error) {
                 status = RES_SUCCEED;
                 msg = null;

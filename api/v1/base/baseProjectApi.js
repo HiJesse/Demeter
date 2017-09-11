@@ -9,6 +9,23 @@ import {URL_PROJECT_LOGO, URL_PROJECT_LOGO_DEFAULT} from "../../../util/pathUtil
 import {getTimeStamp} from "../../../util/timeUtil";
 
 /**
+ * 根据params参数判读该项目是否不存在
+ * @param params
+ * @returns {Promise}
+ */
+export const isProjectNotExist = params => {
+    return new Promise((resolve, reject) => {
+        ProjectModel.find(params, (err, data) => {
+            if (data.length === 1) {
+                reject({isProjectNotExist: false});
+            } else {
+                resolve({isProjectNotExist: true});
+            }
+        });
+    });
+};
+
+/**
  * 根据项目名称说明和logo建立项目信息
  * @param name
  * @param des

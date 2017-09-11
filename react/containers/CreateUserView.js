@@ -3,7 +3,7 @@ import {Button, Form, Input} from "antd";
 import {homeStyle} from "./styles/home";
 import {createUserAction} from "../actions/user";
 import {connect} from "react-redux";
-import {MSG_ACCOUNT} from "../constants/stringConstant";
+import {FORM_RULE_ACCOUNT} from "../constants/formRule";
 
 const FormItem = Form.Item;
 
@@ -22,7 +22,7 @@ class CreateUserView extends React.Component {
                     <FormItem
                         label="账号">
                         {getFieldDecorator('account', {
-                            rules: [{min: 3, message: MSG_ACCOUNT}],
+                            rules: [FORM_RULE_ACCOUNT],
                         })(
                             <Input />
                         )}

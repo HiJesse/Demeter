@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Form, Icon, Input} from "antd";
-import {MSG_ACCOUNT, MSG_PASSWORD} from "../constants/stringConstant";
 import {modifyViewStyle} from "./styles/modifyPasswordView";
+import {FORM_RULE_ACCOUNT, FROM_RULE_PASSWORD} from "../constants/formRule";
 
 const FormItem = Form.Item;
 
@@ -23,9 +23,7 @@ class ModifyPasswordView extends React.Component {
                 <FormItem
                     hasFeedback>
                     {getFieldDecorator('password', {
-                        rules: [{
-                            required: true, min: 6, message: MSG_PASSWORD
-                        }],
+                        rules: [FROM_RULE_PASSWORD],
                     })(
                         <Input prefix={<Icon type="lock" style={{fontSize: 13}}/>} type="password"
                                placeholder="密码"/>
@@ -34,9 +32,7 @@ class ModifyPasswordView extends React.Component {
                 <FormItem
                     hasFeedback>
                     {getFieldDecorator('newPassword', {
-                        rules: [{
-                            required: true, min: 6, message: MSG_PASSWORD
-                        }, {
+                        rules: [FROM_RULE_PASSWORD, {
                             validator: this._checkPassword.bind(this),
                         }],
                     })(
@@ -48,9 +44,7 @@ class ModifyPasswordView extends React.Component {
                 <FormItem
                     hasFeedback>
                     {getFieldDecorator('confirm', {
-                        rules: [{
-                            required: true, min: 6, message: MSG_PASSWORD
-                        }, {
+                        rules: [FROM_RULE_PASSWORD, {
                             validator: this._checkConfirmPassword.bind(this),
                         }],
                     })(
@@ -79,7 +73,7 @@ class ModifyPasswordView extends React.Component {
                 <FormItem
                     hasFeedback>
                     {getFieldDecorator('account', {
-                        rules: [{required: true, min: 3, message: MSG_ACCOUNT}],
+                        rules: [FORM_RULE_ACCOUNT],
                     })(
                         <Input prefix={<Icon type="user" style={{fontSize: 13}}/>} placeholder="账号"/>
                     )}

@@ -3,7 +3,7 @@ import {Button, Form, Input} from "antd";
 import {homeStyle} from "./styles/home";
 import {getUserInfoAction, updateUserInfoAction} from "../actions/user";
 import {connect} from "react-redux";
-import {MSG_NICKNAME} from "../constants/stringConstant";
+import {FROM_RULE_NICKNAME} from "../constants/formRule";
 
 const FormItem = Form.Item;
 
@@ -31,7 +31,7 @@ class UserCenterView extends React.Component {
                     <FormItem
                         label="昵称">
                         {getFieldDecorator('nickName', {
-                            rules: [{min: 2, message: MSG_NICKNAME}],
+                            rules: [FROM_RULE_NICKNAME],
                             initialValue: this.props.nickName
                         })(
                             <Input />

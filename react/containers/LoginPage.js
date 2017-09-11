@@ -5,9 +5,9 @@ import {connect} from "react-redux";
 import {login, loginAction} from "../actions/user";
 import {Button, Checkbox, Form, Icon, Input} from "antd";
 import FooterView from "../components/FooterView";
-import {MSG_ACCOUNT, MSG_PASSWORD} from "../constants/stringConstant";
 import {goToHomePage, goToModifyPasswordPage} from "../../util/router";
 import {RES_SUCCEED} from "../../util/status";
+import {FORM_RULE_ACCOUNT, FROM_RULE_PASSWORD} from "../constants/formRule";
 
 const FormItem = Form.Item;
 
@@ -30,14 +30,14 @@ class LoginPage extends React.Component {
                     <Form onSubmit={this._handleSubmit.bind(this)} style={loginStyle.view_form}>
                         <FormItem>
                             {getFieldDecorator('account', {
-                                rules: [{required: true, min: 3, message: MSG_ACCOUNT}],
+                                rules: [FORM_RULE_ACCOUNT],
                             })(
                                 <Input prefix={<Icon type="user" style={{fontSize: 13}}/>} placeholder="账号"/>
                             )}
                         </FormItem>
                         <FormItem>
                             {getFieldDecorator('password', {
-                                rules: [{required: true, min: 6, message: MSG_PASSWORD}],
+                                rules: [FROM_RULE_PASSWORD],
                             })(
                                 <Input prefix={<Icon type="lock" style={{fontSize: 13}}/>} type="password"
                                        placeholder="密码"/>
