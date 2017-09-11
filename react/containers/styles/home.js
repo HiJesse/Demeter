@@ -2,7 +2,10 @@ export const homeStyle = {
     page: {
         position: 'absolute',
         width: '100%',
-        height: '100%'
+        minHeight: '100vh'
+    },
+    view_slider: {
+        minHeight: '100vh'
     },
     page_header: {
         background: '#fff',
@@ -24,6 +27,9 @@ export const homeStyle = {
         flex: 1,
         borderRadius: 4,
     },
+    view_footer: {
+        textAlign: 'center'
+    },
     view_logo: {
         height: 32,
         background: '#333',
@@ -41,7 +47,8 @@ export const homeStyle = {
         paddingRight: 12,
         display: 'flex',
         justifyContent: 'flex-end',
-        alignItems: 'center'
+        alignItems: 'center',
+        overflow: 'initial'
     },
     button_logout: {
         fontSize: 16,
@@ -49,5 +56,12 @@ export const homeStyle = {
     },
     text_logo: {
 
-    }
+    },
+    text_welcome: {
+        flex: 1,
+        paddingLeft: 12
+    },
+    text_admin: {
+        flex: 1
+    },
 };

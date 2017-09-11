@@ -52,7 +52,7 @@ class HomePage extends React.Component {
             <Layout style={homeStyle.page}>
                 {this._loginVerify()}
                 <Sider
-                    style={{height: '100%'}}
+                    style={homeStyle.view_slider}
                     collapsible
                     collapsed={this.props.isCollapsed}
                     onCollapse={(collapsed) => this.props.collapseMenu(collapsed)}>
@@ -75,10 +75,10 @@ class HomePage extends React.Component {
                 </Sider>
                 <Layout style={{display: 'flex'}}>
                     <Header style={homeStyle.page_header}>
-                        <div style={{flex: 1, paddingLeft: 12}}>
+                        <div style={homeStyle.text_welcome}>
                             {`欢迎 ${this.props.nickName} 用户登录`}
                         </div>
-                        <div style={{flex: 1}}>
+                        <div style={homeStyle.text_admin}>
                             {`账号权限: ${this.props.isAdmin ? '管理员' : '普通用户'}`}
                         </div>
 
@@ -95,7 +95,7 @@ class HomePage extends React.Component {
                         {this._createBreadCrumb()}
                         {this._renderPageContent()}
                     </Content>
-                    <Footer style={{textAlign: 'center'}}>
+                    <Footer style={homeStyle.view_footer}>
                         <FooterView />
                     </Footer>
                 </Layout>
