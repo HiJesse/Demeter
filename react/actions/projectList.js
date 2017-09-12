@@ -4,8 +4,10 @@ import {
     ACTION_CHANGE_SEARCH_PROJECT_INPUT_VISIBLE,
     ACTION_DELETE_PROJECT,
     ACTION_DELETE_PROJECT_DIALOG_VISIBLE,
+    ACTION_FETCH_JOINED_PROJECT_LIST,
     ACTION_FETCH_PROJECT_LIST,
-    ACTION_PROJECT_PAGE_LOADING, ACTION_PROJECT_USER_MANAGER_DIALOG_VISIBLE,
+    ACTION_PROJECT_PAGE_LOADING,
+    ACTION_PROJECT_USER_MANAGER_DIALOG_VISIBLE,
     ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
     ACTION_UPDATING_PROJECT_INFO
 } from "../constants/actionType";
@@ -35,6 +37,21 @@ export const fetchProjectListAction = (uId, pageSize, pageNum, projectName) => (
         pageSize: pageSize,
         pageNum: pageNum,
         projectName: projectName
+    }
+});
+
+/**
+ * 分页获取已经加入的项目列表
+ * @param uId 当前uId
+ * @param pageSize 一页容量
+ * @param pageNum 页码
+ */
+export const fetchJoinedProjectListAction = (uId, pageSize, pageNum) => ({
+    type: ACTION_FETCH_JOINED_PROJECT_LIST,
+    data: {
+        uId: uId,
+        pageSize: pageSize,
+        pageNum: pageNum,
     }
 });
 

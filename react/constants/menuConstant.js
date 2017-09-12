@@ -35,6 +35,13 @@ export const MENU_PROJECT_MANAGER = {
     }]
 };
 
+// 菜单已加入项目列表
+export const MENU_JOINED_PROJECT_LIST = {
+    key: 'project_joined_list',
+    value: '项目列表',
+    icon: 'appstore-o'
+};
+
 export const USER_MANAGER_CREATE = 'user_manager_create';
 export const USER_MANAGER_RESET_PWD = 'user_manager_reset_pwd';
 export const USER_MANAGER_LIST = 'user_manager_list';
@@ -132,20 +139,34 @@ export function getValuesFromKey(key) {
         values = getValueFromSpecificKey(key, MENU_ANDROID_PACKAGE);
     } else if (key.startsWith(MENU_IOS_PACKAGE.key)) {
         values = getValueFromSpecificKey(key, MENU_IOS_PACKAGE);
+    } else if (key.startsWith(MENU_JOINED_PROJECT_LIST.key)) {
+        values = {
+            key: MENU_JOINED_PROJECT_LIST.key,
+            value: MENU_JOINED_PROJECT_LIST.value,
+        };
     }
     return values;
 }
 
 /**
- * 当前Menu item是否需要管理员权限
- * @param data
+ * 根据用户权限和菜单详情 决定是否要绘制该菜单
+ * @param isAdmin
+ * @param menu
  * @returns {boolean}
  */
-export function isAdminMenu(data) {
-    let isAdminMenu = false;
-    if (data === MENU_PROJECT_MANAGER ||
-        data === MENU_USER_MANAGER) {
-        isAdminMenu = true;
+export const willRenderMenu = (isAdmin, menu) => {
+    let willRender = true;
+    if (isAdmin && menu === MENU_JOINED_PROJECT_LIST) {
+        willRender = false;
+    } else if (!isAdmin) {
+        switch (menu) {
+            case MENU_PROJECT_MANAGER:
+            case MENU_USER_MANAGER:
+                willRender = false;
+                break;
+            default:
+                willRender = true;
+        }
     }
-    return isAdminMenu;
-}
+    return willRender;
+};

@@ -6,9 +6,9 @@ import {homeStyle} from "./styles/home";
 import {isArrayEmpty, isStringEmpty} from "../../util/checker";
 import {
     getValuesFromKey,
-    isAdminMenu,
     MENU_ANDROID_PACKAGE,
     MENU_IOS_PACKAGE,
+    MENU_JOINED_PROJECT_LIST,
     MENU_PROJECT_MANAGER,
     MENU_USER_CENTER,
     MENU_USER_MANAGER,
@@ -18,7 +18,8 @@ import {
     USER_CENTER_PASSWORD,
     USER_MANAGER_CREATE,
     USER_MANAGER_LIST,
-    USER_MANAGER_RESET_PWD
+    USER_MANAGER_RESET_PWD,
+    willRenderMenu
 } from "../constants/menuConstant";
 import {collapseMenuAction, fillSelectedMenuValuesAction, fillSelectedPageContentAction} from "../actions/home";
 import {getUserInfoAction} from "../actions/user";
@@ -30,6 +31,7 @@ import ResetPasswordView from "./ResetPasswordView";
 import UserListView from "./UserListView";
 import CreateProjectView from "./CreateProjectView";
 import ProjectListView from "./ProjectListView";
+import JoinedProjectListView from "./JoinedProjectListView";
 
 const confirm = Modal.confirm;
 const {Header, Content, Footer, Sider} = Layout;
@@ -68,6 +70,7 @@ class HomePage extends React.Component {
                         {this._createMenu(MENU_ANDROID_PACKAGE)}
                         {this._createMenu(MENU_IOS_PACKAGE)}
 
+                        {this._createMenu(MENU_JOINED_PROJECT_LIST)}
                         {this._createMenu(MENU_PROJECT_MANAGER)}
                         {this._createMenu(MENU_USER_MANAGER)}
                         {this._createMenu(MENU_USER_CENTER)}
@@ -110,7 +113,7 @@ class HomePage extends React.Component {
      * @private
      */
     _createMenu(data) {
-        if (!this.props.isAdmin && isAdminMenu(data)) {
+        if (!willRenderMenu(this.props.isAdmin, data)) {
             return null;
         }
 
@@ -222,6 +225,11 @@ class HomePage extends React.Component {
             case PROJECT_MANAGER_LIST:
                 content = (
                     <ProjectListView />
+                );
+                break;
+            case MENU_JOINED_PROJECT_LIST.key:
+                content = (
+                    <JoinedProjectListView />
                 );
                 break;
             default:

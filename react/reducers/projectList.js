@@ -3,8 +3,10 @@ import {
     ACTION_CHANGE_SEARCH_PROJECT_INPUT,
     ACTION_CHANGE_SEARCH_PROJECT_INPUT_VISIBLE,
     ACTION_DELETE_PROJECT_DIALOG_VISIBLE,
+    ACTION_FETCH_JOINED_PROJECT_LIST_FULFILLED,
     ACTION_FETCH_PROJECT_LIST_FULFILLED,
-    ACTION_PROJECT_PAGE_LOADING, ACTION_PROJECT_USER_MANAGER_DIALOG_VISIBLE,
+    ACTION_PROJECT_PAGE_LOADING,
+    ACTION_PROJECT_USER_MANAGER_DIALOG_VISIBLE,
     ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
     ACTION_UPDATING_PROJECT_INFO
 } from "../constants/actionType";
@@ -107,6 +109,7 @@ export function projectList(state = initialProjectListState, action) {
                 pageLoading: action.data.pageLoading
             };
             break;
+        case ACTION_FETCH_JOINED_PROJECT_LIST_FULFILLED:
         case ACTION_FETCH_PROJECT_LIST_FULFILLED:
             newState = fetchProjectListReducer(state, action.data);
             break;

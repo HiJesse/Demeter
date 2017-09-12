@@ -18,7 +18,7 @@ import UpdateProjectInfoDialog from "../components/UpdateProjectInfoDialog";
 import DeleteProjectDialog from "../components/DeleteProjectDialog";
 import ProjectMembersManagerDialog from "../components/ProjectMembersManagerDialog";
 
-// 用户管理-用户列表
+// 项目管理-项目列表分页
 class ProjectListView extends React.Component {
 
     componentDidMount() {

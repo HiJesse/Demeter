@@ -5,6 +5,8 @@ import {
     ACTION_CREATE_PROJECT_FULFILLED,
     ACTION_DELETE_PROJECT,
     ACTION_DELETE_PROJECT_FULFILLED,
+    ACTION_FETCH_JOINED_PROJECT_LIST,
+    ACTION_FETCH_JOINED_PROJECT_LIST_FULFILLED,
     ACTION_FETCH_PROJECT_LIST,
     ACTION_FETCH_PROJECT_LIST_FULFILLED,
     ACTION_UPDATE_PROJECT_INFO,
@@ -14,6 +16,7 @@ import {AJAX_METHOD, ajaxRequest} from "../../util/ajax";
 import {
     URL_CREATE_PROJECT,
     URL_DELETE_PROJECT,
+    URL_FETCH_JOINED_PROJECT_LIST,
     URL_FETCH_PROJECT_LIST,
     URL_UPDATE_PROJECT_INFO
 } from "../constants/url";
@@ -41,6 +44,19 @@ export const fetchProjectListEpic = action$ =>
             actionType: ACTION_FETCH_PROJECT_LIST_FULFILLED,
             method: AJAX_METHOD.GET,
             url: URL_FETCH_PROJECT_LIST,
+            params: action.data
+        }));
+
+/**
+ * 获取用户已经加入的项目列表epic
+ * @param action$
+ */
+export const fetchJoinedProjectListEpic = action$ =>
+    action$.ofType(ACTION_FETCH_JOINED_PROJECT_LIST)
+        .mergeMap(action => ajaxRequest({
+            actionType: ACTION_FETCH_JOINED_PROJECT_LIST_FULFILLED,
+            method: AJAX_METHOD.GET,
+            url: URL_FETCH_JOINED_PROJECT_LIST,
             params: action.data
         }));
 
@@ -76,6 +92,7 @@ export const deleteProjectInfoEpic = action$ =>
 export const projectManagerEpics = combineEpics(
     createProjectEpic,
     fetchProjectListEpic,
+    fetchJoinedProjectListEpic,
     updateProjectInfoEpic,
     deleteProjectInfoEpic
 );

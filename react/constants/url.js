@@ -27,8 +27,10 @@ export const URL_UPDATE_USER = URL_DOMAIN + URL_VERSION + URL_MODULE.USER + 'upd
 
 // 创建项目
 export const URL_CREATE_PROJECT = URL_DOMAIN + URL_VERSION + URL_MODULE.PROJECT + 'createProject';
-// 获取用户列表
+// 获取项目列表
 export const URL_FETCH_PROJECT_LIST = URL_DOMAIN + URL_VERSION + URL_MODULE.PROJECT + 'fetchProjectList';
+// 获取已经加入的项目列表
+export const URL_FETCH_JOINED_PROJECT_LIST = URL_DOMAIN + URL_VERSION + URL_MODULE.PROJECT + 'fetchJoinedProjectList';
 // 更新项目信息
 export const URL_UPDATE_PROJECT_INFO = URL_DOMAIN + URL_VERSION + URL_MODULE.PROJECT + 'updateProjectInfo';
 // 删除项目
