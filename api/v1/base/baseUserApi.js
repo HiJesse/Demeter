@@ -62,7 +62,7 @@ export const isUserExist = params => {
     return new Promise((resolve, reject) => {
         UserModel.find(params, (err, data) => {
             if (data.length === 1) {
-                resolve({isUserExist: true});
+                resolve({isUserExist: true, ...data[0]});
             } else {
                 reject({isUserExist: false});
             }

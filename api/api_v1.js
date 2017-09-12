@@ -6,6 +6,8 @@ import * as projectMember from "./v1/projectMemberApi";
 
 const router = express.Router();
 
+/*用户相关*/
+
 // 登录
 router.post('/user/login', user.login);
 
@@ -33,6 +35,8 @@ router.post('/user/updateUser', user.updateUserInfoByAdmin);
 // 删除用户
 router.post('/user/deleteUser', user.deleteUser);
 
+/*项目相关*/
+
 // 新建项目
 router.post('/project/createProject', ProjectLogoMulter.single('projectLogo'), project.createProject);
 
@@ -53,5 +57,8 @@ router.get('/project/fetchProjectMemberList', projectMember.fetchProjectMembers)
 
 // 删除项目成员
 router.post('/project/deleteMember', projectMember.deleteProjectMember);
+
+// 获取用户加入的项目列表
+router.get('/project/fetchJoinedProjectList', projectMember.fetchJoinedProjectList);
 
 export default router;

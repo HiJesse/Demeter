@@ -1,8 +1,12 @@
 // user api
 import {
+    RES_FAILED_COUNT_PROJECT,
+    RES_FAILED_COUNT_PROJECT_EMPTY,
     RES_FAILED_COUNT_PROJECT_MEMBERS,
     RES_FAILED_DELETE_PROJECT_MEMBER,
+    RES_FAILED_FETCH_PROJECT_LIST,
     RES_FAILED_FETCH_PROJECT_MEMBERS,
+    RES_FAILED_FETCH_PROJECT_PLATFORM,
     RES_FAILED_FIND_USERS_INFO,
     RES_FAILED_NOT_ADMIN,
     RES_FAILED_PARAMS_INVALID,
@@ -11,9 +15,13 @@ import {
     RES_FAILED_USER_JOINED_PROJECT,
     RES_FAILED_USER_NONE,
     RES_FAILED_USER_NOT_JOINED_PROJECT,
+    RES_MSG_COUNT_PROJECT,
+    RES_MSG_COUNT_PROJECT_EMPTY,
     RES_MSG_COUNT_PROJECT_MEMBERS,
     RES_MSG_DELETE_PROJECT_MEMBER,
+    RES_MSG_FETCH_PROJECT_LIST,
     RES_MSG_FETCH_PROJECT_MEMBERS,
+    RES_MSG_FETCH_PROJECT_PLATFORM,
     RES_MSG_FIND_USERS_INFO,
     RES_MSG_NOT_ADMIN,
     RES_MSG_PARAMS_INVALID,
@@ -27,15 +35,18 @@ import {
 import {buildResponse} from "../../util/ajax";
 import {isObjectEmpty, isStringEmpty} from "../../util/checker";
 import {findUsersByAccounts, isAdmin, isUserExist} from "./base/baseUserApi";
+import {findProjectPlatforms, findProjectsByIDs, getProjectInfo} from "./base/baseProjectApi";
 import {
     countProjectMembers,
+    countUserJoinedProjects,
     createProjectMemberInfo,
     deleteMember,
     findProjectMembersByPage,
-    getProjectInfo,
+    findUserJoinedProjects,
     isUserJoinedProject,
     isUserNotJoinedProject
-} from "./base/baseProjectApi";
+} from "./base/baseProjectMemberApi";
+import {concatProjectAndPlatformInfo} from "../../util/arrayUtil";
 
 /**
  * 添加项目成员
@@ -220,4 +231,66 @@ export const deleteProjectMember = (req, res) => {
         }
         res.json(buildResponse(status, {}, msg));
     })
+};
+
+/**
+ * 分页获取用户加入的项目列表
+ * 1. 校验用户是否存在
+ * 2. 获取用户加入的项目总量
+ * 3. 根据页码获取项目id列表
+ * 4. 获取完整的项目列表
+ * 5. 获取项目列表对应的平台列表信息
+ * 6. 整合两个列表并回调
+ * @param req
+ * @param res
+ */
+export const fetchJoinedProjectList = (req, res) => {
+    const uId = req.query.uId;
+    const pageSize = Number(req.query.pageSize);
+    const pageNum = Number(req.query.pageNum);
+
+    let status = RES_FAILED_FETCH_PROJECT_LIST;
+    let msg = RES_MSG_FETCH_PROJECT_LIST;
+    let projectCount = -1;
+    let projectList;
+    let userAccount;
+
+    isUserExist({_id: uId}).then((userInfo) => {
+        userAccount = userInfo.account;
+        return countUserJoinedProjects({userAccount: userInfo.account});
+    }).then((data) => {
+        projectCount = data.userJoinedProjectCount;
+        return findUserJoinedProjects(pageSize, pageNum, {userAccount: userAccount});
+    }).then((projectIDs) => {
+        return findProjectsByIDs(projectIDs);
+    }).then((projects) => {
+        projectList = projects;
+        return findProjectPlatforms(projects);
+    }).then((projectPlatformInfo) => {
+        status = RES_SUCCEED;
+        msg = null;
+        res.json(buildResponse(status, {
+            projectList: concatProjectAndPlatformInfo(projectList, projectPlatformInfo),
+            projectCount: projectCount,
+            pageNum: pageNum
+        }, msg));
+    }).catch((error) => {
+        if (isObjectEmpty(error)) {
+            status = RES_FAILED_FETCH_PROJECT_LIST;
+            msg = RES_MSG_FETCH_PROJECT_LIST;
+        } else if (error.isUserExist === false) {
+            status = RES_FAILED_USER_NONE;
+            msg = RES_MSG_USER_NONE;
+        } else if (error.userJoinedProjectCount === -1) {
+            status = RES_FAILED_COUNT_PROJECT;
+            msg = RES_MSG_COUNT_PROJECT;
+        } else if (error.userJoinedProjectCount === 0) {
+            status = RES_FAILED_COUNT_PROJECT_EMPTY;
+            msg = RES_MSG_COUNT_PROJECT_EMPTY;
+        } else if (error.projectPlatformSize === -1) {
+            status = RES_FAILED_FETCH_PROJECT_PLATFORM;
+            msg = RES_MSG_FETCH_PROJECT_PLATFORM;
+        }
+        res.json(buildResponse(status, {}, msg));
+    });
 };
