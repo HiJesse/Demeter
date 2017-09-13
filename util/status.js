@@ -12,6 +12,8 @@ export const RES_MSG_TOKEN = '请先登录';
 export const RES_FAILED_PARAMS_INVALID = -4;
 export const RES_MSG_PARAMS_INVALID = '请求参数不合法';
 
+//------------用户
+
 // 是否是管理员
 export const RES_FAILED_NOT_ADMIN = 100;
 export const RES_MSG_NOT_ADMIN = '权限不足';
@@ -52,6 +54,8 @@ export const RES_MSG_FIND_USERS_INFO = '查询用户信息失败';
 // 账号不存在
 export const RES_FAILED_USER_IS_EXIST = 1011;
 export const RES_MSG_USER_IS_EXIST = '账号已经存在';
+
+//------------项目
 
 // 创建项目失败
 export const RES_FAILED_CREATE_PROJECT = 2000;
@@ -110,3 +114,6 @@ export const RES_MSG_USER_NOT_JOINED_PROJECT = '用户还没有加入该项目';
 // 项目已存在
 export const RES_FAILED_PROJECT_IS_EXIST = 2018;
 export const RES_MSG_PROJECT_IS_EXIST = '项目已存在';
+// 删除项目所有成员失败
+export const RES_FAILED_DELETE_PROJECT_ALL_MEMBERS = 2019;
+export const RES_MSG_DELETE_PROJECT_ALL_MEMBERS = '删除项目所有成员失败';

@@ -262,7 +262,7 @@ export const fetchJoinedProjectList = (req, res) => {
         projectCount = data.userJoinedProjectCount;
         return findUserJoinedProjects(pageSize, pageNum, {userAccount: userAccount});
     }).then((projectIDs) => {
-        return findProjectsByIDs(projectIDs);
+        return findProjectsByIDs(projectIDs.map(item => (item.projectId)));
     }).then((projects) => {
         projectList = projects;
         return findProjectPlatforms(projects);

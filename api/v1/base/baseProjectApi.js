@@ -234,6 +234,17 @@ export const findProjectsByIDs = params =>
             if (err) {
                 reject({findProjects: false})
             }
-            resolve(data);
+            const allProjectInfo = data.map(function (item) {
+                return {
+                    projectId: item._id.toString(),
+                    projectName: item.projectName,
+                    avatar: isStringEmpty(item.avatar) ?
+                        URL_PROJECT_LOGO_DEFAULT :
+                        URL_PROJECT_LOGO + item.avatar,
+                    des: item.des,
+                    createdDate: item.createdDate
+                };
+            });
+            resolve(allProjectInfo);
         });
     });

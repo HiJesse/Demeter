@@ -6,6 +6,7 @@ import {
     RES_FAILED_CREATE_PROJECT,
     RES_FAILED_CREATE_PROJECT_PLATFORMS,
     RES_FAILED_DELETE_PROJECT,
+    RES_FAILED_DELETE_PROJECT_ALL_MEMBERS,
     RES_FAILED_DELETE_PROJECT_PLATFORMS,
     RES_FAILED_FETCH_PROJECT_LIST,
     RES_FAILED_FETCH_PROJECT_PLATFORM,
@@ -20,6 +21,7 @@ import {
     RES_MSG_CREATE_PROJECT,
     RES_MSG_CREATE_PROJECT_PLATFORMS,
     RES_MSG_DELETE_PROJECT,
+    RES_MSG_DELETE_PROJECT_ALL_MEMBERS,
     RES_MSG_DELETE_PROJECT_PLATFORMS,
     RES_MSG_FETCH_PROJECT_LIST,
     RES_MSG_FETCH_PROJECT_PLATFORM,
@@ -47,6 +49,7 @@ import {
     getProjectInfo,
     isProjectNotExist
 } from "./base/baseProjectApi";
+import {deleteAllMembers} from "./base/baseProjectMemberApi";
 
 /**
  * 创建新项目
@@ -122,6 +125,8 @@ export const deleteProject = (req, res) => {
     }).then(() => {
         return deleteProjectInfo(projectId);
     }).then(() => {
+        return deleteAllMembers(projectId);
+    }).then(() => {
         status = RES_SUCCEED;
         msg = null;
         res.json(buildResponse(status, {}, msg));
@@ -132,6 +137,9 @@ export const deleteProject = (req, res) => {
         } else if (error.projectPlatformsDeleted === false) {
             status = RES_FAILED_DELETE_PROJECT_PLATFORMS;
             msg = RES_MSG_DELETE_PROJECT_PLATFORMS;
+        } else if (error.projectAllMemberDeleted === false) {
+            status = RES_FAILED_DELETE_PROJECT_ALL_MEMBERS;
+            msg = RES_MSG_DELETE_PROJECT_ALL_MEMBERS;
         }
         res.json(buildResponse(status, {}, msg));
     })

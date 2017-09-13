@@ -106,6 +106,22 @@ export const deleteMember = (projectId, account) => new Promise((resolve, reject
 });
 
 /**
+ * 删除项目所有成员
+ * @param projectId
+ */
+export const deleteAllMembers = (projectId) => new Promise((resolve, reject) => {
+    ProjectMemberModel.remove({
+        projectId: projectId,
+    }, (err) => {
+        if (err) {
+            reject({projectAllMemberDeleted: false});
+        } else {
+            resolve({projectAllMemberDeleted: true});
+        }
+    });
+});
+
+/**
  * 获取有用户加入的项目列表, 失败的话返回-1
  * @param params
  * @returns {Promise}
