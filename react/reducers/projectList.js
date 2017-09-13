@@ -6,12 +6,15 @@ import {
     ACTION_FETCH_JOINED_PROJECT_LIST_FULFILLED,
     ACTION_FETCH_PROJECT_LIST_FULFILLED,
     ACTION_PROJECT_PAGE_LOADING,
+    ACTION_PROJECT_QUIT_PROJECT_DIALOG_VISIBLE,
     ACTION_PROJECT_USER_MANAGER_DIALOG_VISIBLE,
     ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
     ACTION_UPDATING_PROJECT_INFO
 } from "../constants/actionType";
 import {RES_SUCCEED} from "../../util/status";
 import {message} from "antd";
+import {isStringEmpty} from "../../util/checker";
+import * as React from "react";
 
 /**
  * 获取项目列表
@@ -80,6 +83,33 @@ const setUpdatingProjectInfoReducer = (state, action) => {
     }
 };
 
+/**
+ * 显示退出项目弹窗 reducer
+ * @param state
+ * @param action
+ */
+const showQuitingProjectDialogReducer = (state, action) => {
+    const index = action.index;
+    let projectInfo = {};
+
+    if (index >= 0 && state.projectList.length > index) {
+        const info = state.projectList[index];
+        projectInfo.id = info.project.id;
+        projectInfo.logo = info.project.logo;
+        projectInfo.name = info.project.name;
+        projectInfo.des = info.des;
+    }
+
+    const projectName = isStringEmpty(projectInfo.name) ? '' : projectInfo.name;
+
+    return {
+        ...state,
+        dialogVisible: action.visible,
+        confirmTitle: `退出 ${projectName} 项目`,
+        confirmContent: (<div>{`确认退出 ${projectName} 项目吗?`}</div>)
+    }
+};
+
 const initialProjectListState = {
     projectCount: 0,
     projectList: [],
@@ -92,6 +122,10 @@ const initialProjectListState = {
     updateProjectInfo: {},
     projectSearch: null,
     searchInputVisible: false,
+    dialogVisible: false,
+    confirmLoading: false,
+    confirmTitle: '确认',
+    confirmContent: null,
 };
 
 /**
@@ -145,6 +179,9 @@ export function projectList(state = initialProjectListState, action) {
                 ...state,
                 userManagerVisible: action.data.userManagerDialogVisible
             };
+            break;
+        case ACTION_PROJECT_QUIT_PROJECT_DIALOG_VISIBLE:
+            newState = showQuitingProjectDialogReducer(state, action.data);
             break;
         default:
     }

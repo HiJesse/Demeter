@@ -1,10 +1,15 @@
 import React from "react";
 import {connect} from "react-redux";
-import {Icon, Popconfirm, Popover, Table} from "antd";
+import {Icon, Popover, Table} from "antd";
 import {homeStyle} from "./styles/home";
 import {projectListViewStyle} from "./styles/projectListView";
-import {fetchJoinedProjectListAction, projectPageLoadingAction} from "../actions/projectList";
+import {
+    fetchJoinedProjectListAction,
+    projectPageLoadingAction,
+    showQuitingProjectDialogAction
+} from "../actions/projectList";
 import {isStringEmpty} from "../../util/checker";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 // 已加入的项目列表
 class JoinedProjectListView extends React.Component {
@@ -16,6 +21,18 @@ class JoinedProjectListView extends React.Component {
     render() {
         return (
             <div style={homeStyle.view_content}>
+                <ConfirmDialog
+                    dialogVisible={this.props.dialogVisible}
+                    confirmLoading={this.props.confirmLoading}
+                    title={this.props.confirmTitle}
+                    content={this.props.confirmContent}
+                    onDismiss={() => {
+                        this.props.showQuitingProjectDialog(false, -1);
+                    }}
+                    onConfirm={() => {
+                        // 退出项目
+                    }}
+                />
                 <Table
                     bordered
                     dataSource={this.props.projectList}
@@ -76,12 +93,9 @@ class JoinedProjectListView extends React.Component {
     _buildOperationColumn(index) {
         return (
             <span style={projectListViewStyle.view_operation}>
-                <Popconfirm
-                    title="确认退出项目?"
-                    onConfirm={() => {
-                    }}>
-                        <a href="#">{'退出项目'}</a>
-                </Popconfirm>
+                <a href="#" onClick={() => {
+                    this.props.showQuitingProjectDialog(true, index);
+                }}>{'退出项目'}</a>
             </span>
         )
     }
@@ -143,6 +157,10 @@ function select(state) {
         pageNum: projectList.pageNum, // 当前页码
         projectCount: projectList.projectCount, // 项目总数
         pageLoading: projectList.pageLoading, // 分页loading
+        dialogVisible: projectList.dialogVisible, // 弹窗是否显示
+        confirmLoading: projectList.confirmLoading, // 弹窗确认按钮菊花
+        confirmTitle: projectList.confirmTitle, // 弹窗标题
+        confirmContent: projectList.confirmContent, // 弹窗标题
     };
 }
 
@@ -150,7 +168,8 @@ function mapDispatchToProps(dispatch) {
     return {
         fetchProjectList: (pageSize, pageNum) =>
             dispatch(fetchJoinedProjectListAction(localStorage.uId, pageSize, pageNum)),
-        pageLoadingVisible: isLoading => dispatch(projectPageLoadingAction(isLoading))
+        pageLoadingVisible: isLoading => dispatch(projectPageLoadingAction(isLoading)),
+        showQuitingProjectDialog: (visible, index) => dispatch(showQuitingProjectDialogAction(visible, index)),
     }
 }
 

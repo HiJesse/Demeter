@@ -7,6 +7,7 @@ import {
     ACTION_FETCH_JOINED_PROJECT_LIST,
     ACTION_FETCH_PROJECT_LIST,
     ACTION_PROJECT_PAGE_LOADING,
+    ACTION_PROJECT_QUIT_PROJECT_DIALOG_VISIBLE,
     ACTION_PROJECT_USER_MANAGER_DIALOG_VISIBLE,
     ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
     ACTION_UPDATING_PROJECT_INFO
@@ -85,6 +86,19 @@ export const showUserManagerDialogAction = visible => ({
     type: ACTION_PROJECT_USER_MANAGER_DIALOG_VISIBLE,
     data: {
         userManagerDialogVisible: visible
+    }
+});
+
+/**
+ * 是否显示退出项目弹窗
+ * @param visible
+ * @param index 项目index
+ */
+export const showQuitingProjectDialogAction = (visible, index) => ({
+    type: ACTION_PROJECT_QUIT_PROJECT_DIALOG_VISIBLE,
+    data: {
+        visible: visible,
+        index: index
     }
 });
 
