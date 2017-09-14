@@ -8,6 +8,8 @@ import {
     ACTION_PROJECT_PAGE_LOADING,
     ACTION_PROJECT_QUIT_PROJECT_DIALOG_VISIBLE,
     ACTION_PROJECT_USER_MANAGER_DIALOG_VISIBLE,
+    ACTION_QUIT_PROJECT,
+    ACTION_QUIT_PROJECT_FULFILLED,
     ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
     ACTION_UPDATING_PROJECT_INFO
 } from "../constants/actionType";
@@ -29,7 +31,8 @@ const fetchProjectListReducer = (state, action) => {
         return {
             ...state,
             projectList: [],
-            pageLoading: false
+            pageLoading: false,
+            needRefresh: false,
         };
     }
 
@@ -56,6 +59,7 @@ const fetchProjectListReducer = (state, action) => {
         projectCount: action.data.projectCount,
         pageNum: action.data.pageNum,
         pageLoading: false,
+        needRefresh: false,
     };
 };
 
@@ -104,10 +108,37 @@ const showQuitingProjectDialogReducer = (state, action) => {
 
     return {
         ...state,
+        updateProjectInfo: projectInfo,
         dialogVisible: action.visible,
         confirmTitle: `退出 ${projectName} 项目`,
-        confirmContent: (<div>{`确认退出 ${projectName} 项目吗?`}</div>)
+        confirmContent: (<div>{`确认退出 ${projectName} 项目吗?`}</div>),
+        confirmLoading: false
     }
+};
+
+/**
+ * 退出项目 reducer
+ * @param state
+ * @param action
+ */
+const quitProjectDialogReducer = (state, action) => {
+    const succeed = action.status === RES_SUCCEED;
+
+    let returnData = {
+        ...state,
+        confirmLoading: false,
+        dialogVisible: false,
+        updateProjectInfo: {},
+    };
+
+    if (!succeed) {
+        message.error(action.msg);
+        returnData.needRefresh = false;
+    } else {
+        returnData.needRefresh = true;
+    }
+
+    return returnData;
 };
 
 const initialProjectListState = {
@@ -126,6 +157,7 @@ const initialProjectListState = {
     confirmLoading: false,
     confirmTitle: '确认',
     confirmContent: null,
+    needRefresh: false,
 };
 
 /**
@@ -182,6 +214,15 @@ export function projectList(state = initialProjectListState, action) {
             break;
         case ACTION_PROJECT_QUIT_PROJECT_DIALOG_VISIBLE:
             newState = showQuitingProjectDialogReducer(state, action.data);
+            break;
+        case ACTION_QUIT_PROJECT:
+            newState = {
+                ...state,
+                confirmLoading: true
+            };
+            break;
+        case ACTION_QUIT_PROJECT_FULFILLED:
+            newState = quitProjectDialogReducer(state, action.data);
             break;
         default:
     }

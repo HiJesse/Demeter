@@ -6,10 +6,12 @@ import {projectListViewStyle} from "./styles/projectListView";
 import {
     fetchJoinedProjectListAction,
     projectPageLoadingAction,
+    quitProjectAction,
     showQuitingProjectDialogAction
 } from "../actions/projectList";
 import {isStringEmpty} from "../../util/checker";
 import ConfirmDialog from "../components/ConfirmDialog";
+import {getUID} from "../utils/storageUtil";
 
 // 已加入的项目列表
 class JoinedProjectListView extends React.Component {
@@ -19,6 +21,11 @@ class JoinedProjectListView extends React.Component {
     }
 
     render() {
+
+        if (this.props.needRefresh) {
+            this._refreshPage();
+        }
+
         return (
             <div style={homeStyle.view_content}>
                 <ConfirmDialog
@@ -30,7 +37,7 @@ class JoinedProjectListView extends React.Component {
                         this.props.showQuitingProjectDialog(false, -1);
                     }}
                     onConfirm={() => {
-                        // 退出项目
+                        this.props.quitProject(this.props.updateProjectInfo.id);
                     }}
                 />
                 <Table
@@ -161,15 +168,18 @@ function select(state) {
         confirmLoading: projectList.confirmLoading, // 弹窗确认按钮菊花
         confirmTitle: projectList.confirmTitle, // 弹窗标题
         confirmContent: projectList.confirmContent, // 弹窗标题
+        updateProjectInfo: projectList.updateProjectInfo, // 选中的项目信息
+        needRefresh: projectList.needRefresh, // 是否需要刷新列表
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         fetchProjectList: (pageSize, pageNum) =>
-            dispatch(fetchJoinedProjectListAction(localStorage.uId, pageSize, pageNum)),
+            dispatch(fetchJoinedProjectListAction(getUID(), pageSize, pageNum)),
         pageLoadingVisible: isLoading => dispatch(projectPageLoadingAction(isLoading)),
         showQuitingProjectDialog: (visible, index) => dispatch(showQuitingProjectDialogAction(visible, index)),
+        quitProject: index => dispatch(quitProjectAction(getUID(), index))
     }
 }
 

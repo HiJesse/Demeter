@@ -9,6 +9,7 @@ import {
     ACTION_PROJECT_PAGE_LOADING,
     ACTION_PROJECT_QUIT_PROJECT_DIALOG_VISIBLE,
     ACTION_PROJECT_USER_MANAGER_DIALOG_VISIBLE,
+    ACTION_QUIT_PROJECT,
     ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
     ACTION_UPDATING_PROJECT_INFO
 } from "../constants/actionType";
@@ -147,5 +148,18 @@ export const changeSearchVisibleAction = visible => ({
     type: ACTION_CHANGE_SEARCH_PROJECT_INPUT_VISIBLE,
     data: {
         searchInputVisible: visible
+    }
+});
+
+/**
+ * 退出项目
+ * @param uId
+ * @param index
+ */
+export const quitProjectAction = (uId, index) => ({
+    type: ACTION_QUIT_PROJECT,
+    data: {
+        uId: uId,
+        index: index
     }
 });

@@ -6,10 +6,17 @@ import {
     ACTION_FETCH_PROJECT_MEMBER_LIST,
     ACTION_FETCH_PROJECT_MEMBER_LIST_FULFILLED,
     ACTION_PROJECT_USER_ADD_ACCOUNT,
-    ACTION_PROJECT_USER_ADD_ACCOUNT_FULFILLED
+    ACTION_PROJECT_USER_ADD_ACCOUNT_FULFILLED,
+    ACTION_QUIT_PROJECT,
+    ACTION_QUIT_PROJECT_FULFILLED
 } from "../constants/actionType";
 import {AJAX_METHOD, ajaxRequest} from "../../util/ajax";
-import {URL_ADD_MEMBER_TO_PROJECT, URL_DELETE_PROJECT_MEMBER, URL_FETCH_PROJECT_MEMBER_LIST} from "../constants/url";
+import {
+    URL_ADD_MEMBER_TO_PROJECT,
+    URL_DELETE_PROJECT_MEMBER,
+    URL_FETCH_PROJECT_MEMBER_LIST,
+    URL_QUIT_PROJECT
+} from "../constants/url";
 import {isStringEmpty} from "../../util/checker";
 
 /**
@@ -62,10 +69,24 @@ export const deleteProjectMemberEpic = action$ =>
         }));
 
 /**
+ * 退出项目 epic
+ * @param action$
+ */
+export const quitProjectMemberEpic = action$ =>
+    action$.ofType(ACTION_QUIT_PROJECT)
+        .mergeMap(action => ajaxRequest({
+            actionType: ACTION_QUIT_PROJECT_FULFILLED,
+            method: AJAX_METHOD.POST,
+            url: URL_QUIT_PROJECT,
+            params: action.data
+        }));
+
+/**
  * 项目所属成员管理相关 epic方法汇总
  */
 export const projectMembersManagerEpics = combineEpics(
     addMemberEpic,
     fetchProjectMemberListEpic,
-    deleteProjectMemberEpic
+    deleteProjectMemberEpic,
+    quitProjectMemberEpic
 );
