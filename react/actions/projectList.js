@@ -154,12 +154,12 @@ export const changeSearchVisibleAction = visible => ({
 /**
  * 退出项目
  * @param uId
- * @param index
+ * @param projectId
  */
-export const quitProjectAction = (uId, index) => ({
+export const quitProjectAction = (uId, projectId) => ({
     type: ACTION_QUIT_PROJECT,
     data: {
         uId: uId,
-        index: index
+        projectId: projectId
     }
 });

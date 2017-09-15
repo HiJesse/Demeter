@@ -179,7 +179,7 @@ function mapDispatchToProps(dispatch) {
             dispatch(fetchJoinedProjectListAction(getUID(), pageSize, pageNum)),
         pageLoadingVisible: isLoading => dispatch(projectPageLoadingAction(isLoading)),
         showQuitingProjectDialog: (visible, index) => dispatch(showQuitingProjectDialogAction(visible, index)),
-        quitProject: index => dispatch(quitProjectAction(getUID(), index))
+        quitProject: projectId => dispatch(quitProjectAction(getUID(), projectId))
     }
 }
 

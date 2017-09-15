@@ -117,3 +117,6 @@ export const RES_MSG_PROJECT_IS_EXIST = '项目已存在';
 // 删除项目所有成员失败
 export const RES_FAILED_DELETE_PROJECT_ALL_MEMBERS = 2019;
 export const RES_MSG_DELETE_PROJECT_ALL_MEMBERS = '删除项目所有成员失败';
+// 退出项目失败
+export const RES_FAILED_QUIT_PROJECT = 2020;
+export const RES_MSG_QUIT_PROJECT = '退出项目失败';

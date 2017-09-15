@@ -10,9 +10,9 @@ export const isUserJoinedProject = params =>
     new Promise((resolve, reject) => {
         ProjectMemberModel.find(params, (err, data) => {
             if (data.length === 1) {
-                reject({isUserJoined: true});
+                resolve({isUserJoined: true});
             } else {
-                resolve({isUserJoined: false});
+                reject({isUserJoined: false});
             }
         });
     });
@@ -26,9 +26,9 @@ export const isUserNotJoinedProject = params =>
     new Promise((resolve, reject) => {
         ProjectMemberModel.find(params, (err, data) => {
             if (data.length === 1) {
-                resolve({isUserNotJoined: false});
+                reject({isUserNotJoined: false});
             } else {
-                reject({isUserNotJoined: true});
+                resolve({isUserNotJoined: true});
             }
         });
     });

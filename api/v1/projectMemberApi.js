@@ -12,6 +12,7 @@ import {
     RES_FAILED_PARAMS_INVALID,
     RES_FAILED_PROJECT_ADD_MEMBER,
     RES_FAILED_PROJECT_NOT_EXIST,
+    RES_FAILED_QUIT_PROJECT,
     RES_FAILED_USER_JOINED_PROJECT,
     RES_FAILED_USER_NONE,
     RES_FAILED_USER_NOT_JOINED_PROJECT,
@@ -27,6 +28,7 @@ import {
     RES_MSG_PARAMS_INVALID,
     RES_MSG_PROJECT_ADD_MEMBER,
     RES_MSG_PROJECT_NOT_EXIST,
+    RES_MSG_QUIT_PROJECT,
     RES_MSG_USER_JOINED_PROJECT,
     RES_MSG_USER_NONE,
     RES_MSG_USER_NOT_JOINED_PROJECT,
@@ -79,7 +81,7 @@ export const addProjectMember = (req, res) => {
     isAdmin(adminParams).then(() => {
         return isUserExist({account: account});
     }).then(() => {
-        return isUserJoinedProject({projectId: projectId, userAccount: account});
+        return isUserNotJoinedProject({projectId: projectId, userAccount: account});
     }).then(() => {
         return createProjectMemberInfo({projectId: projectId, userAccount: account});
     }).then(() => {
@@ -96,7 +98,7 @@ export const addProjectMember = (req, res) => {
         } else if (error.isUserExist === false) {
             status = RES_FAILED_USER_NONE;
             msg = RES_MSG_USER_NONE;
-        } else if (error.isUserJoined === false) {
+        } else if (error.isUserNotJoined === false) {
             status = RES_FAILED_USER_JOINED_PROJECT;
             msg = RES_MSG_USER_JOINED_PROJECT;
         }
@@ -208,7 +210,7 @@ export const deleteProjectMember = (req, res) => {
     }).then(() => {
         return getProjectInfo({_id: projectId});
     }).then(() => {
-        return isUserNotJoinedProject({projectId: projectId, userAccount: account});
+        return isUserJoinedProject({projectId: projectId, userAccount: account});
     }).then(() => {
         return deleteMember(projectId, account);
     }).then(() => {
@@ -225,7 +227,7 @@ export const deleteProjectMember = (req, res) => {
         } else if (error.isProjectExist === false) {
             status = RES_FAILED_PROJECT_NOT_EXIST;
             msg = RES_MSG_PROJECT_NOT_EXIST;
-        } else if (error.isUserNotJoined === true) {
+        } else if (error.isUserJoined === false) {
             status = RES_FAILED_USER_NOT_JOINED_PROJECT;
             msg = RES_MSG_USER_NOT_JOINED_PROJECT;
         }
@@ -290,6 +292,47 @@ export const fetchJoinedProjectList = (req, res) => {
         } else if (error.projectPlatformSize === -1) {
             status = RES_FAILED_FETCH_PROJECT_PLATFORM;
             msg = RES_MSG_FETCH_PROJECT_PLATFORM;
+        }
+        res.json(buildResponse(status, {}, msg));
+    });
+};
+
+/**
+ * 退出项目
+ * 1. 校验用户是否存在
+ * 2. 校验用户是否加入该项目
+ * 3. 退出项目
+ * @param req
+ * @param res
+ */
+export const quitProject = (req, res) => {
+    const uId = req.body.uId;
+    const projectId = req.body.projectId;
+
+    let status = RES_FAILED_QUIT_PROJECT;
+    let msg = RES_MSG_QUIT_PROJECT;
+    let userAccount;
+
+    isUserExist({_id: uId}).then((userInfo) => {
+        userAccount = userInfo.account;
+        console.log(userAccount)
+        return isUserJoinedProject({projectId: projectId, userAccount: userInfo.account});
+    }).then(() => {
+        return deleteMember(projectId, userAccount);
+    }).then(() => {
+        status = RES_SUCCEED;
+        msg = null;
+        res.json(buildResponse(status, {}, msg));
+    }).catch((error) => {
+        if (isObjectEmpty(error)) {
+            status = RES_FAILED_FETCH_PROJECT_LIST;
+            msg = RES_MSG_FETCH_PROJECT_LIST;
+        } else if (error.isUserExist === false) {
+            status = RES_FAILED_USER_NONE;
+            msg = RES_MSG_USER_NONE;
+        } else if (error.isUserJoined === false) {
+            status = RES_FAILED_USER_NOT_JOINED_PROJECT;
+            msg = RES_MSG_USER_NOT_JOINED_PROJECT;
         }
         res.json(buildResponse(status, {}, msg));
     });

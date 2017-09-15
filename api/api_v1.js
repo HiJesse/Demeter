@@ -61,4 +61,7 @@ router.post('/project/deleteMember', projectMember.deleteProjectMember);
 // 获取用户加入的项目列表
 router.get('/project/fetchJoinedProjectList', projectMember.fetchJoinedProjectList);
 
+// 退出项目
+router.post('/project/quitProject', projectMember.quitProject);
+
 export default router;
