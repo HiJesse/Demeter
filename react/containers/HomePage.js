@@ -32,6 +32,7 @@ import UserListView from "./UserListView";
 import CreateProjectView from "./CreateProjectView";
 import ProjectListView from "./ProjectListView";
 import JoinedProjectListView from "./JoinedProjectListView";
+import Dashboard from "./Dashboard";
 
 const confirm = Modal.confirm;
 const {Header, Content, Footer, Sider} = Layout;
@@ -234,9 +235,7 @@ class HomePage extends React.Component {
                 break;
             default:
                 content = (
-                    <div style={homeStyle.view_content}>
-                        {'Default'}
-                    </div>
+                    <Dashboard />
                 );
         }
         return content;
