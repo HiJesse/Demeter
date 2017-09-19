@@ -3,6 +3,7 @@ import * as user from "./v1/userApi";
 import * as project from "./v1/projectApi";
 import {ProjectLogoMulter} from "../util/multer";
 import * as projectMember from "./v1/projectMemberApi";
+import * as dashboard from "./v1/dashboardApi";
 
 const router = express.Router();
 
@@ -63,5 +64,10 @@ router.get('/project/fetchJoinedProjectList', projectMember.fetchJoinedProjectLi
 
 // 退出项目
 router.post('/project/quitProject', projectMember.quitProject);
+
+/*dashboard 相关*/
+
+// 获取仪表盘信息
+router.get('/dashboard/fetchDashboard', dashboard.fetchDashboard);
 
 export default router;

@@ -9,14 +9,21 @@ import {fetchDashboardAction} from "../actions/dashboard";
 import {getUID} from "../utils/storageUtil";
 import {Spin} from "antd";
 import {dashboardStyle} from "./styles/dashboard";
+import {isObjectEmpty} from "../../util/checker";
 
 // demeter 仪表盘
 class Dashboard extends React.Component {
 
     componentDidMount() {
-        const countChart = echarts.init(document.getElementById('countChart'));
-        countChart.setOption(this.props.countChartOpt);
         this.props.fetchDashboard();
+    }
+
+    componentWillReceiveProps(receivedProps) {
+        if (this.props.countChartOpt !== receivedProps.countChartOpt && !isObjectEmpty(receivedProps.countChartOpt)) {
+            this.countChart = echarts.init(document.getElementById('countChart'));
+            this.countChart.setOption(receivedProps.countChartOpt);
+        }
+
     }
 
     render() {

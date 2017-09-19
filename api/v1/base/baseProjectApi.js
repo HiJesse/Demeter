@@ -155,8 +155,6 @@ export const countProjects = params => {
         ProjectModel.count(params, (err, count) => {
             if (err) {
                 reject({projectCount: -1});
-            } else if (count === 0) {
-                reject({projectCount: count});
             } else {
                 resolve({projectCount: count});
             }

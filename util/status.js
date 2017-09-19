@@ -120,3 +120,9 @@ export const RES_MSG_DELETE_PROJECT_ALL_MEMBERS = '删除项目所有成员失�
 // 退出项目失败
 export const RES_FAILED_QUIT_PROJECT = 2020;
 export const RES_MSG_QUIT_PROJECT = '退出项目失败';
+
+//------------dashboard
+
+// 获取dashboard信息失败
+export const RES_FAILED_FETCH_DASHBOARD = 3000;
+export const RES_MSG_FETCH_DASHBOARD = '获取仪表盘信息失败';

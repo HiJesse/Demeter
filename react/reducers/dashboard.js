@@ -44,7 +44,10 @@ const fetchDashboardReducer = (state, action) => {
         return result;
     }
 
-    result.countChartOpt = buildCountChartOption({userCount: 3, projectCount: 10});
+    result.countChartOpt = buildCountChartOption({
+        userCount: action.data.userCount,
+        projectCount: action.data.projectCount
+    });
 
     return result;
 };
