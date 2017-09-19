@@ -6,6 +6,7 @@ import {userManager} from "./userManager";
 import {projectManager} from "./projectManager";
 import {projectList} from "./projectList";
 import {projectMembersManager} from "./projectMembersManager";
+import {dashboard} from "./dashboard";
 
 // 将reducer组合起来
 const reducers = combineReducers({
@@ -14,7 +15,8 @@ const reducers = combineReducers({
     userManager,
     projectManager,
     projectList,
-    projectMembersManager
+    projectMembersManager,
+    dashboard
 });
 
 export default reducers;

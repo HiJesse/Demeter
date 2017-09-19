@@ -175,6 +175,15 @@ class HomePage extends React.Component {
             );
         }
 
+        if (isArrayEmpty(breadCrumbItems)) {
+            breadCrumbItems.push(
+                <Breadcrumb.Item key="value">
+                    <Icon type="area-chart"/>
+                    <span>{'仪表盘'}</span>
+                </Breadcrumb.Item>
+            );
+        }
+
         return (
             <Breadcrumb style={{margin: '12px 0'}}>
                 <Breadcrumb.Item key="home">

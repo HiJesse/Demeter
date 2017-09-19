@@ -4,37 +4,46 @@ import "echarts/lib/chart/line";
 import "echarts/lib/component/tooltip";
 import "echarts/lib/component/title";
 import {homeStyle} from "./styles/home";
+import {connect} from "react-redux";
+import {fetchDashboardAction} from "../actions/dashboard";
+import {getUID} from "../utils/storageUtil";
+import {Spin} from "antd";
+import {dashboardStyle} from "./styles/dashboard";
 
 // demeter 仪表盘
-export default class Dashboard extends React.Component {
+class Dashboard extends React.Component {
 
     componentDidMount() {
         const countChart = echarts.init(document.getElementById('countChart'));
-
-        countChart.setOption({
-            title: {text: '数量统计'},
-            tooltip: {},
-            legend: {
-                data: ['数量']
-            },
-            xAxis: {
-                data: ["用户", "项目"]
-            },
-            yAxis: {},
-            series: [{
-                name: '数量',
-                type: 'bar',
-                data: [3, 10]
-            }]
-        });
+        countChart.setOption(this.props.countChartOpt);
+        this.props.fetchDashboard();
     }
 
     render() {
         return (
             <div style={homeStyle.view_content}>
-                <div id="countChart" style={{height: 500}}/>
+                <Spin spinning={this.props.fetchLoading} delay={500}>
+                    <div id="countChart" style={dashboardStyle.chart_count}/>
+                </Spin>
             </div>
 
         );
     }
 }
+
+
+function select(state) {
+    const dashboard = state.dashboard;
+    return {
+        fetchLoading: dashboard.fetchLoading, // 页面加载菊花
+        countChartOpt: dashboard.countChartOpt, // 数量维度表配置
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        fetchDashboard: () => dispatch(fetchDashboardAction(getUID())),
+    }
+}
+
+export default connect(select, mapDispatchToProps)(Dashboard);

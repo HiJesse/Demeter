@@ -1,3 +1,4 @@
+// 主页样式
 export const homeStyle = {
     page: {
         position: 'absolute',
@@ -54,9 +55,7 @@ export const homeStyle = {
         fontSize: 16,
         marginLeft: 5
     },
-    text_logo: {
-
-    },
+    text_logo: {},
     text_welcome: {
         flex: 1,
         paddingLeft: 12

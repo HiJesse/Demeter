@@ -3,7 +3,8 @@ const URL_VERSION = 'api/v1/';
 
 const URL_MODULE = {
     USER: 'user/',
-    PROJECT: 'project/'
+    PROJECT: 'project/',
+    DASHBOARD: 'dashboard/',
 };
 
 // 登录
@@ -43,3 +44,6 @@ export const URL_FETCH_PROJECT_MEMBER_LIST = URL_DOMAIN + URL_VERSION + URL_MODU
 export const URL_DELETE_PROJECT_MEMBER = URL_DOMAIN + URL_VERSION + URL_MODULE.PROJECT + 'deleteMember';
 // 退出项目
 export const URL_QUIT_PROJECT = URL_DOMAIN + URL_VERSION + URL_MODULE.PROJECT + 'quitProject';
+
+// 获取仪表盘数据
+export const URL_FETCH_DASHBOARD = URL_DOMAIN + URL_VERSION + URL_MODULE.DASHBOARD + 'fetchDashboard';
