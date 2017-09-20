@@ -1,4 +1,5 @@
 import Express from "express";
+import Favicon from "serve-favicon";
 import ExpressSession from "express-session";
 import CookieParser from "cookie-parser";
 import BodyParser from "body-parser";
@@ -18,8 +19,7 @@ const app = Express();
 app.set('views', Path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(Favicon(Path.join(__dirname, 'public', 'logo.ico')));
 app.use(Logger('dev'));
 app.use(JWT({secret: Config.env.JWT.secret}).unless({path: Config.env.JWT.whiteList}));
 app.use(BodyParser.json());
