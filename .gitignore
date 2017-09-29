@@ -4,6 +4,9 @@
 # testing
 /coverage
 
+# bundle
+/public/assets/bundle.js
+
 # production
 /build
 

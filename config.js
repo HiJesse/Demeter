@@ -18,6 +18,7 @@ const dev = {
             // 资源白名单
             /^\/upload\/project_logo\/.*/,
             /^\/image\/.*/,
+            /^\/assets\/.*/,
             // 接口白名单
             '/api/v1/user/login',
             '/api/v1/user/modifyPassword'
@@ -36,11 +37,17 @@ const product = {
     JWT: {
         secret: 'demeter_jesse',
         whiteList: [
-            '/',// 页面白名单
+            // 页面白名单
+            '/',
+            '/login',
             '/modifyPassword',
+            // 资源白名单
+            /^\/upload\/project_logo\/.*/,
+            /^\/image\/.*/,
+            /^\/assets\/.*/,
             // 接口白名单
-            '/api/v1/login',
-            '/api/v1/modifyPassword'
+            '/api/v1/user/login',
+            '/api/v1/user/modifyPassword'
         ]
     }
 };
