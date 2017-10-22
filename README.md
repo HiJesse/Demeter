@@ -1,7 +1,7 @@
 Demeter
 ---
 
-Demeter是一个CMS系统, 提供用户体系以及App项目相关内容管理. 其中包括用户模块, 项目模块和app包管理模块等. 该系统会长期迭代和维护, 目前处于1.0.0版本的开发阶段.
+Demeter是一个CMS系统, 提供用户体系以及App项目相关内容管理. 其中会包括用户模块, 项目模块和归档模块等. 该系统会长期迭代和维护.
 
 | 技术栈 | 描述 |
 | --- | ---------- |
@@ -16,6 +16,15 @@ Demeter是一个CMS系统, 提供用户体系以及App项目相关内容管理. 
 | Redux-observable | 处理异步redux action |
 | Webpack | 打包React代码, 并提供dev-server |
 | AntD | 使用AntD提供的UI组件 |
+
+### 项目部署和启动
+
+1. 安装并建立一个名为demeter的mongo数据库
+2. clone仓库在项目跟目录下执行`npm install`
+3. 安装配置pm2 `npm install pm2 -g`
+4. 项目根目录下 `npm run deploy`部署项目
+5. 浏览器打开[http://localhost:3000/](http://localhost:3000/)站点进入demeter登录页
+6. 根目录下 `npm run undeploy`卸载项目.
 
 ### 用户模块
 
@@ -49,7 +58,7 @@ Demeter是一个CMS系统, 提供用户体系以及App项目相关内容管理. 
 | 添加项目成员 | √ |
 | 删除项目成员 | √ |
 
-### App包管理模块
+### 应用归档模块
 
 待开发
 
