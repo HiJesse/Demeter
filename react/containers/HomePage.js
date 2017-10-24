@@ -247,7 +247,11 @@ class HomePage extends React.Component {
                     <Dashboard />
                 );
         }
-        return content;
+        return (
+            <div style={homeStyle.view_content}>
+                {content}
+            </div>
+        );
     }
 
     /**

@@ -1,9 +1,9 @@
 import React from "react";
 import {Button, Form, Input} from "antd";
-import {homeStyle} from "./styles/home";
 import {resetPasswordAction} from "../actions/user";
 import {connect} from "react-redux";
 import {MSG_ACCOUNT} from "../constants/stringConstant";
+import {homeStyle} from "./styles/home";
 
 const FormItem = Form.Item;
 
@@ -13,29 +13,27 @@ class ResetPasswordView extends React.Component {
     render() {
         const {getFieldDecorator} = this.props.form;
         return (
-            <div style={homeStyle.view_content}>
-
-                <Form
-                    layout={'vertical'}
-                    style={{width: 300}}
-                    onSubmit={this._handleSubmit.bind(this)}>
-                    <FormItem
-                        label="账号">
-                        {getFieldDecorator('account', {
-                            rules: [{min: 3, message: MSG_ACCOUNT}],
-                        })(
-                            <Input />
-                        )}
-                    </FormItem>
-                    <FormItem>
-                        <Button
-                            type="primary"
-                            htmlType="submit">
-                            {'重置密码'}
-                        </Button>
-                    </FormItem>
-                </Form>
-            </div>
+            <Form
+                layout={'vertical'}
+                style={{width: 300}}
+                onSubmit={this._handleSubmit.bind(this)}>
+                <FormItem
+                    label="账号">
+                    {getFieldDecorator('account', {
+                        rules: [{min: 3, message: MSG_ACCOUNT}],
+                    })(
+                        <Input />
+                    )}
+                </FormItem>
+                <FormItem>
+                    <Button
+                        type="primary"
+                        style={homeStyle.button_full_width}
+                        htmlType="submit">
+                        {'重置密码'}
+                    </Button>
+                </FormItem>
+            </Form>
         );
     }
 

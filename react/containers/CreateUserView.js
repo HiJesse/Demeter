@@ -14,40 +14,39 @@ class CreateUserView extends React.Component {
         const {getFieldDecorator} = this.props.form;
 
         return (
-            <div style={homeStyle.view_content}>
-                <Form
-                    layout={'vertical'}
-                    style={{width: 300}}
-                    onSubmit={this._handleSubmit.bind(this)}>
-                    <FormItem
-                        label="账号">
-                        {getFieldDecorator('account', {
-                            rules: [FORM_RULE_ACCOUNT],
-                        })(
-                            <Input />
-                        )}
-                    </FormItem>
-                    <FormItem
-                        label="昵称">
-                        <Input
-                            disabled={true}
-                            value={'匿名'}/>
-                    </FormItem>
-                    <FormItem
-                        label="权限">
-                        <Input
-                            disabled={true}
-                            value={'普通用户'}/>
-                    </FormItem>
-                    <FormItem>
-                        <Button
-                            type="primary"
-                            htmlType="submit">
-                            {'创建新用户'}
-                        </Button>
-                    </FormItem>
-                </Form>
-            </div>
+            <Form
+                layout={'vertical'}
+                style={{width: 300}}
+                onSubmit={this._handleSubmit.bind(this)}>
+                <FormItem
+                    label="账号">
+                    {getFieldDecorator('account', {
+                        rules: [FORM_RULE_ACCOUNT],
+                    })(
+                        <Input />
+                    )}
+                </FormItem>
+                <FormItem
+                    label="昵称">
+                    <Input
+                        disabled={true}
+                        value={'匿名'}/>
+                </FormItem>
+                <FormItem
+                    label="权限">
+                    <Input
+                        disabled={true}
+                        value={'普通用户'}/>
+                </FormItem>
+                <FormItem>
+                    <Button
+                        type="primary"
+                        style={homeStyle.button_full_width}
+                        htmlType="submit">
+                        {'创建新用户'}
+                    </Button>
+                </FormItem>
+            </Form>
         );
     }
 

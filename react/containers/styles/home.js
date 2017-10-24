@@ -24,9 +24,12 @@ export const homeStyle = {
     },
     view_content: {
         padding: 24,
-        background: '#fff',
+        backgroundColor: '#fff',
         flex: 1,
         borderRadius: 4,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     view_footer: {
         textAlign: 'center'
@@ -54,6 +57,9 @@ export const homeStyle = {
     button_logout: {
         fontSize: 16,
         marginLeft: 5
+    },
+    button_full_width: {
+        width: '100%'
     },
     text_logo: {},
     text_welcome: {

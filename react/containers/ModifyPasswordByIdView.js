@@ -1,5 +1,4 @@
 import React from "react";
-import {homeStyle} from "./styles/home";
 import ModifyPasswordView from "../components/ModifyPasswordView";
 import {modifyPasswordByIdAction} from "../actions/user";
 import {connect} from "react-redux";
@@ -9,13 +8,11 @@ class ModifyPasswordByIdView extends React.Component {
 
     render() {
         return (
-            <div style={homeStyle.view_content}>
-                <ModifyPasswordView
-                    modifyByAccount={false}
-                    handleSubmit={(values) => {
-                        this.props.modifyPassword(values.password, values.newPassword);
-                    }}/>
-            </div>
+            <ModifyPasswordView
+                modifyByAccount={false}
+                handleSubmit={(values) => {
+                    this.props.modifyPassword(values.password, values.newPassword);
+                }}/>
         );
     }
 }

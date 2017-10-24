@@ -1,9 +1,9 @@
 import React from "react";
 import {Button, Form, Input} from "antd";
-import {homeStyle} from "./styles/home";
 import {getUserInfoAction, updateUserInfoAction} from "../actions/user";
 import {connect} from "react-redux";
 import {FROM_RULE_NICKNAME} from "../constants/formRule";
+import {homeStyle} from "./styles/home";
 
 const FormItem = Form.Item;
 
@@ -17,42 +17,41 @@ class UserCenterView extends React.Component {
     render() {
         const {getFieldDecorator} = this.props.form;
         return (
-            <div style={homeStyle.view_content}>
-                <Form
-                    layout={'vertical'}
-                    style={{width: 300}}
-                    onSubmit={this._handleSubmit.bind(this)}>
-                    <FormItem
-                        label="账号">
-                        <Input
-                            disabled={true}
-                            defaultValue={this.props.account}/>
-                    </FormItem>
-                    <FormItem
-                        label="昵称">
-                        {getFieldDecorator('nickName', {
-                            rules: [FROM_RULE_NICKNAME],
-                            initialValue: this.props.nickName
-                        })(
-                            <Input />
-                        )}
+            <Form
+                layout={'vertical'}
+                style={{width: 300}}
+                onSubmit={this._handleSubmit.bind(this)}>
+                <FormItem
+                    label="账号">
+                    <Input
+                        disabled={true}
+                        defaultValue={this.props.account}/>
+                </FormItem>
+                <FormItem
+                    label="昵称">
+                    {getFieldDecorator('nickName', {
+                        rules: [FROM_RULE_NICKNAME],
+                        initialValue: this.props.nickName
+                    })(
+                        <Input />
+                    )}
 
-                    </FormItem>
-                    <FormItem
-                        label="权限">
-                        <Input
-                            disabled={true}
-                            value={this.props.isAdmin ? '管理员' : '普通用户'}/>
-                    </FormItem>
-                    <FormItem>
-                        <Button
-                            type="primary"
-                            htmlType="submit">
-                            {'更新基础信息'}
-                        </Button>
-                    </FormItem>
-                </Form>
-            </div>
+                </FormItem>
+                <FormItem
+                    label="权限">
+                    <Input
+                        disabled={true}
+                        value={this.props.isAdmin ? '管理员' : '普通用户'}/>
+                </FormItem>
+                <FormItem>
+                    <Button
+                        type="primary"
+                        style={homeStyle.button_full_width}
+                        htmlType="submit">
+                        {'更新基础信息'}
+                    </Button>
+                </FormItem>
+            </Form>
         );
     }
 

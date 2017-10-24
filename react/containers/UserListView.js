@@ -10,7 +10,6 @@ import {
 } from "../actions/userManager";
 import {connect} from "react-redux";
 import {Button, Icon, Input, Popconfirm, Table} from "antd";
-import {homeStyle} from "./styles/home";
 import {userListView} from "./styles/userListView";
 import {resetPasswordAction} from "../actions/user";
 import UpdateUserInfoDialog from "../components/UpdateUserInfoDialog";
@@ -31,7 +30,7 @@ class UserListView extends React.Component {
         const columns = this._buildColumns();
 
         return (
-            <div style={homeStyle.view_content}>
+            <div style={{flex: 1}}>
                 <UpdateUserInfoDialog
                     data={this.props.updateUserInfo}
                     dialogVisible={this.props.updateDialogVisible}

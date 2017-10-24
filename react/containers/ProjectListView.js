@@ -1,7 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Button, Icon, Input, Popover, Table} from "antd";
-import {homeStyle} from "./styles/home";
 import {projectListViewStyle} from "./styles/projectListView";
 import {
     changeSearchInputAction,
@@ -29,7 +28,7 @@ class ProjectListView extends React.Component {
         const columns = this._buildColumns();
 
         return (
-            <div style={homeStyle.view_content}>
+            <div style={{flex: 1}}>
                 <UpdateProjectInfoDialog
                     data={this.props.updateProjectInfo}
                     dialogVisible={this.props.updateDialogVisible}

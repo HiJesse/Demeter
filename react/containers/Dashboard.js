@@ -3,7 +3,6 @@ import echarts from "echarts/dist/echarts.common";
 import "echarts/lib/chart/line";
 import "echarts/lib/component/tooltip";
 import "echarts/lib/component/title";
-import {homeStyle} from "./styles/home";
 import {connect} from "react-redux";
 import {fetchDashboardAction} from "../actions/dashboard";
 import {getUID} from "../utils/storageUtil";
@@ -28,12 +27,11 @@ class Dashboard extends React.Component {
 
     render() {
         return (
-            <div style={homeStyle.view_content}>
+            <div style={{flex: 1}}>
                 <Spin spinning={this.props.fetchLoading} delay={500}>
                     <div id="countChart" style={dashboardStyle.chart_count}/>
                 </Spin>
             </div>
-
         );
     }
 }

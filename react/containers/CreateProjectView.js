@@ -33,64 +33,63 @@ class CreateProjectView extends React.Component {
         );
 
         return (
-            <div style={homeStyle.view_content}>
-                <Form
-                    layout={'vertical'}
-                    style={{width: 300}}
-                    onSubmit={this._handleSubmit.bind(this)}>
-                    <FormItem
-                        label="项目Logo">
-                        {getFieldDecorator('projectLogo')(
-                            <div>
-                                <Upload
-                                    action={''}
-                                    accept={'image/*'}
-                                    listType="picture-card"
-                                    fileList={logo}
-                                    onPreview={file => this.props.showLogoPreview(true, file)}
-                                    onChange={this.onLogoChange}
-                                    beforeUpload={file => this.props.getLogoFile(file)}
-                                    onRemove={() => {
-                                        this.props.getLogoFile(undefined);
-                                        return true;
-                                    }}
-                                >
-                                    {logo.length >= 1 ? null : uploadButton}
-                                </Upload>
-                                <Modal
-                                    visible={previewVisible}
-                                    footer={null}
-                                    onCancel={() => this.props.showLogoPreview(false)}>
-                                    <img alt="example" style={{width: '100%'}} src={previewImage}/>
-                                </Modal>
-                            </div>
-                        )}
-                    </FormItem>
-                    <FormItem
-                        label="项目名称">
-                        {getFieldDecorator('projectName', {
-                            rules: [FROM_RULE_PROJECT_NAME],
-                        })(
-                            <Input />
-                        )}
-                    </FormItem>
-                    <FormItem
-                        label="项目描述">
-                        {getFieldDecorator('projectDes', {
-                            rules: [FROM_RULE_PROJECT_DES],
-                        })(
-                            <TextArea autosize={{minRows: 2, maxRows: 3}}/>
-                        )}
-                    </FormItem>
-                    <FormItem>
-                        <Button
-                            type="primary"
-                            htmlType="submit">
-                            {'创建新项目'}
-                        </Button>
-                    </FormItem>
-                </Form>
-            </div>
+            <Form
+                layout={'vertical'}
+                style={{width: 300}}
+                onSubmit={this._handleSubmit.bind(this)}>
+                <FormItem
+                    label="项目Logo">
+                    {getFieldDecorator('projectLogo')(
+                        <div>
+                            <Upload
+                                action={''}
+                                accept={'image/*'}
+                                listType="picture-card"
+                                fileList={logo}
+                                onPreview={file => this.props.showLogoPreview(true, file)}
+                                onChange={this.onLogoChange}
+                                beforeUpload={file => this.props.getLogoFile(file)}
+                                onRemove={() => {
+                                    this.props.getLogoFile(undefined);
+                                    return true;
+                                }}
+                            >
+                                {logo.length >= 1 ? null : uploadButton}
+                            </Upload>
+                            <Modal
+                                visible={previewVisible}
+                                footer={null}
+                                onCancel={() => this.props.showLogoPreview(false)}>
+                                <img alt="example" style={{width: '100%'}} src={previewImage}/>
+                            </Modal>
+                        </div>
+                    )}
+                </FormItem>
+                <FormItem
+                    label="项目名称">
+                    {getFieldDecorator('projectName', {
+                        rules: [FROM_RULE_PROJECT_NAME],
+                    })(
+                        <Input />
+                    )}
+                </FormItem>
+                <FormItem
+                    label="项目描述">
+                    {getFieldDecorator('projectDes', {
+                        rules: [FROM_RULE_PROJECT_DES],
+                    })(
+                        <TextArea autosize={{minRows: 2, maxRows: 3}}/>
+                    )}
+                </FormItem>
+                <FormItem>
+                    <Button
+                        type="primary"
+                        style={homeStyle.button_full_width}
+                        htmlType="submit">
+                        {'创建新项目'}
+                    </Button>
+                </FormItem>
+            </Form>
         );
     }
 
