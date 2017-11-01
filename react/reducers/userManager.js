@@ -38,7 +38,6 @@ function fetchUserListReducer(state, action) {
             account: item.account,
             nickname: item.nickName,
             auth: item.isAdmin ? '管理员' : '普通用户',
-            projects: 'xxx'
         };
     });
 

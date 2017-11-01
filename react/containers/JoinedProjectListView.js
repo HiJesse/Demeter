@@ -1,7 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Icon, Popover, Table} from "antd";
-import {homeStyle} from "./styles/home";
 import {projectListViewStyle} from "./styles/projectListView";
 import {
     fetchJoinedProjectListAction,
@@ -27,7 +26,7 @@ class JoinedProjectListView extends React.Component {
         }
 
         return (
-            <div style={homeStyle.view_content}>
+            <div style={{flex: 1}}>
                 <ConfirmDialog
                     dialogVisible={this.props.dialogVisible}
                     confirmLoading={this.props.confirmLoading}

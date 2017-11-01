@@ -111,11 +111,6 @@ class UserListView extends React.Component {
             width: '15%',
             render: (text) => (<div>{text}</div>),
         }, {
-            title: '所属项目',
-            dataIndex: 'projects',
-            width: '15%',
-            render: (text) => (<div>{text}</div>),
-        }, {
             title: '操作',
             dataIndex: 'operation',
             render: (text, record, index) => {
