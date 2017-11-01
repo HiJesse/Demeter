@@ -42,6 +42,46 @@ Demeter是一个CMS系统, 提供用户体系以及App项目相关内容管理. 
 | 模糊查找用户 | √ | √ |
 | 查看用户列表 | √ | √ |
 
+* 登录
+
+	提供登录操作, 键入账号密码登录Demeter. 提供输入校验.
+
+	![](http://od9tun44g.bkt.clouddn.com/demeter/login.png)
+	
+* 修改密码 (未登录)
+
+	在登录页点击修改密码跳转到该页面. 用户如果知道自己的账号密码就可以通过该页面修改密码. 如果忘记密码了则需要联系管理员重置账号密码.
+	
+	![](http://od9tun44g.bkt.clouddn.com/demeter/modify_password.png)
+	
+* 首页
+
+	登录成功之后进入系统首页, 首页默认展示仪表盘页面. 该页面展示当前系统注册用户数和已经创建的项目数. 页面左侧为模块菜单, 顶部显示用户名, 用户权限以及推出登录按钮. 用户管理模块和项目管理模块只有管理员可以看到并操作.
+	
+	![](http://od9tun44g.bkt.clouddn.com/demeter/dashboard.png)
+	
+* 个人中心
+
+	个人中心模块提供基本用户信息修改和修改密码功能. 修改基本信息页可以修改用户昵称.
+	
+	![](http://od9tun44g.bkt.clouddn.com/demeter/user_center_modify_general_info.png)
+	
+	修改密码页面可以对已有密码进行修改.
+	
+	![](http://od9tun44g.bkt.clouddn.com/demeter/user_center_modify_password_login.png)
+	
+* 用户管理(管理员)
+
+	用户管理模块需要管理员权限才能访问. 提供新建用户, 重置用户密码和用户列表展示. 新建用户时只能输入账号, 用户昵称默认为匿名, 用户权限默认为普通用户
+	
+	![](http://od9tun44g.bkt.clouddn.com/demeter/user_manager_create_user.png)
+	
+	管理员可以根据用户提供的账号重置该用户的密码. 默认密码为`a123456`.
+	
+	![](http://od9tun44g.bkt.clouddn.com/demeter/user_manager_reset_password.png)
+	
+	用户列表可以分页展示所有的用户信息, 并提供修改用户行为的路径.
+
 ### 项目模块
 
 提供项目管理功能. 新建一个项目时会生成Android 和IOS两个平台对应的子项目, 同时生成两个唯一的App ID作为该项目对应平台的唯一标识, 可以在不同的场景使用, 例如移动端原生接入或者作为脚本参数等. 之后的业务模块都以项目为单位展开.
