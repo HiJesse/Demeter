@@ -125,7 +125,7 @@ class ProjectMembersManagerDialog extends React.Component {
         return (
             <span style={projectUserDialogStyle.view_operation}>
                 <Popconfirm
-                    title="确认产出该用户?"
+                    title="确认删除该用户?"
                     onConfirm={() => {
                         this.props.deleteProjectMember({
                             uId: localStorage.uId,
