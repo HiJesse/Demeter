@@ -123,7 +123,7 @@ Demeter是一个CMS系统, 提供用户体系以及App项目相关内容管理. 
 
 	![](http://od9tun44g.bkt.clouddn.com/demeter/project_manager_create_project.png)
 	
-* 项目列表
+* 项目列表 (管理员)
 
 	所有建立成功的项目都会在项目列表中展示. 列表分页展示所有的项目信息, 并提供根据项目名称模糊查询; 平台ID查询; 项目信息显示; 项目信息更新; 成员管理以及项目删除的功能.
 
@@ -159,6 +159,11 @@ Demeter是一个CMS系统, 提供用户体系以及App项目相关内容管理. 
 		
 		![](http://od9tun44g.bkt.clouddn.com/demeter/project_manager_delete_project.png)
 
+* 项目列表 (普通用户)
+
+	普通用户可以查询到自己所加入的项目列表. 在项目信息展示方面跟管理员所查询到的项目列表保持一直. 但是在功能上普通用户只保留了退出项目的选项.
+	
+	![](http://od9tun44g.bkt.clouddn.com/demeter/project_manager_joined_project.png)
 
 ### 相关文档
 
