@@ -62,32 +62,14 @@ export const MENU_USER_MANAGER = {
     }]
 };
 
-// 菜单android包管理
-export const MENU_ANDROID_PACKAGE = {
-    key: 'package_android_manager',
-    value: 'Android包管理',
-    icon: 'android',
-    MENU_SUB: [{
-        key: 'package_android_manager_daily',
-        value: 'DailyBuild',
-    }, {
-        key: 'package_android_manager_channel',
-        value: '渠道包',
-    }]
-};
-
-// 菜单ios包管理
-export const MENU_IOS_PACKAGE = {
-    key: 'package_ios_manager',
-    value: 'IOS包管理',
-    icon: 'apple',
-    MENU_SUB: [{
-        key: 'package_ios_manager_daily',
-        value: 'DailyBuild',
-    }, {
-        key: 'package_ios_manager_channel',
-        value: '渠道包',
-    }]
+/**
+ * 菜单 文件归档
+ * @type {{key: string, value: string, icon: string}}
+ */
+export const MENU_ARCHIVE = {
+    key: 'archive_manager',
+    value: '文件归档',
+    icon: 'file',
 };
 
 /**
@@ -135,10 +117,6 @@ export function getValuesFromKey(key) {
         values = getValueFromSpecificKey(key, MENU_PROJECT_MANAGER);
     } else if (key.startsWith(MENU_USER_MANAGER.key)) {
         values = getValueFromSpecificKey(key, MENU_USER_MANAGER);
-    } else if (key.startsWith(MENU_ANDROID_PACKAGE.key)) {
-        values = getValueFromSpecificKey(key, MENU_ANDROID_PACKAGE);
-    } else if (key.startsWith(MENU_IOS_PACKAGE.key)) {
-        values = getValueFromSpecificKey(key, MENU_IOS_PACKAGE);
     } else if (key.startsWith(MENU_JOINED_PROJECT_LIST.key)) {
         values = {
             key: MENU_JOINED_PROJECT_LIST.key,

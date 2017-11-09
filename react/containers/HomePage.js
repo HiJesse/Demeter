@@ -6,8 +6,7 @@ import {homeStyle} from "./styles/home";
 import {isArrayEmpty, isStringEmpty} from "../../util/checker";
 import {
     getValuesFromKey,
-    MENU_ANDROID_PACKAGE,
-    MENU_IOS_PACKAGE,
+    MENU_ARCHIVE,
     MENU_JOINED_PROJECT_LIST,
     MENU_PROJECT_MANAGER,
     MENU_USER_CENTER,
@@ -68,8 +67,7 @@ class HomePage extends React.Component {
                         mode="inline"
                         onSelect={this._onMenuSelected.bind(this)}>
 
-                        {this._createMenu(MENU_ANDROID_PACKAGE)}
-                        {this._createMenu(MENU_IOS_PACKAGE)}
+                        {this._createMenu(MENU_ARCHIVE)}
 
                         {this._createMenu(MENU_JOINED_PROJECT_LIST)}
                         {this._createMenu(MENU_PROJECT_MANAGER)}
