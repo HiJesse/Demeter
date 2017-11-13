@@ -122,6 +122,11 @@ export function getValuesFromKey(key) {
             key: MENU_JOINED_PROJECT_LIST.key,
             value: MENU_JOINED_PROJECT_LIST.value,
         };
+    } else if (key.startsWith(MENU_ARCHIVE.key)) {
+        values = {
+            key: MENU_ARCHIVE.key,
+            value: MENU_ARCHIVE.value,
+        };
     }
     return values;
 }

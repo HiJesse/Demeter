@@ -32,6 +32,7 @@ import CreateProjectView from "./CreateProjectView";
 import ProjectListView from "./ProjectListView";
 import JoinedProjectListView from "./JoinedProjectListView";
 import Dashboard from "./Dashboard";
+import ArchiveListView from "./ArchiveListView";
 
 const confirm = Modal.confirm;
 const {Header, Content, Footer, Sider} = Layout;
@@ -238,6 +239,11 @@ class HomePage extends React.Component {
             case MENU_JOINED_PROJECT_LIST.key:
                 content = (
                     <JoinedProjectListView />
+                );
+                break;
+            case MENU_ARCHIVE.key:
+                content = (
+                    <ArchiveListView />
                 );
                 break;
             default:
