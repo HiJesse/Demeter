@@ -1,13 +1,13 @@
 import React from "react";
-import {loginStyle} from "./styles/login";
-import {pageStyle} from "./styles/page";
+import {loginStyle} from "./styles/LoginStyle";
+import {pageStyle} from "./styles/PageStyle";
 import {connect} from "react-redux";
-import {login, loginAction} from "../actions/user";
+import {login, loginAction} from "../actions/UserAction";
 import {Button, Checkbox, Form, Icon, Input} from "antd";
 import FooterView from "../components/FooterView";
-import {goToHomePage, goToModifyPasswordPage} from "../../util/router";
-import {RES_SUCCEED} from "../../util/status";
-import {FORM_RULE_ACCOUNT, FROM_RULE_PASSWORD} from "../constants/formRule";
+import {goToHomePage, goToModifyPasswordPage} from "../../util/RouterUtil";
+import {RES_SUCCEED} from "../../api/Status";
+import {FORM_RULE_ACCOUNT, FROM_RULE_PASSWORD} from "../constants/FormRule";
 
 const FormItem = Form.Item;
 

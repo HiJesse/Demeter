@@ -1,9 +1,9 @@
 import React from "react";
 import {Button, Form, Input} from "antd";
-import {getUserInfoAction, updateUserInfoAction} from "../actions/user";
+import {getUserInfoAction, updateUserInfoAction} from "../actions/UserAction";
 import {connect} from "react-redux";
-import {FROM_RULE_NICKNAME} from "../constants/formRule";
-import {homeStyle} from "./styles/home";
+import {FROM_RULE_NICKNAME} from "../constants/FormRule";
+import {homeStyle} from "./styles/HomeStyle";
 
 const FormItem = Form.Item;
 

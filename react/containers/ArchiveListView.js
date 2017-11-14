@@ -1,8 +1,8 @@
 // archive manager
 import React from "react";
 import {connect} from "react-redux";
-import {getUID} from "../utils/storageUtil";
-import {fetchAllProjectsAction} from "../actions/archiveManager";
+import {getUID} from "../utils/StorageUtil";
+import {fetchAllProjectsAction} from "../actions/ArchiveManagerAction";
 
 /**
  * 归档管理页

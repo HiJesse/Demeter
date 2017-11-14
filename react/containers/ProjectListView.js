@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Button, Icon, Input, Popover, Table} from "antd";
-import {projectListViewStyle} from "./styles/projectListView";
+import {projectListViewStyle} from "./styles/ProjectListViewStyle";
 import {
     changeSearchInputAction,
     changeSearchVisibleAction,
@@ -11,8 +11,8 @@ import {
     showDeletingDialogAction,
     showUpdateDialogAction,
     showUserManagerDialogAction
-} from "../actions/projectList";
-import {isStringEmpty} from "../../util/checker";
+} from "../actions/ProjectListAction";
+import {isStringEmpty} from "../../util/CheckerUtil";
 import UpdateProjectInfoDialog from "../components/UpdateProjectInfoDialog";
 import DeleteProjectDialog from "../components/DeleteProjectDialog";
 import ProjectMembersManagerDialog from "../components/ProjectMembersManagerDialog";

@@ -1,8 +1,8 @@
 import React from "react";
 import {Input, message, Modal} from "antd";
 import {connect} from "react-redux";
-import {isStringEmpty, isStringLengthLeast} from "../../util/checker";
-import {updateUserInfoAction, updateUserInfoLoadingAction, updateUserNicknameAction} from "../actions/userManager";
+import {isStringEmpty, isStringLengthLeast} from "../../util/CheckerUtil";
+import {updateUserInfoAction, updateUserInfoLoadingAction, updateUserNicknameAction} from "../actions/UserManagerAction";
 
 // 更新用户信息弹窗
 class UpdateUserInfoDialog extends React.Component {

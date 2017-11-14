@@ -1,9 +1,9 @@
 import React from "react";
 import {Button, Form, Input} from "antd";
-import {resetPasswordAction} from "../actions/user";
+import {resetPasswordAction} from "../actions/UserAction";
 import {connect} from "react-redux";
-import {MSG_ACCOUNT} from "../constants/stringConstant";
-import {homeStyle} from "./styles/home";
+import {MSG_ACCOUNT} from "../constants/StringConstant";
+import {homeStyle} from "./styles/HomeStyle";
 
 const FormItem = Form.Item;
 

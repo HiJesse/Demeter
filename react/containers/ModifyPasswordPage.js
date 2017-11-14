@@ -1,12 +1,12 @@
 import React from "react";
 import {connect} from "react-redux";
 import FooterView from "../components/FooterView";
-import {pageStyle} from "./styles/page";
-import {modifyPasswordAction} from "../actions/user";
+import {pageStyle} from "./styles/PageStyle";
+import {modifyPasswordAction} from "../actions/UserAction";
 import ModifyPasswordView from "../components/ModifyPasswordView";
-import {modifyStyle} from "./styles/modifyPassword";
-import {goToLoginPage} from "../../util/router";
-import {RES_SUCCEED} from "../../util/status";
+import {modifyStyle} from "./styles/ModifyPasswordStyle";
+import {goToLoginPage} from "../../util/RouterUtil";
+import {RES_SUCCEED} from "../../api/Status";
 
 
 class ModifyPasswordPage extends React.Component {

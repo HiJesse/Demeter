@@ -1,15 +1,15 @@
 import React from "react";
 import {Button, Form, Icon, Input, Modal, Upload} from "antd";
-import {homeStyle} from "./styles/home";
+import {homeStyle} from "./styles/HomeStyle";
 import {connect} from "react-redux";
 import {
     createProjectAction,
     getLogoFileAction,
     showLogoPreviewAction,
     uploadLogoAction
-} from "../actions/projectManager";
-import {PROJECT_LOGO} from "../constants/fileConstant";
-import {FROM_RULE_PROJECT_DES, FROM_RULE_PROJECT_NAME} from "../constants/formRule";
+} from "../actions/ProjectManagerAction";
+import {PROJECT_LOGO} from "../constants/FileConstant";
+import {FROM_RULE_PROJECT_DES, FROM_RULE_PROJECT_NAME} from "../constants/FormRule";
 
 const FormItem = Form.Item;
 const {TextArea} = Input;

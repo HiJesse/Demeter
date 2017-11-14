@@ -2,8 +2,8 @@ import React from "react";
 import {Breadcrumb, Button, Icon, Layout, Menu, Modal} from "antd";
 import {connect} from "react-redux";
 import FooterView from "../components/FooterView";
-import {homeStyle} from "./styles/home";
-import {isArrayEmpty, isStringEmpty} from "../../util/checker";
+import {homeStyle} from "./styles/HomeStyle";
+import {isArrayEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import {
     getValuesFromKey,
     MENU_ARCHIVE,
@@ -19,10 +19,10 @@ import {
     USER_MANAGER_LIST,
     USER_MANAGER_RESET_PWD,
     willRenderMenu
-} from "../constants/menuConstant";
-import {collapseMenuAction, fillSelectedMenuValuesAction, fillSelectedPageContentAction} from "../actions/home";
-import {getUserInfoAction} from "../actions/user";
-import {goToLoginPage} from "../../util/router";
+} from "../constants/MenuConstant";
+import {collapseMenuAction, fillSelectedMenuValuesAction, fillSelectedPageContentAction} from "../actions/HomeAction";
+import {getUserInfoAction} from "../actions/UserAction";
+import {goToLoginPage} from "../../util/RouterUtil";
 import UserCenter from "./UserCenterView";
 import ModifyPasswordByIdView from "./ModifyPasswordByIdView";
 import CreateUserView from "./CreateUserView";

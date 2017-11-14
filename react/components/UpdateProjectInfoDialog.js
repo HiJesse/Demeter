@@ -7,8 +7,8 @@ import {
     updateProjectInfoAction,
     updateProjectLoadingAction,
     uploadLogoAction
-} from "../actions/projectManager";
-import {isStringEmpty, isStringLengthLeast} from "../../util/checker";
+} from "../actions/ProjectManagerAction";
+import {isStringEmpty, isStringLengthLeast} from "../../util/CheckerUtil";
 
 const {TextArea} = Input;
 

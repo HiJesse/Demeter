@@ -1,9 +1,9 @@
 import React from "react";
 import {Modal} from "antd";
 import {connect} from "react-redux";
-import {deleteProjectLoadingAction} from "../actions/projectManager";
-import {isStringEmpty} from "../../util/checker";
-import {deleteProjectAction} from "../actions/projectList";
+import {deleteProjectLoadingAction} from "../actions/ProjectManagerAction";
+import {isStringEmpty} from "../../util/CheckerUtil";
+import {deleteProjectAction} from "../actions/ProjectListAction";
 
 
 // 删除项目信息弹窗

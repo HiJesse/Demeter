@@ -10,8 +10,8 @@ import JWT from "express-jwt";
 
 import * as Config from "./config";
 import api_v1 from "./api/api_v1";
-import {RES_FAILED_TOKEN, RES_MSG_TOKEN} from "./util/status";
-import {connectDB} from "./util/dbUtil";
+import {RES_FAILED_TOKEN, RES_MSG_TOKEN} from "./api/Status";
+import {connectDB} from "./util/DBUtil";
 
 const app = Express();
 

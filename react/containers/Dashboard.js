@@ -4,11 +4,11 @@ import "echarts/lib/chart/line";
 import "echarts/lib/component/tooltip";
 import "echarts/lib/component/title";
 import {connect} from "react-redux";
-import {fetchDashboardAction} from "../actions/dashboard";
-import {getUID} from "../utils/storageUtil";
+import {fetchDashboardAction} from "../actions/DashboardAction";
+import {getUID} from "../utils/StorageUtil";
 import {Spin} from "antd";
-import {dashboardStyle} from "./styles/dashboard";
-import {isObjectEmpty} from "../../util/checker";
+import {dashboardStyle} from "./styles/DashboardStyle";
+import {isObjectEmpty} from "../../util/CheckerUtil";
 
 // demeter 仪表盘
 class Dashboard extends React.Component {

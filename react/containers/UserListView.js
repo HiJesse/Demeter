@@ -7,11 +7,11 @@ import {
     pageLoadingAction,
     setUpdatingUserInfoAction,
     showUpdatingUserDialogAction
-} from "../actions/userManager";
+} from "../actions/UserManagerAction";
 import {connect} from "react-redux";
 import {Button, Icon, Input, Popconfirm, Table} from "antd";
-import {userListView} from "./styles/userListView";
-import {resetPasswordAction} from "../actions/user";
+import {userListView} from "./styles/UserListViewStyle";
+import {resetPasswordAction} from "../actions/UserAction";
 import UpdateUserInfoDialog from "../components/UpdateUserInfoDialog";
 
 // 用户管理-用户列表

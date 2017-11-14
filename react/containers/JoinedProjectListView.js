@@ -1,16 +1,16 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Icon, Popover, Table} from "antd";
-import {projectListViewStyle} from "./styles/projectListView";
+import {projectListViewStyle} from "./styles/ProjectListViewStyle";
 import {
     fetchJoinedProjectListAction,
     projectPageLoadingAction,
     quitProjectAction,
     showQuitingProjectDialogAction
-} from "../actions/projectList";
-import {isStringEmpty} from "../../util/checker";
+} from "../actions/ProjectListAction";
+import {isStringEmpty} from "../../util/CheckerUtil";
 import ConfirmDialog from "../components/ConfirmDialog";
-import {getUID} from "../utils/storageUtil";
+import {getUID} from "../utils/StorageUtil";
 
 // 已加入的项目列表
 class JoinedProjectListView extends React.Component {

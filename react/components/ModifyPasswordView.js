@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Form, Icon, Input} from "antd";
-import {modifyViewStyle} from "./styles/modifyPasswordView";
-import {FORM_RULE_ACCOUNT, FROM_RULE_PASSWORD} from "../constants/formRule";
+import {modifyViewStyle} from "./styles/ModifyPasswordViewStyle";
+import {FORM_RULE_ACCOUNT, FROM_RULE_PASSWORD} from "../constants/FormRule";
 
 const FormItem = Form.Item;
 

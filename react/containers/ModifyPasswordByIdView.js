@@ -1,6 +1,6 @@
 import React from "react";
 import ModifyPasswordView from "../components/ModifyPasswordView";
-import {modifyPasswordByIdAction} from "../actions/user";
+import {modifyPasswordByIdAction} from "../actions/UserAction";
 import {connect} from "react-redux";
 
 // 个人中心-修改密码

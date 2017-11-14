@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Icon, Input, Modal, Popconfirm, Table} from "antd";
 import {connect} from "react-redux";
-import {isStringEmpty} from "../../util/checker";
+import {isStringEmpty} from "../../util/CheckerUtil";
 import {
     addMemberAction,
     changeUserAccountAction,
@@ -9,8 +9,8 @@ import {
     fetchMembersAction,
     initDialogDataAction,
     selectMemberAction
-} from "../actions/projectMembersManager";
-import {projectUserDialogStyle} from "./styles/projectUserManagerDialog";
+} from "../actions/ProjectMembersManagerAction";
+import {projectUserDialogStyle} from "./styles/ProjectUserManagerDialogStyle";
 
 
 // 项目成员管理弹窗
