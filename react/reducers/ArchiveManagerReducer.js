@@ -11,7 +11,8 @@ const fetchAllProjectsReducer = (state, action) => {
 };
 
 const initialArchive = {
-    projectList: [],
+    projectList: [], // 项目列表
+    platformList: [], // 平台列表
 };
 
 /**
