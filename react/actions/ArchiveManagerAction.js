@@ -9,6 +9,7 @@ export const fetchAllProjectsAction = uId => ({
     type: ACTION_ARCHIVE_FETCH_ALL_PROJECTS,
     data: {
         uId: uId,
+        pageSize: 100,
     }
 });
 

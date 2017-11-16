@@ -7,7 +7,15 @@ import {ACTION_ARCHIVE_FETCH_ALL_PROJECTS_FULFILLED} from "../constants/ActionTy
  * @param action
  */
 const fetchAllProjectsReducer = (state, action) => {
-    return state;
+    const projectList = action.data.projectList.map((item, index) => ({
+        value: item.projectId,
+        name: item.projectName
+    }));
+
+    return {
+        ...state,
+        projectList: projectList,
+    };
 };
 
 const initialArchive = {

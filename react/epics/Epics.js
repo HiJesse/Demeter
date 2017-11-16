@@ -5,6 +5,7 @@ import {userEpics} from "./UserEpic";
 import {projectManagerEpics} from "./ProjectManagerEpic";
 import {projectMembersManagerEpics} from "./ProjectMembersManagerEpic";
 import {dashboardEpics} from "./DashboardEpic";
+import {ArchiveManagerEpics} from "./ArchiveManagerEpic";
 
 
 export const epics = combineEpics(
@@ -12,5 +13,6 @@ export const epics = combineEpics(
     userManagerEpics,
     projectManagerEpics,
     projectMembersManagerEpics,
-    dashboardEpics
+    dashboardEpics,
+    ArchiveManagerEpics
 );
