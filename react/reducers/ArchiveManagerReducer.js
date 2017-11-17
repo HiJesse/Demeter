@@ -20,7 +20,13 @@ const fetchAllProjectsReducer = (state, action) => {
 
 const initialArchive = {
     projectList: [], // 项目列表
-    platformList: [], // 平台列表
+    platformList: [{
+        value : 0,
+        name: 'Android'
+    }, {
+        value: 1,
+        name: 'IOS'
+    }], // 平台列表
 };
 
 /**
