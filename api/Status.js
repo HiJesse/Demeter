@@ -126,3 +126,9 @@ export const RES_MSG_QUIT_PROJECT = '退出项目失败';
 // 获取dashboard信息失败
 export const RES_FAILED_FETCH_DASHBOARD = 3000;
 export const RES_MSG_FETCH_DASHBOARD = '获取仪表盘信息失败';
+
+//------------archive
+
+// 上传 archive 失败
+export const RES_FAILED_UPLOAD_ARCHIVE = 4000;
+export const RES_MSG_UPLOAD_ARCHIVE = '上传文档失败';

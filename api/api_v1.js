@@ -4,6 +4,7 @@ import * as project from "./v1/ProjectApi";
 import {ProjectLogoMulter} from "../util/MulterUtil";
 import * as projectMember from "./v1/ProjectMemberApi";
 import * as dashboard from "./v1/DashboardApi";
+import * as archive from "./v1/ArchiveApi";
 
 const router = express.Router();
 
@@ -69,5 +70,10 @@ router.post('/project/quitProject', projectMember.quitProject);
 
 // 获取仪表盘信息
 router.get('/dashboard/fetchDashboard', dashboard.fetchDashboard);
+
+/* archive 相关*/
+
+// 上传文档
+router.post('/archive/uploadArchive', ProjectLogoMulter.single('archive'), archive.uploadArchive);
 
 export default router;

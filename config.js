@@ -21,7 +21,8 @@ const dev = {
             /^\/assets\/.*/,
             // 接口白名单
             '/api/v1/user/login',
-            '/api/v1/user/modifyPassword'
+            '/api/v1/user/modifyPassword',
+            '/api/v1/archive/uploadArchive'
         ]
     }
 };

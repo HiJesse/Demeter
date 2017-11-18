@@ -137,7 +137,7 @@ export const deleteProjectPlatforms = (projectId) => new Promise((resolve, rejec
  */
 export const findProjectPlatforms = params => new Promise((resolve, reject) => {
     ProjectPlatformModel.find(params, (err, data) => {
-        if (data.length < 1) {
+        if (err || data.length < 1) {
             reject({projectPlatformSize: -1});
             return;
         }
