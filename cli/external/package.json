@@ -1,0 +1,12 @@
+{
+  "name": "demeter-cli",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "isomorphic-fetch": "^2.2.1",
+    "shelljs": "^0.7.8",
+    "yargs": "^10.0.3"
+  },
+  "devDependencies": {}
+}
