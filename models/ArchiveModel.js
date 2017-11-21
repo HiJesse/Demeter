@@ -8,7 +8,7 @@ const ArchiveSchema = new Schema({
     des: {type: String, default: '什么都没写'}, // 文档描述
     archiveName: {type: String, required: true}, // 文档名称
     archivePath: {type: String, required: true}, // 文档路径
-    archiveSize: {type: Number}, // 文档大小 MB
+    archiveSize: {type: Number}, // 文档大小 KB
     createDate: {type: String, default: getDate()}, // 文档创建时间
 });
 

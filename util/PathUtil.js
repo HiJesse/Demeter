@@ -14,6 +14,7 @@ const URL_PUBLIC_UPLOAD = URL_BASE + 'upload/';
 
 export const UPLOAD_PATH = 'public/upload/';
 export const UPLOAD_PROJECT_LOGO = 'project_logo/';
+export const UPLOAD_PROJECT_ARCHIVE = 'project_archive/';
 
 // 默认的项目logo
 export const URL_PROJECT_LOGO_DEFAULT = URL_PUBLIC_IMAGE + 'project_logo.png';

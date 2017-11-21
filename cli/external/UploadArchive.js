@@ -3,6 +3,7 @@ require('isomorphic-fetch');
 
 const argv = require('yargs').argv;
 const fs = require("fs");
+const formstream = require('formstream');
 
 const api = argv.api; // 接口api
 const appId = argv.key; // app id
@@ -50,18 +51,19 @@ const printParams = () => {
  */
 const uploadArchive = () => {
     console.log('开始上传');
-    const formData = {
-        appId: appId,
-    };
+    const form = formstream();
 
+    form.field('appId', appId);
+    form.file('archive', archive.toString(), archive.toString());
 
     if (!isStringEmpty(archiveDes)) {
-        formData.archiveDes = archiveDes;
+        form.field('archiveDes', archiveDes);
     }
 
     const data = {
         method: 'POST',
-        body: formData
+        headers: form.headers(),
+        body: form
     };
 
     fetch(api, data).then(response => {

@@ -23,6 +23,8 @@ import {createArchive} from "./base/BaseArchiveApi";
  * req
  * appId 项目平台唯一id
  * archiveDes 文档描述
+ * archive 文档
+ *
  * @param req
  * @param res
  */
@@ -47,9 +49,9 @@ export const uploadArchive = (req, res) => {
         const createArchiveParams = {
             projectId: projects[0].projectId,
             platformId: projects[0].platformId,
-            archiveName: 'test',
-            archivePath: '/test.zip',
-            archiveSize: 123,
+            archiveName: archive.originalname,
+            archivePath: archive.filename,
+            archiveSize: archive.size,
         };
 
         if (!isStringEmpty(archiveDes)) {

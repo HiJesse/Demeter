@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "formstream": "^1.1.0",
     "fs": "0.0.1-security",
     "isomorphic-fetch": "^2.2.1",
     "shelljs": "^0.7.8",

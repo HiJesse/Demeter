@@ -1,7 +1,7 @@
 import express from "express";
 import * as user from "./v1/UserApi";
 import * as project from "./v1/ProjectApi";
-import {ProjectLogoMulter} from "../util/MulterUtil";
+import {ProjectArchiveMulter, ProjectLogoMulter} from "../util/MulterUtil";
 import * as projectMember from "./v1/ProjectMemberApi";
 import * as dashboard from "./v1/DashboardApi";
 import * as archive from "./v1/ArchiveApi";
@@ -74,6 +74,6 @@ router.get('/dashboard/fetchDashboard', dashboard.fetchDashboard);
 /* archive 相关*/
 
 // 上传文档
-router.post('/archive/uploadArchive', ProjectLogoMulter.single('archive'), archive.uploadArchive);
+router.post('/archive/uploadArchive', ProjectArchiveMulter.single('archive'), archive.uploadArchive);
 
 export default router;
