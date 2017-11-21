@@ -11,6 +11,7 @@ import {
 import {isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import {findProjectPlatforms} from "./base/BaseProjectApi";
 import {createArchive} from "./base/BaseArchiveApi";
+import * as LogUtil from "../../util/LogUtil";
 
 
 /**
@@ -33,6 +34,7 @@ export const uploadArchive = (req, res) => {
     const archiveDes = req.body.archiveDes;
     const archive = req.file;
 
+    LogUtil.i(`uploadArchive req ${appId}`);
     if (isStringEmpty(appId) || isObjectEmpty(archive)) {
         res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
         return;

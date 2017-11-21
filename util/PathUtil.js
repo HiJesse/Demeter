@@ -1,5 +1,5 @@
 // path util
-import * as Config from "../config";
+import * as Config from "../Config";
 
 // base url eg. http://localhost:3000/
 const URL_BASE = Config.env.SERVER + ':' + Config.env.SERVER_PORT + '/';

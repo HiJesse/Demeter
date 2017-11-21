@@ -1,6 +1,9 @@
 # dependencies
 node_modules
 
+# log
+logs
+
 # testing
 /coverage
 
