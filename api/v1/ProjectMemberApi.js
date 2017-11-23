@@ -36,7 +36,7 @@ import {
 } from "../Status";
 import {buildResponse} from "../../util/AjaxUtil";
 import {isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
-import {findUsersByAccounts, isAdmin, isUserExist} from "./base/BaseUserApi";
+import {findUsers, isAdmin, isUserExist} from "./base/BaseUserApi";
 import {findProjectPlatforms, findProjectsByIDs, getProjectInfo} from "./base/BaseProjectApi";
 import {
     countProjectMembers,
@@ -78,12 +78,15 @@ export const addProjectMember = (req, res) => {
         _id: uId
     };
 
+    let memberId;
+
     isAdmin(adminParams).then(() => {
         return isUserExist({account: account});
+    }).then((userInfo) => {
+        memberId = userInfo.uId;
+        return isUserNotJoinedProject({projectId: projectId, userId: memberId});
     }).then(() => {
-        return isUserNotJoinedProject({projectId: projectId, userAccount: account});
-    }).then(() => {
-        return createProjectMemberInfo({projectId: projectId, userAccount: account});
+        return createProjectMemberInfo({projectId: projectId, userId: memberId});
     }).then(() => {
         status = RES_SUCCEED;
         msg = null;
@@ -112,7 +115,7 @@ export const addProjectMember = (req, res) => {
  * 2. 校验projectId项目是否存在
  * 3. 获取项目成员总数
  * 4. 根据页码和页内容获取对应的成员列表
- * 5. 根据account列表获取用户详情列表
+ * 5. 根据userId列表获取用户详情列表
  * @param req
  * @param res
  */
@@ -141,12 +144,16 @@ export const fetchProjectMembers = (req, res) => {
         projectMemberCount = count.projectMemberCount;
         return findProjectMembersByPage(pageSize, pageNum, {projectId: projectId});
     }).then(projectMembers => {
-        return findUsersByAccounts(projectMembers.map(item => item.account));
+        return findUsers({_id: projectMembers.map(item => item.userId)});
     }).then((users) => {
         status = RES_SUCCEED;
         msg = null;
         res.json(buildResponse(status, {
-            projectMemberList: users.map(item => ({account: item.account, nickname: item.nickName})),
+            projectMemberList: users.map(item => ({
+                account: item.account,
+                nickname: item.nickName,
+                userId: item._id
+            })),
             projectMembers: projectMemberCount,
             pageNum: pageNum
         }, msg));
@@ -183,9 +190,9 @@ export const fetchProjectMembers = (req, res) => {
 /**
  * 删除项目成员
  * 1. 校验uId用户是否存在
- * 2. 校验account用户是否存在
+ * 2. 校验userId用户是否存在
  * 3. 校验projectId项目是否存在
- * 4. 校验account 是否已经加入项目
+ * 4. 校验userId 是否已经加入项目
  * 5. 删除成员
  * @param req
  * @param res
@@ -193,12 +200,12 @@ export const fetchProjectMembers = (req, res) => {
 export const deleteProjectMember = (req, res) => {
     const uId = req.body.uId;
     const projectId = req.body.projectId;
-    const account = req.body.account;
+    const userId = req.body.userId;
 
     let status = RES_FAILED_DELETE_PROJECT_MEMBER;
     let msg = RES_MSG_DELETE_PROJECT_MEMBER;
 
-    if (isStringEmpty(uId) || isStringEmpty(projectId) || isStringEmpty(account)) {
+    if (isStringEmpty(uId) || isStringEmpty(projectId) || isStringEmpty(userId)) {
         status = RES_FAILED_PARAMS_INVALID;
         msg = RES_MSG_PARAMS_INVALID;
         res.json(buildResponse(status, {}, msg));
@@ -206,13 +213,13 @@ export const deleteProjectMember = (req, res) => {
     }
 
     isUserExist({_id: uId}).then(() => {
-        return isUserExist({account: account});
+        return isUserExist({_id: userId});
     }).then(() => {
         return getProjectInfo({_id: projectId});
     }).then(() => {
-        return isUserJoinedProject({projectId: projectId, userAccount: account});
+        return isUserJoinedProject({projectId: projectId, userId: userId});
     }).then(() => {
-        return deleteMember(projectId, account);
+        return deleteMember(projectId, userId);
     }).then(() => {
         status = RES_SUCCEED;
         msg = null;
@@ -255,14 +262,12 @@ export const fetchJoinedProjectList = (req, res) => {
     let msg = RES_MSG_FETCH_PROJECT_LIST;
     let projectCount = -1;
     let projectList;
-    let userAccount;
 
-    isUserExist({_id: uId}).then((userInfo) => {
-        userAccount = userInfo.account;
-        return countUserJoinedProjects({userAccount: userInfo.account});
+    isUserExist({_id: uId}).then(() => {
+        return countUserJoinedProjects({userId: uId});
     }).then((data) => {
         projectCount = data.userJoinedProjectCount;
-        return findUserJoinedProjects(pageSize, pageNum, {userAccount: userAccount});
+        return findUserJoinedProjects(pageSize, pageNum, {userId: uId});
     }).then((projectIDs) => {
         return findProjectsByIDs(projectIDs.map(item => (item.projectId)));
     }).then((projects) => {
@@ -311,14 +316,11 @@ export const quitProject = (req, res) => {
 
     let status = RES_FAILED_QUIT_PROJECT;
     let msg = RES_MSG_QUIT_PROJECT;
-    let userAccount;
 
-    isUserExist({_id: uId}).then((userInfo) => {
-        userAccount = userInfo.account;
-        console.log(userAccount)
-        return isUserJoinedProject({projectId: projectId, userAccount: userInfo.account});
+    isUserExist({_id: uId}).then(() => {
+        return isUserJoinedProject({projectId: projectId, userId: uId});
     }).then(() => {
-        return deleteMember(projectId, userAccount);
+        return deleteMember(projectId, uId);
     }).then(() => {
         status = RES_SUCCEED;
         msg = null;

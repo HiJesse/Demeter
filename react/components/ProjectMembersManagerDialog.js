@@ -11,6 +11,7 @@ import {
     selectMemberAction
 } from "../actions/ProjectMembersManagerAction";
 import {projectUserDialogStyle} from "./styles/ProjectUserManagerDialogStyle";
+import * as StorageUtil from "../utils/StorageUtil";
 
 
 // 项目成员管理弹窗
@@ -130,8 +131,7 @@ class ProjectMembersManagerDialog extends React.Component {
                         this.props.deleteProjectMember({
                             uId: localStorage.uId,
                             projectId: this.props.data.id,
-                            account: this.props.memberInfo.account
-
+                            userId: this.props.memberInfo.userId,
                         });
                     }}>
                     <a href="#" onClick={() => this.props.selectMember(index)}>{'删除'}</a>
@@ -160,7 +160,7 @@ function mapDispatchToProps(dispatch) {
     return {
         initDialogData: () => dispatch(initDialogDataAction()), // 初始化弹窗数据
         changeUserAccount: account => dispatch(changeUserAccountAction(account)), // 实时改变用户account
-        addMember: (projectId, account) => dispatch(addMemberAction(localStorage.uId, projectId, account)), // 向项目中添加用户
+        addMember: (projectId, account) => dispatch(addMemberAction(StorageUtil.getUID(), projectId, account)), // 向项目中添加用户
         fetchProjectMembers: params => dispatch(fetchMembersAction(params)), // 获取项目成员列表
         selectMember: index => dispatch(selectMemberAction(index)), // 根据index获取选中项目成员信息
         deleteProjectMember: params => dispatch(deleteMemberAction(params)), // 删除项目成员

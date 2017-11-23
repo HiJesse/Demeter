@@ -76,6 +76,6 @@ export const deleteMemberAction = params => ({
     data: {
         uId: params.uId,
         projectId: params.projectId,
-        account: params.account
+        userId: params.userId
     }
 });

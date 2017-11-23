@@ -64,6 +64,7 @@ export const isUserExist = params => {
             if (data.length === 1) {
                 resolve({
                     isUserExist: true,
+                    uId: data[0]._id,
                     nickname: data[0].nickName,
                     account: data[0].account,
                     isAdmin: data[0].isAdmin
@@ -169,17 +170,16 @@ export const countUsers = (accountSearch) => {
  * 根据参数获取用户列表
  * @param params
  */
-export const findUsersByAccounts = params =>
+export const findUsers = params =>
     new Promise((resolve, reject) => {
-        UserModel.find({
-            account: params
-        }, (err, data) => {
+        UserModel.find(params, (err, data) => {
             if (err) {
                 reject({findUsers: false})
             }
             resolve(data);
         });
     });
+
 
 /**
  * 更新用户信息 可选根据uId和account进行查询

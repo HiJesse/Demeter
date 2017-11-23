@@ -80,6 +80,7 @@ const fetchMemberListFulfilledReducer = (state, action) => {
             key: index,
             account: item.account,
             nickname: item.nickname,
+            userId: item.userId,
         };
     });
 

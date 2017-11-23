@@ -82,7 +82,7 @@ export const findProjectMembersByPage = (pageSize, pageNum, params) => new Promi
             reject({findProjectMembers: false});
         }
 
-        const projectMembers = data.map(item => ({account: item.userAccount}));
+        const projectMembers = data.map(item => ({userId: item.userId}));
         resolve(projectMembers);
     });
 });
@@ -90,12 +90,12 @@ export const findProjectMembersByPage = (pageSize, pageNum, params) => new Promi
 /**
  * 删除项目成员
  * @param projectId
- * @param account
+ * @param userId
  */
-export const deleteMember = (projectId, account) => new Promise((resolve, reject) => {
+export const deleteMember = (projectId, userId) => new Promise((resolve, reject) => {
     ProjectMemberModel.remove({
         projectId: projectId,
-        userAccount: account
+        userId: userId
     }, (err) => {
         if (err) {
             reject({projectMemberDeleted: false});
