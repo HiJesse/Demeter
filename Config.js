@@ -1,31 +1,35 @@
 // config
 
+// jwt配置
+const JWT = {
+    secret: 'demeter_jesse',
+    whiteList: [
+        // 页面白名单
+        '/',
+        '/login',
+        '/modifyPassword',
+        // 资源白名单
+        /^\/upload\/project_logo\/.*/,
+        /^\/image\/.*/,
+        /^\/assets\/.*/,
+        // 接口白名单
+        '/api/v1/user/login',
+        '/api/v1/user/modifyPassword',
+        '/api/v1/archive/uploadArchive'
+    ]
+};
+
 //  开发环境配置
 const dev = {
     DATABASE: 'mongodb://localhost/demeter',
+    DB: 'mysql://root:mysql@127.0.0.1/demeter_test',
     SERVER: 'http://localhost',
     SERVER_PORT: 3000,
     PUBLIC_PATH: 'public',
     REACT_IP: '127.0.0.1',
     REACT_PORT: 3001,
     LOG_LEVEL: 'debug',
-    JWT: {
-        secret: 'demeter_jesse',
-        whiteList: [
-            // 页面白名单
-            '/',
-            '/login',
-            '/modifyPassword',
-            // 资源白名单
-            /^\/upload\/project_logo\/.*/,
-            /^\/image\/.*/,
-            /^\/assets\/.*/,
-            // 接口白名单
-            '/api/v1/user/login',
-            '/api/v1/user/modifyPassword',
-            '/api/v1/archive/uploadArchive'
-        ]
-    }
+    JWT: JWT
 };
 
 // 生产环境配置
@@ -37,22 +41,7 @@ const product = {
     REACT_IP: '127.0.0.1',
     REACT_PORT: 3001,
     LOG_LEVEL: 'info',
-    JWT: {
-        secret: 'demeter_jesse',
-        whiteList: [
-            // 页面白名单
-            '/',
-            '/login',
-            '/modifyPassword',
-            // 资源白名单
-            /^\/upload\/project_logo\/.*/,
-            /^\/image\/.*/,
-            /^\/assets\/.*/,
-            // 接口白名单
-            '/api/v1/user/login',
-            '/api/v1/user/modifyPassword'
-        ]
-    }
+    JWT: JWT
 };
 
 export const env = dev;

@@ -10,7 +10,7 @@ import JWT from "express-jwt";
 import * as Config from "./Config";
 import api_v1 from "./api/api_v1";
 import {RES_FAILED_TOKEN, RES_MSG_TOKEN} from "./api/Status";
-import {connectDB} from "./util/DBUtil";
+import {connectDB, ormExpress} from "./util/DBUtil";
 import * as LogUtil from "./util/LogUtil";
 
 const app = Express();
@@ -20,6 +20,7 @@ app.set('views', Path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(LogUtil.initLog());
+app.use(ormExpress());
 app.use(Favicon(Path.join(__dirname, 'public', 'logo.ico')));
 app.use(JWT({secret: Config.env.JWT.secret}).unless({path: Config.env.JWT.whiteList}));
 app.use(BodyParser.json());
