@@ -2,7 +2,7 @@
 import Mongoose from "mongoose";
 import UserModel from "../models/UserModel";
 import PlatformModel from "../models/PlatformModel";
-import * as Config from "../Config";
+import * as Config from "../config/Config";
 import {md5} from "./EncryptUtil";
 
 /**

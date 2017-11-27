@@ -1,7 +1,7 @@
 // react server
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
-const Config = require('../webpack.config');
+const Config = require('../config/webpack.config');
 
 new WebpackDevServer(webpack(Config), {
     publicPath: Config.output.publicPath,

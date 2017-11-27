@@ -1,6 +1,6 @@
 // log util
 import log4js from "log4js";
-import * as Config from "../Config";
+import * as Config from "../config/Config";
 
 let demeterLogger;
 

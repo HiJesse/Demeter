@@ -1,6 +1,6 @@
 // db config
 import orm from "orm";
-import * as Config from "../Config";
+import * as Config from "./Config";
 import * as LogUtil from "../util/LogUtil";
 
 /**

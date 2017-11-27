@@ -1,6 +1,6 @@
 // web token
 import JWT from "jsonwebtoken";
-import * as Config from "../Config";
+import * as Config from "../config/Config";
 
 /**
  * 返回从当前时刻开始days天后的日期
