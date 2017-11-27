@@ -1,6 +1,5 @@
 // db util
 import Mongoose from "mongoose";
-import orm from "orm";
 import UserModel from "../models/UserModel";
 import PlatformModel from "../models/PlatformModel";
 import * as Config from "../Config";
@@ -94,13 +93,3 @@ export function connectDB() {
         console.info('Error: Could not connect to MongoDB. Did you forget to run `mongod`?');
     });
 }
-
-/**
- * 连接Mysql
- */
-export const ormExpress = () => orm.express(Config.env.DB, {
-    define: function (db, models, next) {
-        models.person = db.define("user", {});
-        next();
-    }
-});

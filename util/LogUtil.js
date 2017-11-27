@@ -19,7 +19,7 @@ export const initLog = () => {
  * debug level
  * @param debug
  */
-export const d = (debug) => demeterLogger.info(debug);
+export const d = (debug) => demeterLogger.debug(debug);
 
 /**
  * info level
@@ -31,4 +31,4 @@ export const i = (info) => demeterLogger.info(info);
  * error level
  * @param error
  */
-export const e = (error) => demeterLogger.info(error);
+export const e = (error) => demeterLogger.error(error);
