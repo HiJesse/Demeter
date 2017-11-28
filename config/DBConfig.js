@@ -2,6 +2,7 @@
 import orm from "orm";
 import * as Config from "./Config";
 import * as LogUtil from "../util/LogUtil";
+import {getUserModel, userModel} from "../models/UserModel";
 
 /**
  * 数据库连接
@@ -57,5 +58,25 @@ export const initORM = callback => {
  * @returns {*}
  */
 const setup = (db, callback) => {
+    userModel(orm, db);
+
+    db.sync((error) => {
+        if (error) {
+            LogUtil.e('ORM ' + error);
+        }
+        
+        // 测试数据
+        getUserModel().create({
+            nickName: 'tmp',
+            account: 'test',
+            pwd: 'md5',
+            admin: true,
+            accessToken: 'tmp',
+            createdAt: '2017-11-11'
+        }, (error, results) => {
+        });
+    });
+
+
     return callback(null, db);
 };

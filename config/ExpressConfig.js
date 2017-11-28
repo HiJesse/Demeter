@@ -43,7 +43,7 @@ const configExpress = app => {
      * 重定向到/public/index.html页面
      */
     app.use(function (req, res) {
-        FS.readFile(__dirname + '../public/index.html', function (err, data) {
+        FS.readFile(Path.join(__dirname, '../public/index.html'), function (err, data) {
             if (err) {
                 console.log(err);
                 res.send('500 error' + err);
