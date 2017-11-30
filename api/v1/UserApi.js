@@ -1,34 +1,41 @@
 // user api
 import {buildResponse} from "../../util/AjaxUtil";
-import UserModel from "../../models/UserModel";
+import UserModel, {findUser} from "../../models/UserModel";
 import {
     RES_FAILED,
     RES_FAILED_COUNT_USER,
     RES_FAILED_CREATE_USER,
     RES_FAILED_DELETE_USER,
     RES_FAILED_FETCH_USER_LIST,
+    RES_FAILED_FIND_USER_INFO,
+    RES_FAILED_LOGIN,
     RES_FAILED_MATCHED_USER_LIST,
     RES_FAILED_MODIFY_PWD,
     RES_FAILED_NOT_ADMIN,
+    RES_FAILED_PARAMS_INVALID,
     RES_FAILED_RESET_PASSWORD,
     RES_FAILED_UPDATE_USER_INFO,
+    RES_FAILED_USER_ERR_PWD,
     RES_FAILED_USER_IS_EXIST,
     RES_FAILED_USER_NONE,
     RES_MSG_COUNT_USER,
     RES_MSG_CREATE_USER,
     RES_MSG_DELETE_USER,
     RES_MSG_FETCH_USER_LIST,
+    RES_MSG_FIND_USER_INFO,
+    RES_MSG_LOGIN,
     RES_MSG_MATCHED_USER_LIST,
     RES_MSG_MODIFY_PWD,
     RES_MSG_NOT_ADMIN,
+    RES_MSG_PARAMS_INVALID,
     RES_MSG_RESET_PASSWORD,
     RES_MSG_UPDATE_USER_INFO,
+    RES_MSG_USER_ERR_PWD,
     RES_MSG_USER_IS_EXIST,
     RES_MSG_USER_NONE,
     RES_SUCCEED
 } from "../Status";
-import {createJsonWebToken} from "../../util/WebTokenUtil";
-import {isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
+import {isArrayEmpty, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import {md5} from "../../util/EncryptUtil";
 import {
     countUsers,
@@ -39,23 +46,71 @@ import {
     updateUserInfoByIdOrAccount,
     verifyUser
 } from "./base/BaseUserApi";
+import * as LogUtil from "../../util/LogUtil";
+import {createJsonWebToken} from "../../util/WebTokenUtil";
+
+const TAG = 'UserApi';
 
 /**
- * 登录接口, status == 0 成功返回token; -1000 账号不存在; -1001 密码错误
+ * 登录接口
+ *
+ * 1. 参数校验
+ * 2. 查找用户
+ * 3. 判断密码
+ *
  * @param req account/password
  * @param res
  */
 export const login = (req, res) => {
     const account = req.body.account;
     const password = req.body.password;
-    verifyUser(false, account, password, (val) => {
-        const data = val.data;
-        res.json(buildResponse(val.status, {
-            token: createJsonWebToken(data._id),
-            isAdmin: data.isAdmin,
-            uId: data._id
-        }, val.msg));
+
+    let status = RES_FAILED_LOGIN;
+    let msg = RES_MSG_LOGIN;
+
+    LogUtil.i(`${TAG} login ${account}`);
+
+    if (isStringEmpty(account) || isStringEmpty(password)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
+
+    findUser({
+        account: account,
+        pwd: password
+    }).then(results => {
+        handleLoginResult(req, res, results);
+    }).catch(err => {
+        LogUtil.e(`${TAG} login ${err}`)
+        if (isObjectEmpty(err)) {
+            status = RES_FAILED_LOGIN;
+            msg = RES_FAILED_LOGIN;
+        } else if (err.findUserError) {
+            status = RES_FAILED_FIND_USER_INFO;
+            msg = RES_MSG_FIND_USER_INFO;
+        }
+        res.json(buildResponse(status, {}, msg));
     });
+};
+
+const handleLoginResult = (req, res, results) => {
+    if (isArrayEmpty(results)) {
+        res.json(buildResponse(RES_FAILED_USER_NONE, {}, RES_MSG_USER_NONE));
+        return;
+    }
+
+    const result = results[0];
+
+    if (result.pwd !== req.body.password) {
+        res.json(buildResponse(RES_FAILED_USER_ERR_PWD, {}, RES_MSG_USER_ERR_PWD));
+        return;
+    }
+
+    res.json(buildResponse(RES_SUCCEED, {
+        token: createJsonWebToken(result.id),
+        isAdmin: result.admin,
+        uId: result.id
+    }, '登录成功'));
 };
 
 /**

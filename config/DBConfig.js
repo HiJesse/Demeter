@@ -2,7 +2,8 @@
 import orm from "orm";
 import * as Config from "./Config";
 import * as LogUtil from "../util/LogUtil";
-import {getUserModel, userModel} from "../models/UserModel";
+import {createUser, findUser, USER_ADMIN, userModel} from "../models/UserModel";
+import {isArrayEmpty} from "../util/CheckerUtil";
 
 /**
  * 数据库连接
@@ -63,20 +64,35 @@ const setup = (db, callback) => {
     db.sync((error) => {
         if (error) {
             LogUtil.e('ORM ' + error);
+            return;
         }
-        
-        // 测试数据
-        getUserModel().create({
-            nickName: 'tmp',
-            account: 'test',
-            pwd: 'md5',
-            admin: true,
-            accessToken: 'tmp',
-            createdAt: '2017-11-11'
-        }, (error, results) => {
-        });
+        initDBData();
     });
 
 
     return callback(null, db);
+};
+
+/**
+ * 初始化 数据库数据
+ *
+ * 1. 创建admin账号
+ */
+const initDBData = () => {
+
+    /**
+     * 1. 判断是否存在admin用户
+     * 2. 不存在的话创建admin
+     */
+    findUser({
+        account: 'admin'
+    }).then((user) => {
+        if (!isArrayEmpty(user)) {
+            LogUtil.i('default admin account is exit!');
+            return;
+        }
+        return createUser(USER_ADMIN);
+    }).catch(() => {
+        LogUtil.e('create default admin account failed!');
+    });
 };

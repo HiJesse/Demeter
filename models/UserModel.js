@@ -2,6 +2,7 @@
 import Mongoose from "mongoose";
 import * as LogUtil from "../util/LogUtil";
 import {isObjectEmpty} from "../util/CheckerUtil";
+import {md5} from "../util/EncryptUtil";
 const Schema = Mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -25,6 +26,7 @@ let UserModel;
 export const userModel = (orm, db) => {
     LogUtil.i('DB created');
     UserModel = db.define('user', {
+        id: {type: 'serial', key: true},
         nickName: {type: "text", size: 10, defaultValue: "匿名"},
         account: {type: 'text', size: 10, required: true, unique: true},
         pwd: {type: 'text', required: true},
@@ -46,6 +48,20 @@ export const userModel = (orm, db) => {
     });
 };
 
+const TAG = 'UserModel';
+
+/**
+ * 默认管理员用户信息
+ */
+export const USER_ADMIN = {
+    nickName: 'admin',
+    account: 'admin',
+    pwd: md5('a123456'),
+    admin: true,
+    accessToken: 'tmp',
+    createdAt: '2017-11-11'
+};
+
 /**
  * 获取用户model实例
  * @returns {*}
@@ -56,3 +72,33 @@ export const getUserModel = () => {
     }
     return UserModel;
 };
+
+/**
+ * 根据参数查找用户
+ * @param params
+ */
+export const findUser = params => new Promise((resolve, reject) => {
+    getUserModel().find(params, (err, results) => {
+        if (err) {
+            LogUtil.e(`${TAG} findUser ${err}`);
+            reject({findUserError: true});
+        } else {
+            resolve(results);
+        }
+    });
+});
+
+/**
+ * 创建用户
+ * @param params
+ */
+export const createUser = params => new Promise((resolve, reject) => {
+    getUserModel().create(params, (err, results) => {
+        if (err) {
+            LogUtil.e(`${TAG} createUser ${err}`);
+            reject({createUserError: false});
+        } else {
+            resolve(results);
+        }
+    });
+});
