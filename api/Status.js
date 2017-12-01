@@ -20,7 +20,6 @@ export const RES_MSG_NOT_ADMIN = '权限不足';
 // 账号不存在
 export const RES_FAILED_USER_NONE = 1000;
 export const RES_MSG_USER_NONE = '账号不存在';
-export const RES_MSG_USER_NONE_PWD = '旧密码不正确';
 // 账号或密码不存在
 export const RES_FAILED_USER_ERR_PWD = 1001;
 export const RES_MSG_USER_ERR_PWD = '账号或密码不正确';
@@ -60,6 +59,9 @@ export const RES_MSG_LOGIN = '登录失败';
 // 查询用户信息失败
 export const RES_FAILED_FIND_USER_INFO = 1013;
 export const RES_MSG_FIND_USER_INFO = '查询用户信息失败';
+// 用户信息不存在
+export const RES_FAILED_USER_IS_NOT_EXIST = 1014;
+export const RES_MSG_USER_IS_NOT_EXIST = '用户不存在';
 
 //------------项目
 

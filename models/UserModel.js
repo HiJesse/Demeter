@@ -1,7 +1,7 @@
 // user model
 import Mongoose from "mongoose";
 import * as LogUtil from "../util/LogUtil";
-import {isObjectEmpty} from "../util/CheckerUtil";
+import {isArrayEmpty, isObjectEmpty} from "../util/CheckerUtil";
 import {md5} from "../util/EncryptUtil";
 const Schema = Mongoose.Schema;
 
@@ -99,6 +99,65 @@ export const createUser = params => new Promise((resolve, reject) => {
             reject({createUserError: false});
         } else {
             resolve(results);
+        }
+    });
+});
+
+/**
+ * 判断用户是否存在
+ *
+ * 异常返回 isUserExistError
+ * 用户不存在返回 userNotExist
+ *
+ * @param params
+ */
+export const isUserExist = params => new Promise((resolve, reject) => {
+    getUserModel().find(params, (err, results) => {
+        if (err) {
+            LogUtil.e(`${TAG} isUserExist ${err}`);
+            reject({isUserExistError: true});
+        } else if (isArrayEmpty(results)) {
+            reject({userNotExist: true});
+        } else {
+            resolve(results[0]);
+        }
+    });
+});
+
+/**
+ * 保存用户信息 将callback转为 promise
+ * @param user
+ */
+export const saveUserInfo = user => new Promise((resolve, reject) => {
+    user.save(err => {
+        if (err) {
+            LogUtil.e(`${TAG} saveUserInfo ${err}`);
+            reject({saveUserInfoError: true});
+        }
+        resolve();
+    });
+});
+
+/**
+ * 判断用户是否为管理员
+ *
+ * 异常返回 isAdminUserError
+ * 用户不存在返回 userNotExist
+ * 不是管理员返回 isNotAdmin
+ *
+ * @param params
+ */
+export const isAdminUser = params => new Promise((resolve, reject) => {
+    getUserModel().find(params, (err, results) => {
+        if (err) {
+            LogUtil.e(`${TAG} isAdminUser ${err}`);
+            reject({isAdminUserError: true});
+        } else if (isArrayEmpty(results)) {
+            reject({userNotExist: true});
+        } else if (results[0].admin) {
+            resolve(results[0]);
+        } else {
+            reject({isNotAdmin: true});
         }
     });
 });

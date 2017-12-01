@@ -1,57 +1,6 @@
 // base user api
 import UserModel from "../../../models/UserModel";
-import {
-    RES_FAILED,
-    RES_FAILED_USER_ERR_PWD,
-    RES_FAILED_USER_NONE,
-    RES_MSG_USER_ERR_PWD,
-    RES_MSG_USER_NONE,
-    RES_MSG_USER_NONE_PWD,
-    RES_SUCCEED
-} from "../../Status";
 import {isArrayEmpty, isStringEmpty} from "../../../util/CheckerUtil";
-
-
-/**
- * 验证账号密码是否存在, 并返回不同状态, 兼容根据uId和account查询
- * @param isLogin 是否登录, true account, false uId
- * @param account | uId
- * @param password
- * @param callback
- */
-export const verifyUser = (isLogin, account, password, callback) => {
-    let status = RES_FAILED;
-    let msg = null;
-    let userData = {};
-    const params = {};
-    if (isLogin) {
-        params._id = account;
-    } else {
-        params.account = account;
-    }
-
-    UserModel.find(params, (err, data) => {
-        if (data.length === 1) {
-            const pwd = data[0].pwd;
-            if (pwd === password) {
-                status = RES_SUCCEED;
-                userData = data[0];
-            } else {
-                status = RES_FAILED_USER_ERR_PWD;
-                msg = RES_MSG_USER_ERR_PWD;
-            }
-        } else {
-            status = RES_FAILED_USER_NONE;
-            msg = isLogin ? RES_MSG_USER_NONE_PWD : RES_MSG_USER_NONE;
-        }
-
-        callback({
-            status: status,
-            msg: msg,
-            data: userData
-        })
-    });
-};
 
 /**
  * 根据params参数判读该用户是否存在

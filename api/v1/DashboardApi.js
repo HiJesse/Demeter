@@ -30,6 +30,10 @@ export const fetchDashboard = (req, res) => {
         projectCount: 0
     };
 
+    //TODO 先返回成功, 重构完项目模块后再修改
+    res.json(buildResponse(RES_SUCCEED, result, ''));
+    return;
+
     let status = RES_FAILED_FETCH_DASHBOARD;
     let msg = RES_MSG_FETCH_DASHBOARD;
 

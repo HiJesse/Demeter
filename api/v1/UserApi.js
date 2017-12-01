@@ -1,8 +1,7 @@
 // user api
 import {buildResponse} from "../../util/AjaxUtil";
-import UserModel, {findUser} from "../../models/UserModel";
+import UserModel, {findUser, isAdminUser, isUserExist, saveUserInfo} from "../../models/UserModel";
 import {
-    RES_FAILED,
     RES_FAILED_COUNT_USER,
     RES_FAILED_CREATE_USER,
     RES_FAILED_DELETE_USER,
@@ -17,6 +16,7 @@ import {
     RES_FAILED_UPDATE_USER_INFO,
     RES_FAILED_USER_ERR_PWD,
     RES_FAILED_USER_IS_EXIST,
+    RES_FAILED_USER_IS_NOT_EXIST,
     RES_FAILED_USER_NONE,
     RES_MSG_COUNT_USER,
     RES_MSG_CREATE_USER,
@@ -32,20 +32,13 @@ import {
     RES_MSG_UPDATE_USER_INFO,
     RES_MSG_USER_ERR_PWD,
     RES_MSG_USER_IS_EXIST,
+    RES_MSG_USER_IS_NOT_EXIST,
     RES_MSG_USER_NONE,
     RES_SUCCEED
 } from "../Status";
 import {isArrayEmpty, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import {md5} from "../../util/EncryptUtil";
-import {
-    countUsers,
-    findUsersByPage,
-    isAdmin,
-    isUserExist,
-    isUserNotExist,
-    updateUserInfoByIdOrAccount,
-    verifyUser
-} from "./base/BaseUserApi";
+import {countUsers, findUsersByPage, isAdmin, isUserNotExist, updateUserInfoByIdOrAccount} from "./base/BaseUserApi";
 import * as LogUtil from "../../util/LogUtil";
 import {createJsonWebToken} from "../../util/WebTokenUtil";
 
@@ -77,11 +70,10 @@ export const login = (req, res) => {
 
     findUser({
         account: account,
-        pwd: password
     }).then(results => {
         handleLoginResult(req, res, results);
     }).catch(err => {
-        LogUtil.e(`${TAG} login ${err}`)
+        LogUtil.e(`${TAG} login ${JSON.stringify(err)}`);
         if (isObjectEmpty(err)) {
             status = RES_FAILED_LOGIN;
             msg = RES_FAILED_LOGIN;
@@ -93,6 +85,12 @@ export const login = (req, res) => {
     });
 };
 
+/**
+ * 处理登录信息结果
+ * @param req
+ * @param res
+ * @param results
+ */
 const handleLoginResult = (req, res, results) => {
     if (isArrayEmpty(results)) {
         res.json(buildResponse(RES_FAILED_USER_NONE, {}, RES_MSG_USER_NONE));
@@ -114,73 +112,113 @@ const handleLoginResult = (req, res, results) => {
 };
 
 /**
- * 修改密码接口, 兼容未登录模式和登录模式
- * @param req (account | uId)/password/newPassword
+ * 修改密码
+ *
+ * 兼容登录和非登录, 登录使用uId 非登录使用account
+ *
+ * 1. 判断用户是否存在
+ * 2. 判断用户密码是否正确
+ * 3. 保存用户新密码
+ *
+ * @param req
  * @param res
  */
 export const modifyPassword = (req, res) => {
-    let isLogin = false;
-    let account = req.body.account;
+    const account = req.body.account;
+    const uId = req.body.uId;
     const password = req.body.password;
     const newPassword = req.body.newPassword;
-    const updateParams = {pwd: password};
 
-    if (isStringEmpty(account)) {
-        account = req.body.uId;
-        updateParams._id = account;
-        isLogin = true;
-    } else {
-        updateParams.account = account;
+    LogUtil.i(`${TAG} modifyPassword ${account} ${uId}`);
+
+    // 密码校验
+    if (isStringEmpty(password) || isStringEmpty(newPassword)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
     }
 
-    verifyUser(isLogin, account, password, (val) => {
-        if (val.status !== RES_SUCCEED) {
-            res.json(buildResponse(val.status, {}, val.msg));
-            return;
+    let userParams = {};
+
+    // 用户标识校验
+    if (isStringEmpty(account) && isStringEmpty(uId)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    } else if (isStringEmpty(account)) {
+        userParams.id = uId;
+    } else {
+        userParams.account = account;
+    }
+
+    let status = RES_FAILED_MODIFY_PWD;
+    let msg = RES_MSG_MODIFY_PWD;
+
+    isUserExist(userParams).then(result => {
+        if (result.pwd !== password) { // 如果密码不匹配 则结束
+            throw {invalidPassword: true};
         }
-
-        let status = RES_FAILED_MODIFY_PWD;
-        let msg = RES_MSG_MODIFY_PWD;
-
-        UserModel.update(updateParams, {
-            $set: {pwd: newPassword}
-        }, {upsert: false}, (error) => {
-            if (!error) {
-                status = RES_SUCCEED;
-                msg = null;
-            }
-            res.json(buildResponse(status, {}, msg));
-        });
+        result.pwd = newPassword;
+        return saveUserInfo(result);
+    }).then(() => {
+        res.json(buildResponse(RES_SUCCEED, {}, '密码修改成功'));
+    }).catch(err => {
+        LogUtil.e(`${TAG} modifyPassword ${JSON.stringify(err)}`);
+        if (isObjectEmpty(err)) {
+            status = RES_FAILED_MODIFY_PWD;
+            msg = RES_MSG_MODIFY_PWD;
+        } else if (err.userNotExist) {
+            status = RES_FAILED_USER_IS_NOT_EXIST;
+            msg = RES_MSG_USER_IS_NOT_EXIST;
+        } else if (err.invalidPassword) {
+            status = RES_FAILED_USER_ERR_PWD;
+            msg = RES_MSG_USER_ERR_PWD;
+        } else if (err.saveUserInfoError) {
+            status = RES_FAILED_UPDATE_USER_INFO;
+            msg = RES_MSG_UPDATE_USER_INFO;
+        }
+        res.json(buildResponse(status, {}, msg));
     });
 };
 
 /**
  * 根据uId获取用户信息
+ *
+ * 1. 判断用户是否存在
+ * 2. 返回用户信息
+ *
  * @param req
  * @param res
  */
 export const getUserInfo = (req, res) => {
     const uId = req.query.uId;
-    let status = RES_FAILED;
-    let msg = null;
-    let userData = {};
 
-    UserModel.find({
-        _id: uId,
-    }, (err, data) => {
-        if (data.length === 1) {
-            status = RES_SUCCEED;
-            userData = data[0];
-        } else {
-            status = RES_FAILED_USER_NONE;
-            msg = RES_MSG_USER_NONE;
-        }
+    LogUtil.i(`${TAG} getUserInfo ${uId}`);
 
-        res.json(buildResponse(status, {
-            nickName: userData.nickName,
-            isAdmin: userData.isAdmin,
-            account: userData.account
+    if (isStringEmpty(uId)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
+
+    let status = RES_FAILED_FIND_USER_INFO;
+    let msg = RES_MSG_FIND_USER_INFO;
+
+    isUserExist({
+        id: uId,
+    }).then(result => {
+        res.json(buildResponse(RES_SUCCEED, {
+            nickName: result.nickName,
+            isAdmin: result.admin,
+            account: result.account
         }, msg));
+    }).catch(err => {
+        LogUtil.e(`${TAG} getUserInfo ${JSON.stringify(err)}`);
+        if (isObjectEmpty(err)) {
+            status = RES_FAILED_LOGIN;
+            msg = RES_FAILED_LOGIN;
+        } else if (err.userNotExist) {
+            status = RES_FAILED_USER_IS_NOT_EXIST;
+            msg = RES_MSG_USER_IS_NOT_EXIST;
+        }
+        res.json(buildResponse(status, {}, msg));
     });
 };
 
@@ -259,41 +297,54 @@ export const createUser = (req, res) => {
 
 /**
  * 根据account重置用户密码
+ *
+ * 1. 权限校验
+ * 2. 校验被重置用户是否存在
+ * 3. 重置用户密码
+ *
  * @param req
  * @param res
  */
 export const resetPassword = (req, res) => {
     const account = req.body.account;
     const uId = req.body.uId;
-    const params = {
-        account: account
-    };
-    const adminParams = {
-        _id: uId
-    };
+
+    LogUtil.i(`${TAG} resetPassword ${uId} ${account}`);
+
+    if (isStringEmpty(uId) || isStringEmpty(account)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
 
     let status = RES_FAILED_RESET_PASSWORD;
     let msg = RES_MSG_RESET_PASSWORD;
 
-    isAdmin(adminParams).then(() => {
-        return isUserExist(params);
+    isAdminUser({
+        id: uId
     }).then(() => {
-        UserModel.update(params, {
-            $set: {pwd: md5('a123456')}
-        }, {upsert: false}, (error) => {
-            if (!error) {
-                status = RES_SUCCEED;
-                msg = null;
-            }
-            res.json(buildResponse(status, {}, msg));
-        });
-    }).catch((error) => {
-        if (error.isAdmin === false) {
+        return isUserExist({account: account});
+    }).then((result) => {
+        result.pwd = md5('a123456');
+        return saveUserInfo(result);
+    }).then(() => {
+        res.json(buildResponse(RES_SUCCEED, {}, '重置成功'));
+    }).catch((err) => {
+        LogUtil.e(`${TAG} resetPassword ${JSON.stringify(err)}`);
+        if (isObjectEmpty(err)) {
+            status = RES_FAILED_RESET_PASSWORD;
+            msg = RES_MSG_RESET_PASSWORD;
+        } else if (err.isAdminUserError) {
+            status = RES_FAILED_FIND_USER_INFO;
+            msg = RES_MSG_FIND_USER_INFO;
+        } else if (err.userNotExist) {
+            status = RES_FAILED_USER_IS_NOT_EXIST;
+            msg = RES_MSG_USER_IS_NOT_EXIST;
+        } else if (err.isNotAdmin) {
             status = RES_FAILED_NOT_ADMIN;
             msg = RES_MSG_NOT_ADMIN;
-        } else if (error.isUserExist === false) {
-            status = RES_FAILED_USER_NONE;
-            msg = RES_MSG_USER_NONE;
+        } else if (err.saveUserInfoError) {
+            status = RES_FAILED_UPDATE_USER_INFO;
+            msg = RES_MSG_UPDATE_USER_INFO;
         }
         res.json(buildResponse(status, {}, msg));
     });
