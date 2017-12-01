@@ -23,7 +23,7 @@ router.get('/user/getUserInfo', user.getUserInfo);
 router.post('/user/updateGeneralInfo', user.updateUserInfo);
 
 // 创建用户
-router.post('/user/createUser', user.createUser);
+router.post('/user/createUser', user.createUserInfo);
 
 // 重置用户密码
 router.post('/user/resetPassword', user.resetPassword);

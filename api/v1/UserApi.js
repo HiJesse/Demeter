@@ -1,6 +1,6 @@
 // user api
 import {buildResponse} from "../../util/AjaxUtil";
-import UserModel, {findUser, isAdminUser, isUserExist, saveUserInfo} from "../../models/UserModel";
+import UserModel, {createUser, findUser, isAdminUser, isUserExist, saveUserInfo} from "../../models/UserModel";
 import {
     RES_FAILED_COUNT_USER,
     RES_FAILED_CREATE_USER,
@@ -38,7 +38,7 @@ import {
 } from "../Status";
 import {isArrayEmpty, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import {md5} from "../../util/EncryptUtil";
-import {countUsers, findUsersByPage, isAdmin, isUserNotExist, updateUserInfoByIdOrAccount} from "./base/BaseUserApi";
+import {countUsers, findUsersByPage, isAdmin, updateUserInfoByIdOrAccount} from "./base/BaseUserApi";
 import * as LogUtil from "../../util/LogUtil";
 import {createJsonWebToken} from "../../util/WebTokenUtil";
 
@@ -224,6 +224,10 @@ export const getUserInfo = (req, res) => {
 
 /**
  * 根据uId更新用户基本信息
+ *
+ * 1. uId用户是否存在
+ * 2. 更新昵称
+ *
  * @param req
  * @param res
  */
@@ -231,17 +235,34 @@ export const updateUserInfo = (req, res) => {
     const uId = req.body.uId;
     const nickName = req.body.nickName;
 
+    LogUtil.i(`${TAG} updateUserInfo ${uId} ${nickName}`);
+
+    if (isStringEmpty(uId) || isStringEmpty(nickName)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
+
     let status = RES_FAILED_UPDATE_USER_INFO;
     let msg = RES_MSG_UPDATE_USER_INFO;
 
-    UserModel.update({
-        _id: uId
-    }, {
-        $set: {nickName: nickName}
-    }, {upsert: false}, (error) => {
-        if (!error) {
-            status = RES_SUCCEED;
-            msg = null;
+    isUserExist({
+        id: uId,
+    }).then(result => {
+        result.nickName = nickName;
+        return saveUserInfo(result);
+    }).then(() => {
+        res.json(buildResponse(RES_SUCCEED, {}, '更新成功'));
+    }).catch(err => {
+        LogUtil.e(`${TAG} updateUserInfo ${JSON.stringify(err)}`);
+        if (isObjectEmpty(err)) {
+            status = RES_FAILED_UPDATE_USER_INFO;
+            msg = RES_MSG_UPDATE_USER_INFO;
+        } else if (err.userNotExist) {
+            status = RES_FAILED_USER_IS_NOT_EXIST;
+            msg = RES_MSG_USER_IS_NOT_EXIST;
+        } else if (err.isUserExistError) {
+            status = RES_FAILED_FIND_USER_INFO;
+            msg = RES_MSG_FIND_USER_INFO;
         }
         res.json(buildResponse(status, {}, msg));
     });
@@ -255,39 +276,49 @@ export const updateUserInfo = (req, res) => {
  * @param req
  * @param res
  */
-export const createUser = (req, res) => {
+export const createUserInfo = (req, res) => {
     const account = req.body.account;
     const uId = req.body.uId;
 
-    const params = {
-        account: account,
-        pwd: md5('a123456')
-    };
-    const adminParams = {
-        _id: uId
-    };
+    LogUtil.i(`${TAG} createUser ${uId} ${account}`);
+
+    if (isStringEmpty(uId) || isStringEmpty(account)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
 
     let status = RES_FAILED_CREATE_USER;
     let msg = RES_MSG_CREATE_USER;
 
-    isAdmin(adminParams).then(() => {
-        return isUserNotExist({account: account});
+    isAdminUser({
+        id: uId
     }).then(() => {
-        UserModel.create(params, (error) => {
-            if (!error) {
-                status = RES_SUCCEED;
-                msg = null;
-            }
-            res.json(buildResponse(status, {}, msg));
-        });
-    }).catch((error) => {
-        if (isObjectEmpty(error)) {
+        return findUser({account: account});
+    }).then((results) => {
+        if (!isArrayEmpty(results)) {
+            throw {isUserExist: true}; // 用户已经存在
+        }
+        return createUser({
+            account: account,
+            pwd: md5('a123456'),
+            admin: false,
+            accessToken: 'tmp',
+            createdAt: '2017-11-11'
+        })
+    }).then(() => {
+        res.json(buildResponse(RES_SUCCEED, {}, '创建成功'));
+    }).catch((err) => {
+        LogUtil.e(`${TAG} createUser ${JSON.stringify(err)}`);
+        if (isObjectEmpty(err)) {
             status = RES_FAILED_CREATE_USER;
             msg = RES_MSG_CREATE_USER;
-        } else if (error.isAdmin === false) {
+        } else if (err.isAdminUserError || err.findUserError) {
+            status = RES_FAILED_FIND_USER_INFO;
+            msg = RES_MSG_FIND_USER_INFO;
+        } else if (err.isNotAdmin) {
             status = RES_FAILED_NOT_ADMIN;
             msg = RES_MSG_NOT_ADMIN;
-        } else if (error.isUserNotExist === false) {
+        } else if (err.isUserExist) {
             status = RES_FAILED_USER_IS_EXIST;
             msg = RES_MSG_USER_IS_EXIST;
         }
