@@ -1,7 +1,9 @@
 // user api
 import {buildResponse} from "../../util/AjaxUtil";
-import UserModel, {
+import orm from "orm";
+import {
     createUser,
+    deleteUser,
     findUser,
     findUserByPage,
     isAdminUser,
@@ -41,7 +43,6 @@ import {
 } from "../Status";
 import {isArrayEmpty, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import {md5} from "../../util/EncryptUtil";
-import {isAdmin, updateUserInfoByIdOrAccount} from "./base/BaseUserApi";
 import * as LogUtil from "../../util/LogUtil";
 import {createJsonWebToken} from "../../util/WebTokenUtil";
 
@@ -401,12 +402,7 @@ export const fetchUserList = (req, res) => {
 
     LogUtil.i(`${TAG} fetchUserList ${uId} ${accountSearch} ${pageNum}`);
 
-    if (isStringEmpty(uId) || isStringEmpty(accountSearch)) {
-        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
-        return;
-    }
-
-    if (pageSize < 0 || pageNum < 0) {
+    if (isStringEmpty(uId) || pageSize < 0 || pageNum < 0) {
         res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
         return;
     }
@@ -414,10 +410,13 @@ export const fetchUserList = (req, res) => {
     let status = RES_FAILED_FETCH_USER_LIST;
     let msg = RES_MSG_FETCH_USER_LIST;
 
+    const accountLike = isStringEmpty(accountSearch) || accountSearch === 'null' ? '%' : accountSearch + '%';
+    LogUtil.i(accountLike);
+
     isAdminUser({
         id: uId
     }).then(() => {
-        return findUserByPage({}, pageSize, pageNum);
+        return findUserByPage({account: orm.like(accountLike)}, pageSize, pageNum);
     }).then((allUserInfo) => {
         res.json(buildResponse(RES_SUCCEED, {
             userList: allUserInfo,
@@ -425,6 +424,7 @@ export const fetchUserList = (req, res) => {
             pageNum: pageNum
         }, '查询成功'));
     }).catch((err) => {
+        LogUtil.e(`${TAG} fetchUserList ${JSON.stringify(err)}`);
         if (isObjectEmpty(err)) {
             status = RES_FAILED_FETCH_USER_LIST;
             msg = RES_MSG_FETCH_USER_LIST;
@@ -444,32 +444,51 @@ export const fetchUserList = (req, res) => {
 
 /**
  * 删除用户
+ *
+ * 1. 判断管理员权限
+ * 2. 禁止删除管理员账户
+ * 3. 删除账户
+ *
  * @param req
  * @param res
  */
-export const deleteUser = (req, res) => {
+export const deleteUserInfo = (req, res) => {
     const uId = req.body.uId;
     const account = req.body.account;
-    const adminParams = {
-        _id: uId
-    };
+
+    LogUtil.i(`${TAG} deleteUser ${uId} ${account}`);
+
+    if (isStringEmpty(uId) || isStringEmpty(account)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
 
     let status = RES_FAILED_DELETE_USER;
     let msg = RES_MSG_DELETE_USER;
 
 
-    isAdmin(adminParams).then(() => {
-        UserModel.remove({
-            account: account
-        }, (err) => {
-            if (!err) {
-                status = RES_SUCCEED;
-                msg = null;
-            }
-            res.json(buildResponse(status, {}, msg));
-        });
-    }).catch((error) => {
-        if (error.isAdmin === false) {
+    isAdminUser({
+        id: uId
+    }).then((result) => {
+        // 禁止删除的是管理员账户
+        if (result.account === account) {
+            throw {isAdminAccount: true}
+        }
+        return deleteUser({account: account});
+    }).then(() => {
+        res.json(buildResponse(RES_SUCCEED, {}, '删除成功'));
+    }).catch((err) => {
+        LogUtil.e(`${TAG} fetchUserList ${JSON.stringify(err)}`);
+        if (isObjectEmpty(err)) {
+            status = RES_FAILED_DELETE_USER;
+            msg = RES_MSG_DELETE_USER;
+        } else if (err.isAdminUserError) {
+            status = RES_FAILED_FIND_USER_INFO;
+            msg = RES_MSG_FIND_USER_INFO;
+        } else if (err.userNotExist) {
+            status = RES_FAILED_USER_IS_NOT_EXIST;
+            msg = RES_MSG_USER_IS_NOT_EXIST;
+        } else if (err.isNotAdmin || err.isAdminAccount) {
             status = RES_FAILED_NOT_ADMIN;
             msg = RES_MSG_NOT_ADMIN;
         }
@@ -490,27 +509,42 @@ export const updateUserInfoByAdmin = (req, res) => {
     const account = req.body.account;
     const nickname = req.body.nickname;
 
+    LogUtil.i(`${TAG} updateUserInfoByAdmin ${uId} ${account} ${nickname}`);
+
+    if (isStringEmpty(uId) || isStringEmpty(account) || isStringEmpty(nickname)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
+
     let status = RES_FAILED_UPDATE_USER_INFO;
     let msg = RES_MSG_UPDATE_USER_INFO;
 
-    isAdmin({_id: uId}).then(() => {
+    isAdminUser({
+        id: uId
+    }).then(() => {
         return isUserExist({account: account});
+    }).then((result) => {
+        result.nickName = nickname;
+        return saveUserInfo(result);
     }).then(() => {
-        return updateUserInfoByIdOrAccount(null, account, {nickName: nickname})
-    }).then(() => {
-        status = RES_SUCCEED;
-        msg = null;
-        res.json(buildResponse(status, {}, msg));
-    }).catch((error) => {
-        if (isObjectEmpty(error)) {
+        res.json(buildResponse(RES_SUCCEED, {}, '更新成功'));
+    }).catch((err) => {
+        LogUtil.e(`${TAG} updateUserInfoByAdmin ${JSON.stringify(err)}`);
+        if (isObjectEmpty(err)) {
             status = RES_FAILED_UPDATE_USER_INFO;
             msg = RES_MSG_UPDATE_USER_INFO;
-        } else if (error.isAdmin === false) {
+        } else if (err.isAdminUserError) {
+            status = RES_FAILED_FIND_USER_INFO;
+            msg = RES_MSG_FIND_USER_INFO;
+        } else if (err.userNotExist) {
+            status = RES_FAILED_USER_IS_NOT_EXIST;
+            msg = RES_MSG_USER_IS_NOT_EXIST;
+        } else if (err.isNotAdmin) {
             status = RES_FAILED_NOT_ADMIN;
             msg = RES_MSG_NOT_ADMIN;
-        } else if (error.isUserExist === false) {
-            status = RES_FAILED_USER_NONE;
-            msg = RES_MSG_USER_NONE;
+        } else if (err.saveUserInfoError) {
+            status = RES_FAILED_UPDATE_USER_INFO;
+            msg = RES_MSG_UPDATE_USER_INFO;
         }
         res.json(buildResponse(status, {}, msg));
     });

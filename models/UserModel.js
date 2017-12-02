@@ -188,3 +188,18 @@ export const findUserByPage = (findParams, pageSize, pageNum) => new Promise((re
         });
     });
 });
+
+/**
+ * 删除用户
+ * @param params
+ */
+export const deleteUser = params => new Promise((resolve, reject) => {
+    getUserModel().find(params).remove((err) => {
+        if (err) {
+            LogUtil.e(`${TAG} deleteUser ${err}`);
+            reject({deleteUserError: true});
+        } else {
+            resolve();
+        }
+    });
+});

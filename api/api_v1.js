@@ -35,7 +35,7 @@ router.get('/user/fetchUserList', user.fetchUserList);
 router.post('/user/updateUser', user.updateUserInfoByAdmin);
 
 // 删除用户
-router.post('/user/deleteUser', user.deleteUser);
+router.post('/user/deleteUser', user.deleteUserInfo);
 
 /*项目相关*/
 
