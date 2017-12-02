@@ -161,3 +161,30 @@ export const isAdminUser = params => new Promise((resolve, reject) => {
         }
     });
 });
+
+/**
+ * 按页查找用户列表
+ * @param findParams 查找参数
+ * @param pageSize 一页容量
+ * @param pageNum 页码
+ */
+export const findUserByPage = (findParams, pageSize, pageNum) => new Promise((resolve, reject) => {
+    const user = getUserModel();
+
+    user.settings.set("pagination.perpage", pageSize);
+
+    user.pages(findParams, (err, pages) => {
+        if (err) {
+            LogUtil.e(`${TAG} findUserByPage pages ${err}`);
+            reject({findUserByPage: true})
+        }
+
+        user.page(findParams, pageNum).order("account").run(function (err, people) {
+            if (err) {
+                LogUtil.e(`${TAG} findUserByPage page ${err}`);
+                reject({findUserByPage: true})
+            }
+            resolve(people);
+        });
+    });
+});

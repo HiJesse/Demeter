@@ -1,14 +1,19 @@
 // user api
 import {buildResponse} from "../../util/AjaxUtil";
-import UserModel, {createUser, findUser, isAdminUser, isUserExist, saveUserInfo} from "../../models/UserModel";
+import UserModel, {
+    createUser,
+    findUser,
+    findUserByPage,
+    isAdminUser,
+    isUserExist,
+    saveUserInfo
+} from "../../models/UserModel";
 import {
-    RES_FAILED_COUNT_USER,
     RES_FAILED_CREATE_USER,
     RES_FAILED_DELETE_USER,
     RES_FAILED_FETCH_USER_LIST,
     RES_FAILED_FIND_USER_INFO,
     RES_FAILED_LOGIN,
-    RES_FAILED_MATCHED_USER_LIST,
     RES_FAILED_MODIFY_PWD,
     RES_FAILED_NOT_ADMIN,
     RES_FAILED_PARAMS_INVALID,
@@ -18,13 +23,11 @@ import {
     RES_FAILED_USER_IS_EXIST,
     RES_FAILED_USER_IS_NOT_EXIST,
     RES_FAILED_USER_NONE,
-    RES_MSG_COUNT_USER,
     RES_MSG_CREATE_USER,
     RES_MSG_DELETE_USER,
     RES_MSG_FETCH_USER_LIST,
     RES_MSG_FIND_USER_INFO,
     RES_MSG_LOGIN,
-    RES_MSG_MATCHED_USER_LIST,
     RES_MSG_MODIFY_PWD,
     RES_MSG_NOT_ADMIN,
     RES_MSG_PARAMS_INVALID,
@@ -38,7 +41,7 @@ import {
 } from "../Status";
 import {isArrayEmpty, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import {md5} from "../../util/EncryptUtil";
-import {countUsers, findUsersByPage, isAdmin, updateUserInfoByIdOrAccount} from "./base/BaseUserApi";
+import {isAdmin, updateUserInfoByIdOrAccount} from "./base/BaseUserApi";
 import * as LogUtil from "../../util/LogUtil";
 import {createJsonWebToken} from "../../util/WebTokenUtil";
 
@@ -383,7 +386,10 @@ export const resetPassword = (req, res) => {
 
 /**
  * 根据页码和页面容量获取用户列表
- * 先判断uid是否为管理员, 再获取用户总数, 再根据页码信息查询用户列表
+ *
+ * 1. 是否为管理员
+ * 2. 分页查询
+ *
  * @param req
  * @param res
  */
@@ -392,41 +398,45 @@ export const fetchUserList = (req, res) => {
     const pageSize = Number(req.query.pageSize);
     const pageNum = Number(req.query.pageNum);
     const accountSearch = req.query.accountSearch;
-    let userCount = -1;
-    const adminParams = {
-        _id: uId
-    };
+
+    LogUtil.i(`${TAG} fetchUserList ${uId} ${accountSearch} ${pageNum}`);
+
+    if (isStringEmpty(uId) || isStringEmpty(accountSearch)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
+
+    if (pageSize < 0 || pageNum < 0) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
 
     let status = RES_FAILED_FETCH_USER_LIST;
     let msg = RES_MSG_FETCH_USER_LIST;
 
-
-    isAdmin(adminParams).then(() => {
-        return countUsers(accountSearch);
-    }).then((data) => {
-        userCount = data.userCount;
-        return findUsersByPage(pageSize, pageNum, accountSearch);
+    isAdminUser({
+        id: uId
+    }).then(() => {
+        return findUserByPage({}, pageSize, pageNum);
     }).then((allUserInfo) => {
-        status = RES_SUCCEED;
-        msg = null;
-        res.json(buildResponse(status, {
+        res.json(buildResponse(RES_SUCCEED, {
             userList: allUserInfo,
-            userCount: userCount,
+            userCount: isArrayEmpty(allUserInfo) ? 0 : allUserInfo.length,
             pageNum: pageNum
-        }, msg));
-    }).catch((error) => {
-        if (isObjectEmpty(error)) {
+        }, '查询成功'));
+    }).catch((err) => {
+        if (isObjectEmpty(err)) {
             status = RES_FAILED_FETCH_USER_LIST;
             msg = RES_MSG_FETCH_USER_LIST;
-        } else if (error.isAdmin === false) {
+        } else if (err.isAdminUserError) {
+            status = RES_FAILED_FIND_USER_INFO;
+            msg = RES_MSG_FIND_USER_INFO;
+        } else if (err.userNotExist) {
+            status = RES_FAILED_USER_IS_NOT_EXIST;
+            msg = RES_MSG_USER_IS_NOT_EXIST;
+        } else if (err.isNotAdmin) {
             status = RES_FAILED_NOT_ADMIN;
             msg = RES_MSG_NOT_ADMIN;
-        } else if (error.userCount === -1) {
-            status = RES_FAILED_COUNT_USER;
-            msg = RES_MSG_COUNT_USER;
-        } else if (error.hasMatchedUser === false) {
-            status = RES_FAILED_MATCHED_USER_LIST;
-            msg = RES_MSG_MATCHED_USER_LIST;
         }
         res.json(buildResponse(status, {}, msg));
     });

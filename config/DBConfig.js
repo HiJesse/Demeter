@@ -4,6 +4,7 @@ import * as Config from "./Config";
 import * as LogUtil from "../util/LogUtil";
 import {createUser, findUser, USER_ADMIN, userModel} from "../models/UserModel";
 import {isArrayEmpty} from "../util/CheckerUtil";
+import {ormPaging} from "../models/plugins/ORMPaging";
 
 /**
  * 数据库连接
@@ -59,6 +60,9 @@ export const initORM = callback => {
  * @returns {*}
  */
 const setup = (db, callback) => {
+    // 加载分页插件
+    db.use(ormPaging);
+
     userModel(orm, db);
 
     db.sync((error) => {

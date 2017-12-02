@@ -26,23 +26,6 @@ export const isUserExist = params => {
 };
 
 /**
- * 根据params参数判读该用户是否不存在
- * @param params
- * @returns {Promise}
- */
-export const isUserNotExist = params => {
-    return new Promise((resolve, reject) => {
-        UserModel.find(params, (err, data) => {
-            if (data.length === 1) {
-                reject({isUserNotExist: false});
-            } else {
-                resolve({isUserNotExist: true});
-            }
-        });
-    });
-};
-
-/**
  * 根据params参数判断该用户是否为管理员
  * @param params
  * @returns {Promise}
@@ -55,41 +38,6 @@ export const isAdmin = params => {
             } else {
                 reject({isAdmin: false});
             }
-        });
-    });
-};
-
-/**
- * 分页获取用户信息, 并支持基于账号的模糊搜索
- * @param pageSize
- * @param pageNum
- * @param accountSearch
- * @returns {Promise}
- */
-export const findUsersByPage = (pageSize, pageNum, accountSearch) => {
-    const findParams = {};
-    if (!isStringEmpty(accountSearch) && accountSearch !== 'null') {
-        findParams.account = new RegExp(accountSearch, 'i');
-    }
-
-    return new Promise((resolve, reject) => {
-        const query = UserModel.find(findParams);
-        query.skip((pageNum - 1) * pageSize);
-        query.limit(pageSize);
-        query.exec((err, data) => {
-            if (data.length < 1) {
-                reject({hasMatchedUser: false});
-                return;
-            }
-
-            const allUserInfo = data.map(function (item) {
-                return {
-                    account: item.account,
-                    nickName: item.nickName,
-                    isAdmin: item.isAdmin,
-                };
-            });
-            resolve(allUserInfo);
         });
     });
 };
