@@ -24,7 +24,6 @@ let UserModel;
  * @param db
  */
 export const userModel = (orm, db) => {
-    LogUtil.i('DB created');
     UserModel = db.define('user', {
         id: {type: 'serial', key: true},
         nickName: {type: "text", size: 10, defaultValue: "匿名"},
@@ -68,7 +67,7 @@ export const USER_ADMIN = {
  */
 export const getUserModel = () => {
     if (isObjectEmpty(UserModel)) {
-        throw {};
+        throw {userModelError: true};
     }
     return UserModel;
 };

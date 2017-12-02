@@ -5,6 +5,7 @@ import * as LogUtil from "../util/LogUtil";
 import {createUser, findUser, USER_ADMIN, userModel} from "../models/UserModel";
 import {isArrayEmpty} from "../util/CheckerUtil";
 import {ormPaging} from "../models/plugins/ORMPaging";
+import {createPlatform, findPlatform, PLATFORM_ANDROID, PLATFORM_IOS, platformModel} from "../models/PlatformModel";
 
 /**
  * 数据库连接
@@ -64,6 +65,7 @@ const setup = (db, callback) => {
     db.use(ormPaging);
 
     userModel(orm, db);
+    platformModel(orm, db);
 
     db.sync((error) => {
         if (error) {
@@ -96,7 +98,25 @@ const initDBData = () => {
             return;
         }
         return createUser(USER_ADMIN);
-    }).catch(() => {
-        LogUtil.e('create default admin account failed!');
+    }).catch(err => {
+        LogUtil.e(`create default admin account failed! ${JSON.stringify(err)}`);
     });
+
+    /**
+     * 1. 查找所有平台信息
+     * 2. 平台数量是否匹配
+     * 3. 创建android 和ios平台
+     */
+    findPlatform({}).then(platforms => {
+        if (!isArrayEmpty(platforms) && platforms.length === 2) {
+            LogUtil.i('default platform is exit!');
+        }
+        return createPlatform(PLATFORM_ANDROID);
+    }).then(() => {
+        return createPlatform(PLATFORM_IOS);
+    }).catch(err => {
+        LogUtil.e(`create default admin platform failed! ${JSON.stringify(err)}`);
+    })
+
+
 };
