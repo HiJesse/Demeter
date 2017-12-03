@@ -7,12 +7,18 @@ import {isArrayEmpty} from "../util/CheckerUtil";
 import {ormPaging} from "../models/plugins/ORMPaging";
 import {createPlatform, findPlatform, PLATFORM_ANDROID, PLATFORM_IOS, platformModel} from "../models/PlatformModel";
 import {projectModel} from "../models/ProjectModel";
+import {ormTransaction} from "../models/plugins/ORMTransaction";
 
 /**
  * 数据库连接
  * @type {null}
  */
 let connection = null;
+
+/**
+ * 获取数据库连接
+ */
+export const getConnection = () => connection;
 
 /**
  * 构建express用orm
@@ -64,6 +70,8 @@ export const initORM = callback => {
 const setup = (db, callback) => {
     // 加载分页插件
     db.use(ormPaging);
+    // 加载事务插件
+    db.use(ormTransaction);
 
     userModel(orm, db);
     platformModel(orm, db);

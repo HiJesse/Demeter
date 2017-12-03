@@ -5,6 +5,7 @@ import {isArrayEmpty, isObjectEmpty} from "../util/CheckerUtil";
 import * as LogUtil from "../util/LogUtil";
 import {findPlatform} from "./PlatformModel";
 import {md5} from "../util/EncryptUtil";
+import {getConnection} from "../config/DBConfig";
 const Schema = Mongoose.Schema;
 
 /**
@@ -66,35 +67,63 @@ export const getProjectModel = () => {
  * @param params
  */
 export const createProject = params => new Promise((resolve, reject) => {
-    getProjectModel().create(params, (err, project) => {
+    getConnection().transaction((err, transaction) => {
         if (err) {
-            LogUtil.e(`${TAG} createProject ${err}`);
+            LogUtil.e(`${TAG} createProject transaction ${err}`);
             reject({createProjectError: true});
         }
 
-        // 获取平台
-        findPlatform({}).then(platforms => {
-
-            for (let i = 0; i < platforms.length; i++) {
-                const platform = platforms[i];
-                // 遍历平台信息 新增appId 与项目关联起来
-                project.addPlatform(platform, {
-                    appId: md5(project.id + platform.id + getTimeStamp() + '')
-                }, err => {
-                    if (err) {
-                        throw err;
-                    } else if (i === platforms.length - 1) {
-                        resolve(project);
-                    }
-
-                });
+        getProjectModel().create(params, (err, project) => {
+            if (err) {
+                LogUtil.e(`${TAG} createProject ${err}`);
+                reject({createProjectError: true});
             }
-        }).catch(err => {
-            LogUtil.e(`${TAG} findPlatform ${err}`);
-            reject(err);
-        })
+
+            createProjectPlatform(project, resolve, reject);
+        });
+
+        transaction.commit(err => {
+            if (err) {
+                LogUtil.e(`${TAG} createProject transaction commit ${err}`);
+                reject({createProjectError: true});
+            }
+        });
     });
 });
+
+/**
+ * 创建项目平台信息
+ *
+ * 1. 查找已有平台信息
+ * 2. 遍历 新增appId字段
+ * 3. 添加到项目中
+ *
+ * @param project 项目实例
+ * @param resolve promise
+ * @param reject promise
+ */
+const createProjectPlatform = (project, resolve, reject) => {
+    findPlatform({}).then(platforms => {
+
+        for (let i = 0; i < platforms.length; i++) {
+            const platform = platforms[i];
+            // 遍历平台信息 新增appId 与项目关联起来
+            project.addPlatform(platform, {
+                appId: md5(project.id + platform.id + getTimeStamp() + '')
+            }, err => {
+                if (err) {
+                    throw err;
+                } else if (i === platforms.length - 1) {
+                    resolve(project);
+                }
+
+            });
+        }
+    }).catch(err => {
+        LogUtil.e(`${TAG} findPlatform ${err}`);
+        reject(err);
+    })
+};
 
 /**
  * 根据参数查找项目
