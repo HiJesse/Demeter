@@ -6,6 +6,7 @@ import {createUser, findUser, USER_ADMIN, userModel} from "../models/UserModel";
 import {isArrayEmpty} from "../util/CheckerUtil";
 import {ormPaging} from "../models/plugins/ORMPaging";
 import {createPlatform, findPlatform, PLATFORM_ANDROID, PLATFORM_IOS, platformModel} from "../models/PlatformModel";
+import {projectModel} from "../models/ProjectModel";
 
 /**
  * 数据库连接
@@ -66,6 +67,7 @@ const setup = (db, callback) => {
 
     userModel(orm, db);
     platformModel(orm, db);
+    projectModel(orm, db);
 
     db.sync((error) => {
         if (error) {
@@ -83,6 +85,7 @@ const setup = (db, callback) => {
  * 初始化 数据库数据
  *
  * 1. 创建admin账号
+ * 2. 创建默认平台信息 android & ios
  */
 const initDBData = () => {
 
@@ -109,13 +112,17 @@ const initDBData = () => {
      */
     findPlatform({}).then(platforms => {
         if (!isArrayEmpty(platforms) && platforms.length === 2) {
-            LogUtil.i('default platform is exit!');
+            throw {isPlatformExist: true};
         }
         return createPlatform(PLATFORM_ANDROID);
     }).then(() => {
         return createPlatform(PLATFORM_IOS);
     }).catch(err => {
-        LogUtil.e(`create default admin platform failed! ${JSON.stringify(err)}`);
+        if (err.isPlatformExist) {
+            LogUtil.i('default platform is exit!');
+        } else {
+            LogUtil.e(`create default admin platform failed! ${JSON.stringify(err)}`);
+        }
     })
 
 

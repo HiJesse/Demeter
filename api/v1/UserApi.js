@@ -542,9 +542,6 @@ export const updateUserInfoByAdmin = (req, res) => {
         } else if (err.isNotAdmin) {
             status = RES_FAILED_NOT_ADMIN;
             msg = RES_MSG_NOT_ADMIN;
-        } else if (err.saveUserInfoError) {
-            status = RES_FAILED_UPDATE_USER_INFO;
-            msg = RES_MSG_UPDATE_USER_INFO;
         }
         res.json(buildResponse(status, {}, msg));
     });
