@@ -28,7 +28,7 @@ class ProjectListView extends React.Component {
         const columns = this._buildColumns();
 
         return (
-            <div style={{flex: 1}}>
+            <div style={projectListViewStyle.view_all}>
                 <UpdateProjectInfoDialog
                     data={this.props.updateProjectInfo}
                     dialogVisible={this.props.updateDialogVisible}

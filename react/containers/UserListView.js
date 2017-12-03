@@ -30,7 +30,7 @@ class UserListView extends React.Component {
         const columns = this._buildColumns();
 
         return (
-            <div style={{flex: 1}}>
+            <div style={userListView.view_all}>
                 <UpdateUserInfoDialog
                     data={this.props.updateUserInfo}
                     dialogVisible={this.props.updateDialogVisible}

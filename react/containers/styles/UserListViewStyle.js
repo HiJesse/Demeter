@@ -1,4 +1,8 @@
 export const userListView = {
+    view_all: {
+        flex: 1,
+        alignSelf: 'start'
+    },
     view_search: {
         padding: 8,
         backgroundColor: '#fff',

@@ -1,4 +1,8 @@
 export const projectListViewStyle = {
+    view_all: {
+        flex: 1,
+        alignSelf: 'start'
+    },
     view_operation: {
         display: 'flex',
         justifyContent: 'space-around'
