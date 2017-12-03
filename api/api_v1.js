@@ -40,7 +40,7 @@ router.post('/user/deleteUser', user.deleteUserInfo);
 /*项目相关*/
 
 // 新建项目
-router.post('/project/createProject', ProjectLogoMulter.single('projectLogo'), project.createProject);
+router.post('/project/createProject', ProjectLogoMulter.single('projectLogo'), project.createProjectInfo);
 
 // 删除项目
 router.post('/project/deleteProject', project.deleteProject);

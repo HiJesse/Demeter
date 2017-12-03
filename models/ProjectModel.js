@@ -1,8 +1,10 @@
 // project models
 import Mongoose from "mongoose";
-import {getDate} from "../util/TimeUtil";
+import {getDate, getFullDate, getTimeStamp} from "../util/TimeUtil";
 import {isArrayEmpty, isObjectEmpty} from "../util/CheckerUtil";
 import * as LogUtil from "../util/LogUtil";
+import {findPlatform} from "./PlatformModel";
+import {md5} from "../util/EncryptUtil";
 const Schema = Mongoose.Schema;
 
 /**
@@ -31,7 +33,7 @@ export const projectModel = (orm, db) => {
         projectName: {type: "text", size: 10, unique: true},
         avatar: {type: 'text'},
         des: {type: 'text', size: 20, defaultValue: '什么都没写'},
-        createdAt: {type: 'date', time: true, defaultValue: getDate()}
+        createdAt: {type: 'date', time: true, defaultValue: getFullDate()}
     }, {
         tableName: 'project'
     });
@@ -56,28 +58,43 @@ export const getProjectModel = () => {
 
 /**
  * 根据参数创建项目
+ *
+ * 1. 创建项目
+ * 2. 获取平台信息
+ * 3. 遍历平台信息 添加appId 保存到项目信息中
+ *
  * @param params
  */
 export const createProject = params => new Promise((resolve, reject) => {
-    getProjectModel().create(params, (err, results) => {
+    getProjectModel().create(params, (err, project) => {
         if (err) {
             LogUtil.e(`${TAG} createProject ${err}`);
-            reject({createProjectError: false});
-        } else {
-            resolve(results);
+            reject({createProjectError: true});
         }
+
+        // 获取平台
+        findPlatform({}).then(platforms => {
+
+            for (let i = 0; i < platforms.length; i++) {
+                const platform = platforms[i];
+                // 遍历平台信息 新增appId 与项目关联起来
+                project.addPlatform(platform, {
+                    appId: md5(project.id + platform.id + getTimeStamp() + '')
+                }, err => {
+                    if (err) {
+                        throw err;
+                    } else if (i === platforms.length - 1) {
+                        resolve(project);
+                    }
+
+                });
+            }
+        }).catch(err => {
+            LogUtil.e(`${TAG} findPlatform ${err}`);
+            reject(err);
+        })
     });
 });
-
-/**
- * 添加项目平台信息
- * @param project 项目实例
- * @param resolve promise
- * @param reject promise
- */
-const addPlatform = (project, resolve, reject) => {
-
-};
 
 /**
  * 根据参数查找项目
@@ -112,5 +129,19 @@ export const isProjectExist = params => new Promise((resolve, reject) => {
         } else {
             resolve(results[0]);
         }
+    });
+});
+
+/**
+ * 保存项目信息 将callback转为 promise
+ * @param project
+ */
+export const saveProjectInfo = project => new Promise((resolve, reject) => {
+    project.save(err => {
+        if (err) {
+            LogUtil.e(`${TAG} saveProjectInfo ${err}`);
+            reject({saveUserInfoError: true});
+        }
+        resolve();
     });
 });

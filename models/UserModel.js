@@ -3,6 +3,7 @@ import Mongoose from "mongoose";
 import * as LogUtil from "../util/LogUtil";
 import {isArrayEmpty, isObjectEmpty} from "../util/CheckerUtil";
 import {md5} from "../util/EncryptUtil";
+import {getFullDate} from "../util/TimeUtil";
 const Schema = Mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -30,8 +31,7 @@ export const userModel = (orm, db) => {
         account: {type: 'text', size: 10, required: true, unique: true},
         pwd: {type: 'text', required: true},
         admin: {type: 'boolean', required: true},
-        accessToken: {type: 'text', required: true},
-        createdAt: {type: 'date', time: true, required: true}
+        createdAt: {type: 'date', time: true, defaultValue: getFullDate()}
     }, {
         tableName: 'user'
     }, {
@@ -57,8 +57,7 @@ export const USER_ADMIN = {
     account: 'admin',
     pwd: md5('a123456'),
     admin: true,
-    accessToken: 'tmp',
-    createdAt: '2017-11-11'
+    createAt: getFullDate(),
 };
 
 /**

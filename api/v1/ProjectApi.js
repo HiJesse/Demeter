@@ -1,5 +1,5 @@
 // project api
-import ProjectModel from "../../models/ProjectModel";
+import ProjectModel, {createProject, findProject} from "../../models/ProjectModel";
 import {
     RES_FAILED_COUNT_PROJECT,
     RES_FAILED_COUNT_PROJECT_EMPTY,
@@ -11,9 +11,8 @@ import {
     RES_FAILED_FETCH_PROJECT_LIST,
     RES_FAILED_FETCH_PROJECT_PLATFORM,
     RES_FAILED_NOT_ADMIN,
-    RES_FAILED_PLATFORM_NOT_EXIST,
+    RES_FAILED_PARAMS_INVALID,
     RES_FAILED_PROJECT_IS_EXIST,
-    RES_FAILED_PROJECT_NOT_EXIST,
     RES_FAILED_UPDATE_PROJECT_DES,
     RES_FAILED_UPDATE_PROJECT_INFO,
     RES_MSG_COUNT_PROJECT,
@@ -26,83 +25,85 @@ import {
     RES_MSG_FETCH_PROJECT_LIST,
     RES_MSG_FETCH_PROJECT_PLATFORM,
     RES_MSG_NOT_ADMIN,
-    RES_MSG_PLATFORM_NOT_EXIST,
+    RES_MSG_PARAMS_INVALID,
     RES_MSG_PROJECT_IS_EXIST,
-    RES_MSG_PROJECT_NOT_EXIST,
     RES_MSG_UPDATE_PROJECT_DES,
     RES_MSG_UPDATE_PROJECT_INFO,
     RES_SUCCEED
 } from "../Status";
 import {buildResponse} from "../../util/AjaxUtil";
-import {isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
+import {isArrayEmpty, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import {concatProjectAndPlatformInfo} from "../../util/ArrayUtil";
 import {isAdmin} from "./base/BaseUserApi";
 import {
     countProjectsByName,
-    createProjectInfo,
-    createProjectPlatforms,
     deleteProjectInfo,
     deleteProjectPlatforms,
     findProjectPlatforms,
-    findProjectsByName,
-    getPlatforms,
-    getProjectInfo,
-    isProjectNotExist
+    findProjectsByName
 } from "./base/BaseProjectApi";
 import {deleteAllMembers} from "./base/BaseProjectMemberApi";
+import * as LogUtil from "../../util/LogUtil";
+import {getFullDate} from "../../util/TimeUtil";
+
+const TAG = 'ProjectApi';
 
 /**
  * 创建新项目
+ *
  * 1. 获取平台信息
  * 2. 校验项目是否已存在
  * 3. 创建项目信息
  * 4. 根据平台信息和项目ID创建项目平台信息, 并生成对应的app id
+ *
  * @param req
  * @param res
  */
-export const createProject = (req, res) => {
-    let status = RES_FAILED_CREATE_PROJECT;
-    let msg = RES_MSG_CREATE_PROJECT;
-
+export const createProjectInfo = (req, res) => {
     const projectName = req.body.projectName;
     const projectDes = req.body.projectDes;
     const projectLogo = req.file;
-    let platforms;
 
-    getPlatforms().then((data) => {
-        platforms = data.platforms;
-        return isProjectNotExist({projectName: projectName});
+    LogUtil.i(`${TAG} createProject ${projectName} ${projectDes}`);
+
+    if (isStringEmpty(projectName) || isStringEmpty(projectDes)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
+
+    let status = RES_FAILED_CREATE_PROJECT;
+    let msg = RES_MSG_CREATE_PROJECT;
+
+    findProject({
+        projectName: projectName
+    }).then(results => {
+
+        if (!isArrayEmpty(results)) {
+            throw {isProjectExist: true}; // 项目已经存在
+        }
+
+        return createProject({
+            projectName: projectName,
+            des: projectDes,
+            avatar: projectLogo === undefined ? '' : projectLogo.filename,
+            createAt: getFullDate(),
+        });
     }).then(() => {
-        return createProjectInfo(projectName, projectDes, projectLogo);
-    }).then(() => {
-        return getProjectInfo({
-            projectName: projectName
-        })
-    }).then(data => {
-        return createProjectPlatforms(data.projects[0]._id, platforms);
-    }).then(() => {
-        status = RES_SUCCEED;
-        msg = null;
-        res.json(buildResponse(status, {}, msg));
-    }).catch(error => {
-        if (isObjectEmpty(error)) {
+        res.json(buildResponse(RES_SUCCEED, {}, '创建成功'));
+    }).catch(err => {
+        LogUtil.e(`${TAG} createProject ${JSON.stringify(err)}`);
+        if (isObjectEmpty(err)) {
             status = RES_FAILED_CREATE_PROJECT;
             msg = RES_MSG_CREATE_PROJECT;
-        } else if (error.isProjectNotExist === false) {
+        } else if (err.isProjectExist) {
             status = RES_FAILED_PROJECT_IS_EXIST;
             msg = RES_MSG_PROJECT_IS_EXIST;
-        } else if (error.isProjectExist === false) {
-            status = RES_FAILED_PROJECT_NOT_EXIST;
-            msg = RES_MSG_PROJECT_NOT_EXIST;
-        } else if (error.isPlatformExist === false) {
-            status = RES_FAILED_PLATFORM_NOT_EXIST;
-            msg = RES_MSG_PLATFORM_NOT_EXIST;
-        } else if (error.projectPlatformsCreated === false) {
+        } else if (err.projectPlatformsCreated === false) {
             status = RES_FAILED_CREATE_PROJECT_PLATFORMS;
             msg = RES_MSG_CREATE_PROJECT_PLATFORMS;
         }
         res.json(buildResponse(status, {}, msg));
-    })
+    });
 };
 
 /**

@@ -45,6 +45,7 @@ import {isArrayEmpty, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil
 import {md5} from "../../util/EncryptUtil";
 import * as LogUtil from "../../util/LogUtil";
 import {createJsonWebToken} from "../../util/WebTokenUtil";
+import {getFullDate} from "../../util/TimeUtil";
 
 const TAG = 'UserApi';
 
@@ -306,8 +307,7 @@ export const createUserInfo = (req, res) => {
             account: account,
             pwd: md5('a123456'),
             admin: false,
-            accessToken: 'tmp',
-            createdAt: '2017-11-11'
+            createAt: getFullDate(),
         })
     }).then(() => {
         res.json(buildResponse(RES_SUCCEED, {}, '创建成功'));
@@ -411,7 +411,6 @@ export const fetchUserList = (req, res) => {
     let msg = RES_MSG_FETCH_USER_LIST;
 
     const accountLike = isStringEmpty(accountSearch) || accountSearch === 'null' ? '%' : accountSearch + '%';
-    LogUtil.i(accountLike);
 
     isAdminUser({
         id: uId
