@@ -2,6 +2,7 @@
 import {buildResponse} from "../../util/AjaxUtil";
 import orm from "orm";
 import {
+    countUser,
     createUser,
     deleteUser,
     findUser,
@@ -11,6 +12,7 @@ import {
     saveUserInfo
 } from "../../models/UserModel";
 import {
+    RES_FAILED_COUNT_USER,
     RES_FAILED_CREATE_USER,
     RES_FAILED_DELETE_USER,
     RES_FAILED_FETCH_USER_LIST,
@@ -25,6 +27,7 @@ import {
     RES_FAILED_USER_IS_EXIST,
     RES_FAILED_USER_IS_NOT_EXIST,
     RES_FAILED_USER_NONE,
+    RES_MSG_COUNT_USER,
     RES_MSG_CREATE_USER,
     RES_MSG_DELETE_USER,
     RES_MSG_FETCH_USER_LIST,
@@ -389,7 +392,8 @@ export const resetPassword = (req, res) => {
  * 根据页码和页面容量获取用户列表
  *
  * 1. 是否为管理员
- * 2. 分页查询
+ * 2. 计算用户总数
+ * 3. 分页查询
  *
  * @param req
  * @param res
@@ -409,17 +413,21 @@ export const fetchUserList = (req, res) => {
 
     let status = RES_FAILED_FETCH_USER_LIST;
     let msg = RES_MSG_FETCH_USER_LIST;
+    let userCount = 0;
 
     const accountLike = isStringEmpty(accountSearch) || accountSearch === 'null' ? '%' : accountSearch + '%';
 
     isAdminUser({
         id: uId
     }).then(() => {
+        return countUser({account: orm.like(accountLike)});
+    }).then((count) => {
+        userCount = count;
         return findUserByPage({account: orm.like(accountLike)}, pageSize, pageNum);
     }).then((allUserInfo) => {
         res.json(buildResponse(RES_SUCCEED, {
             userList: allUserInfo,
-            userCount: isArrayEmpty(allUserInfo) ? 0 : allUserInfo.length,
+            userCount: userCount,
             pageNum: pageNum
         }, '查询成功'));
     }).catch((err) => {
@@ -436,6 +444,9 @@ export const fetchUserList = (req, res) => {
         } else if (err.isNotAdmin) {
             status = RES_FAILED_NOT_ADMIN;
             msg = RES_MSG_NOT_ADMIN;
+        } else if (err.countUserError) {
+            status = RES_FAILED_COUNT_USER;
+            msg = RES_MSG_COUNT_USER;
         }
         res.json(buildResponse(status, {}, msg));
     });

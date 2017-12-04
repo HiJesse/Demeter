@@ -37,7 +37,7 @@ function fetchUserListReducer(state, action) {
             key: index,
             account: item.account,
             nickname: item.nickName,
-            auth: item.isAdmin ? '管理员' : '普通用户',
+            auth: item.admin ? '管理员' : '普通用户',
         };
     });
 

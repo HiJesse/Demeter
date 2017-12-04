@@ -87,6 +87,21 @@ export const findUser = params => new Promise((resolve, reject) => {
 });
 
 /**
+ * 计算总用户数
+ * @param params
+ */
+export const countUser = params => new Promise((resolve, reject) => {
+    getUserModel().count(params, (err, count) => {
+        if (err) {
+            LogUtil.e(`${TAG} countUser ${err}`);
+            reject({countUserError: true});
+        } else {
+            resolve(count);
+        }
+    });
+});
+
+/**
  * 创建用户
  * @param params
  */
