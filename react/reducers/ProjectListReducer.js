@@ -49,7 +49,7 @@ const fetchProjectListReducer = (state, action) => {
                 ios: item.iosAppId
             },
             des: item.des,
-            createdDate: item.createdDate
+            createdDate: item.createdAt
         };
     });
 

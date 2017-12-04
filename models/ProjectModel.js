@@ -3,7 +3,7 @@ import Mongoose from "mongoose";
 import {getDate, getFullDate, getTimeStamp} from "../util/TimeUtil";
 import {isArrayEmpty, isObjectEmpty} from "../util/CheckerUtil";
 import * as LogUtil from "../util/LogUtil";
-import {findPlatform} from "./PlatformModel";
+import {findPlatform, getPlatformModel} from "./PlatformModel";
 import {md5} from "../util/EncryptUtil";
 import {getConnection} from "../config/DBConfig";
 const Schema = Mongoose.Schema;
@@ -40,8 +40,8 @@ export const projectModel = (orm, db) => {
     });
 
     // 联表
-    ProjectModel.hasMany('platform', {appId: String});
-    ProjectModel.hasMany('user');
+    ProjectModel.hasMany('platforms', getPlatformModel(), {appId: String}, {autoFetch: true});
+    ProjectModel.hasMany('users');
 };
 
 const TAG = 'ProjectModel';
@@ -108,7 +108,7 @@ const createProjectPlatform = (project, resolve, reject) => {
         for (let i = 0; i < platforms.length; i++) {
             const platform = platforms[i];
             // 遍历平台信息 新增appId 与项目关联起来
-            project.addPlatform(platform, {
+            project.addPlatforms(platform, {
                 appId: md5(project.id + platform.id + getTimeStamp() + '')
             }, err => {
                 if (err) {
@@ -136,6 +136,21 @@ export const findProject = params => new Promise((resolve, reject) => {
             reject({findProjectError: true});
         } else {
             resolve(results);
+        }
+    });
+});
+
+/**
+ * 计算总项目数
+ * @param params
+ */
+export const countProject = params => new Promise((resolve, reject) => {
+    getProjectModel().count(params, (err, count) => {
+        if (err) {
+            LogUtil.e(`${TAG} countProject ${err}`);
+            reject({countProjectError: true});
+        } else {
+            resolve(count);
         }
     });
 });
@@ -172,5 +187,32 @@ export const saveProjectInfo = project => new Promise((resolve, reject) => {
             reject({saveUserInfoError: true});
         }
         resolve();
+    });
+});
+
+/**
+ * 按页查找项目列表
+ * @param findParams 查找参数
+ * @param pageSize 一页容量
+ * @param pageNum 页码
+ */
+export const findProjectByPage = (findParams, pageSize, pageNum) => new Promise((resolve, reject) => {
+    const project = getProjectModel();
+
+    project.settings.set("pagination.perpage", pageSize);
+
+    project.pages(findParams, (err, pages) => {
+        if (err) {
+            LogUtil.e(`${TAG} findProjectByPage pages ${err}`);
+            reject({findProjectPage: true})
+        }
+
+        project.page(findParams, pageNum).run(function (err, project) {
+            if (err) {
+                LogUtil.e(`${TAG} findProjectByPage page ${err}`);
+                reject({findProjectPage: true})
+            }
+            resolve(project);
+        });
     });
 });
