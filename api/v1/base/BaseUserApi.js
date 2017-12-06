@@ -1,6 +1,6 @@
 // base user api
 import UserModel from "../../../models/UserModel";
-import {isArrayEmpty, isStringEmpty} from "../../../util/CheckerUtil";
+import {isArrayEmpty} from "../../../util/CheckerUtil";
 
 /**
  * 根据params参数判读该用户是否存在
@@ -38,27 +38,6 @@ export const isAdmin = params => {
             } else {
                 reject({isAdmin: false});
             }
-        });
-    });
-};
-
-/**
- * 获取根据参数的用户总数, 失败的话返回-1
- * @param accountSearch 模糊查找
- * @returns {Promise}
- */
-export const countUsers = (accountSearch) => {
-    const findParams = {};
-    if (!isStringEmpty(accountSearch) && accountSearch !== 'null') {
-        findParams.account = new RegExp(accountSearch, 'i');
-    }
-
-    return new Promise((resolve, reject) => {
-        UserModel.count(findParams, (err, count) => {
-            if (err) {
-                reject({userCount: -1});
-            }
-            resolve({userCount: count});
         });
     });
 };

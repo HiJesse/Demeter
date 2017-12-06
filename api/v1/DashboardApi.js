@@ -1,18 +1,26 @@
 // dashboard api
 import {buildResponse} from "../../util/AjaxUtil";
 import {
+    RES_FAILED_COUNT_PROJECT,
     RES_FAILED_COUNT_USER,
     RES_FAILED_FETCH_DASHBOARD,
-    RES_FAILED_USER_NONE,
+    RES_FAILED_FIND_USER_INFO,
+    RES_FAILED_PARAMS_INVALID,
+    RES_FAILED_USER_IS_NOT_EXIST,
+    RES_MSG_COUNT_PROJECT,
     RES_MSG_COUNT_USER,
     RES_MSG_FETCH_DASHBOARD,
-    RES_MSG_USER_NONE,
+    RES_MSG_FIND_USER_INFO,
+    RES_MSG_PARAMS_INVALID,
+    RES_MSG_USER_IS_NOT_EXIST,
     RES_SUCCEED
 } from "../Status";
-import {isObjectEmpty} from "../../util/CheckerUtil";
-import {countUsers, isUserExist} from "./base/BaseUserApi";
-import {countProjects} from "./base/BaseProjectApi";
+import {isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
+import {countUser, isUserExist} from "../../models/UserModel";
+import {countProject} from "../../models/ProjectModel";
+import * as LogUtil from "../../util/LogUtil";
 
+const TAG = 'UserApi';
 
 /**
  * 获取仪表盘信息
@@ -30,33 +38,43 @@ export const fetchDashboard = (req, res) => {
         projectCount: 0
     };
 
-    //TODO 先返回成功, 重构完项目模块后再修改
-    res.json(buildResponse(RES_SUCCEED, result, ''));
-    return;
+    LogUtil.i(`${TAG} fetchDashboard ${uId}`);
+
+    if (isStringEmpty(uId)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
 
     let status = RES_FAILED_FETCH_DASHBOARD;
     let msg = RES_MSG_FETCH_DASHBOARD;
 
-    isUserExist({_id: uId}).then(() => {
-        return countUsers();
+    isUserExist({
+        id: uId
+    }).then(() => {
+        return countUser({});
     }).then((data) => {
-        result.userCount = data.userCount;
-        return countProjects({})
+        result.userCount = data;
+        return countProject({})
     }).then((data) => {
-        result.projectCount = data.projectCount;
-        status = RES_SUCCEED;
-        msg = null;
-        res.json(buildResponse(status, result, msg));
-    }).catch((error) => {
-        if (isObjectEmpty(error)) {
+        result.projectCount = data;
+        res.json(buildResponse(RES_SUCCEED, result, '查询成功'));
+    }).catch((err) => {
+        LogUtil.e(`${TAG} fetchUserList ${JSON.stringify(err)}`);
+        if (isObjectEmpty(err)) {
             status = RES_FAILED_FETCH_DASHBOARD;
             msg = RES_MSG_FETCH_DASHBOARD;
-        } else if (error.isUserExist === false) {
-            status = RES_FAILED_USER_NONE;
-            msg = RES_MSG_USER_NONE;
-        } else if (error.userCount === -1) {
+        } else if (err.userNotExist) {
+            status = RES_FAILED_USER_IS_NOT_EXIST;
+            msg = RES_MSG_USER_IS_NOT_EXIST;
+        } else if (err.isUserExistError) {
+            status = RES_FAILED_FIND_USER_INFO;
+            msg = RES_MSG_FIND_USER_INFO;
+        } else if (err.countUserError) {
             status = RES_FAILED_COUNT_USER;
             msg = RES_MSG_COUNT_USER;
+        } else if (err.countProjectError) {
+            status = RES_FAILED_COUNT_PROJECT;
+            msg = RES_MSG_COUNT_PROJECT;
         }
         res.json(buildResponse(status, {}, msg));
     });
