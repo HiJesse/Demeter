@@ -40,7 +40,7 @@ const fetchProjectListReducer = (state, action) => {
         return {
             key: index,
             project: {
-                id: item.projectId,
+                id: item.id,
                 logo: item.avatar,
                 name: item.projectName
             },

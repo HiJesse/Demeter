@@ -1,5 +1,12 @@
 // project api
-import ProjectModel, {countProject, createProject, findProject, findProjectByPage} from "../../models/ProjectModel";
+import {
+    countProject,
+    createProject,
+    findProject,
+    findProjectByPage,
+    isProjectExist,
+    saveProjectInfo
+} from "../../models/ProjectModel";
 import orm from "orm";
 import {
     RES_FAILED_COUNT_PROJECT,
@@ -8,12 +15,13 @@ import {
     RES_FAILED_DELETE_PROJECT,
     RES_FAILED_DELETE_PROJECT_ALL_MEMBERS,
     RES_FAILED_DELETE_PROJECT_PLATFORMS,
+    RES_FAILED_FETCH_PROJECT,
     RES_FAILED_FETCH_PROJECT_LIST,
     RES_FAILED_FIND_USER_INFO,
     RES_FAILED_NOT_ADMIN,
     RES_FAILED_PARAMS_INVALID,
     RES_FAILED_PROJECT_IS_EXIST,
-    RES_FAILED_UPDATE_PROJECT_DES,
+    RES_FAILED_PROJECT_NOT_EXIST,
     RES_FAILED_UPDATE_PROJECT_INFO,
     RES_FAILED_USER_IS_NOT_EXIST,
     RES_MSG_COUNT_PROJECT,
@@ -22,12 +30,13 @@ import {
     RES_MSG_DELETE_PROJECT,
     RES_MSG_DELETE_PROJECT_ALL_MEMBERS,
     RES_MSG_DELETE_PROJECT_PLATFORMS,
+    RES_MSG_FETCH_PROJECT,
     RES_MSG_FETCH_PROJECT_LIST,
     RES_MSG_FIND_USER_INFO,
     RES_MSG_NOT_ADMIN,
     RES_MSG_PARAMS_INVALID,
     RES_MSG_PROJECT_IS_EXIST,
-    RES_MSG_UPDATE_PROJECT_DES,
+    RES_MSG_PROJECT_NOT_EXIST,
     RES_MSG_UPDATE_PROJECT_INFO,
     RES_MSG_USER_IS_NOT_EXIST,
     RES_SUCCEED
@@ -39,7 +48,7 @@ import {deleteProjectInfo, deleteProjectPlatforms} from "./base/BaseProjectApi";
 import {deleteAllMembers} from "./base/BaseProjectMemberApi";
 import * as LogUtil from "../../util/LogUtil";
 import {getFullDate} from "../../util/TimeUtil";
-import {isAdminUser} from "../../models/UserModel";
+import {isAdminUser, isUserExist} from "../../models/UserModel";
 import {concatProjectAndPlatformInfo} from "../../util/ArrayUtil";
 
 const TAG = 'ProjectApi';
@@ -210,40 +219,63 @@ export const fetchProjectList = (req, res) => {
 
 /**
  * 更新项目信息, 项目简介和项目logo
+ *
+ * 1. 判断用户是否存在
+ * 2. 判断项目是否存在
+ * 3. 判断用户是否有权限更新该项目
+ * 4. 更新信息
+ *
  * @param req
  * @param res
  */
 export const updateProjectInfo = (req, res) => {
+    const uId = req.body.uId;
     const projectId = req.body.projectId;
     const projectDes = req.body.projectDes;
     const projectLogo = req.file;
 
-    let status = RES_FAILED_UPDATE_PROJECT_INFO;
-    let msg = RES_MSG_UPDATE_PROJECT_INFO;
+    LogUtil.i(`${TAG} updateProjectInfo ${uId} ${projectId} ${projectDes}`);
 
-    if (isStringEmpty(projectDes) || projectDes.length < 3) {
-        status = RES_FAILED_UPDATE_PROJECT_DES;
-        msg = RES_MSG_UPDATE_PROJECT_DES;
-        res.json(buildResponse(status, {}, msg));
+    if (isStringEmpty(projectDes) || isStringEmpty(uId) || isStringEmpty(projectId)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
         return;
     }
 
-    const params = {
-        des: projectDes
-    };
+    let status = RES_FAILED_UPDATE_PROJECT_INFO;
+    let msg = RES_MSG_UPDATE_PROJECT_INFO;
+    let avatar;
 
     if (!isObjectEmpty(projectLogo) && !isStringEmpty(projectLogo.filename)) {
-        params.avatar = projectLogo.filename;
+        avatar = projectLogo.filename;
     }
 
-    ProjectModel.update({
-        _id: projectId
-    }, {
-        $set: params
-    }, {upsert: false}, (error) => {
-        if (!error) {
-            status = RES_SUCCEED;
-            msg = null;
+    isUserExist({
+        id: uId
+    }).then(user => {
+        return isProjectExist({id: projectId});
+    }).then(project => {
+        project.des = projectDes;
+        project.avatar = avatar;
+        return saveProjectInfo(project);
+    }).then(() => {
+        res.json(buildResponse(RES_SUCCEED, {}, '更新成功'));
+    }).catch(err => {
+        LogUtil.e(`${TAG} updateProjectInfo ${JSON.stringify(err)}`);
+        if (isObjectEmpty(err)) {
+            status = RES_FAILED_UPDATE_PROJECT_INFO;
+            msg = RES_MSG_UPDATE_PROJECT_INFO;
+        } else if (err.userNotExist) {
+            status = RES_FAILED_USER_IS_NOT_EXIST;
+            msg = RES_MSG_USER_IS_NOT_EXIST;
+        } else if (err.isUserExistError) {
+            status = RES_FAILED_FIND_USER_INFO;
+            msg = RES_MSG_FIND_USER_INFO;
+        } else if (err.isProjectExistError) {
+            status = RES_FAILED_FETCH_PROJECT;
+            msg = RES_MSG_FETCH_PROJECT;
+        } else if (err.isProjectNotExist) {
+            status = RES_FAILED_PROJECT_NOT_EXIST;
+            msg = RES_MSG_PROJECT_NOT_EXIST;
         }
         res.json(buildResponse(status, {}, msg));
     });

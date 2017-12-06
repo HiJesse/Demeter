@@ -71,9 +71,9 @@ export const RES_MSG_CREATE_PROJECT = '创建项目失败';
 // 项目不存在
 export const RES_FAILED_PROJECT_NOT_EXIST = 2001;
 export const RES_MSG_PROJECT_NOT_EXIST = '项目不存在';
-// 平台不存在
-export const RES_FAILED_PLATFORM_NOT_EXIST = 2002;
-export const RES_MSG_PLATFORM_NOT_EXIST = '平台不存在';
+// 查询项目失败
+export const RES_FAILED_FETCH_PROJECT = 2002;
+export const RES_MSG_FETCH_PROJECT = '查询项目失败';
 // 创建项目平台信息失败
 export const RES_FAILED_CREATE_PROJECT_PLATFORMS = 2003;
 export const RES_MSG_CREATE_PROJECT_PLATFORMS = '创建项目平台信息失败';

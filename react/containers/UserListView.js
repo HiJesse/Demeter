@@ -13,6 +13,7 @@ import {Button, Icon, Input, Popconfirm, Table} from "antd";
 import {userListView} from "./styles/UserListViewStyle";
 import {resetPasswordAction} from "../actions/UserAction";
 import UpdateUserInfoDialog from "../components/UpdateUserInfoDialog";
+import {getUID} from "../utils/StorageUtil";
 
 // 用户管理-用户列表
 class UserListView extends React.Component {
@@ -176,12 +177,12 @@ function mapDispatchToProps(dispatch) {
     return {
         pageLoadingVisible: isLoading => dispatch(pageLoadingAction(isLoading)),
         fetchUserList: (pageSize, pageNum, accountSearch) => {
-            dispatch(fetchUserListAction(localStorage.uId, pageSize, pageNum, accountSearch));
+            dispatch(fetchUserListAction(getUID(), pageSize, pageNum, accountSearch));
         },
         changeSearchInput: (search) => dispatch(changeSearchInputAction(search)),
         changeSearchVisible: (visible) => dispatch(changeSearchVisibleAction(visible)),
-        deleteUser: (account) => dispatch(deleteUserAction(localStorage.uId, account)),
-        resetPassword: (account) => dispatch(resetPasswordAction(account, localStorage.uId)),
+        deleteUser: (account) => dispatch(deleteUserAction(getUID(), account)),
+        resetPassword: (account) => dispatch(resetPasswordAction(account, getUID())),
         showUpdateDialog: visible => dispatch(showUpdatingUserDialogAction(visible)),
         setUpdatingUserInfo: index => dispatch(setUpdatingUserInfoAction(index)),
     }

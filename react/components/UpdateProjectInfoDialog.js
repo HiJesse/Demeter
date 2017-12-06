@@ -9,6 +9,7 @@ import {
     uploadLogoAction
 } from "../actions/ProjectManagerAction";
 import {isStringEmpty, isStringLengthLeast} from "../../util/CheckerUtil";
+import {getUID} from "../utils/StorageUtil";
 
 const {TextArea} = Input;
 
@@ -118,7 +119,7 @@ function mapDispatchToProps(dispatch) {
         uploadLogo: file => dispatch(uploadLogoAction(file)),
         getLogoFile: file => dispatch(getLogoFileAction(file)),
         updateDes: des => dispatch(updateProjectDesAction(des)),
-        updateInfo: (projectId, logo, des) => dispatch(updateProjectInfoAction(projectId, logo, des)),
+        updateInfo: (projectId, logo, des) => dispatch(updateProjectInfoAction(getUID(), projectId, logo, des)),
     }
 }
 

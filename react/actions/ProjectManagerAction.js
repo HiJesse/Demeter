@@ -83,13 +83,15 @@ export const updateProjectDesAction = des => ({
 
 /**
  * 更新项目信息
+ * @param uId 用户ID
  * @param projectId 项目id
  * @param logo 项目logo文件
  * @param projectDes 项目简介
  */
-export const updateProjectInfoAction = (projectId, logo, projectDes) => ({
+export const updateProjectInfoAction = (uId, projectId, logo, projectDes) => ({
     type: ACTION_UPDATE_PROJECT_INFO,
     data: {
+        uId: uId,
         projectId: projectId,
         projectDes: projectDes,
         projectLogo: logo

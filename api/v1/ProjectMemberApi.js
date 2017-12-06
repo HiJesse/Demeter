@@ -136,6 +136,10 @@ export const fetchProjectMembers = (req, res) => {
         return;
     }
 
+    // TODO 先阻断掉
+    res.json(buildResponse(status, {}, msg));
+    return;
+
     isUserExist({_id: uId}).then(() => {
         return getProjectInfo({_id: projectId});
     }).then(() => {

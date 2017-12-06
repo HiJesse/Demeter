@@ -16,6 +16,7 @@ import {isStringEmpty} from "../../util/CheckerUtil";
 import UpdateProjectInfoDialog from "../components/UpdateProjectInfoDialog";
 import DeleteProjectDialog from "../components/DeleteProjectDialog";
 import ProjectMembersManagerDialog from "../components/ProjectMembersManagerDialog";
+import {getUID} from "../utils/StorageUtil";
 
 // 项目管理-项目列表分页
 class ProjectListView extends React.Component {
@@ -236,7 +237,7 @@ function select(state) {
 function mapDispatchToProps(dispatch) {
     return {
         fetchProjectList: (pageSize, pageNum, projectName) =>
-            dispatch(fetchProjectListAction(localStorage.uId, pageSize, pageNum, projectName)),
+            dispatch(fetchProjectListAction(getUID(), pageSize, pageNum, projectName)),
         pageLoadingVisible: isLoading => dispatch(projectPageLoadingAction(isLoading)),
         showUpdateDialog: visible => dispatch(showUpdateDialogAction(visible)),
         showDeleteDialog: visible => dispatch(showDeletingDialogAction(visible)),
