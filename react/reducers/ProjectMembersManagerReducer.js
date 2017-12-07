@@ -2,7 +2,6 @@
 import {message} from "antd";
 import {
     ACTION_DELETE_PROJECT_MEMBER_FULFILLED,
-    ACTION_FETCH_PROJECT_MEMBER_LIST,
     ACTION_FETCH_PROJECT_MEMBER_LIST_FULFILLED,
     ACTION_INIT_PROJECT_MEMBER_DIALOG,
     ACTION_PROJECT_USER_ADD_ACCOUNT,
@@ -166,12 +165,6 @@ export function projectMembersManager(state = initialProjectUserManagerState, ac
             break;
         case ACTION_PROJECT_USER_ADD_ACCOUNT_FULFILLED:
             newState = addMemberFulfilledReducer(state, action.data);
-            break;
-        case ACTION_FETCH_PROJECT_MEMBER_LIST:
-            newState = {
-                ...state,
-                projectMemberLoading: true
-            };
             break;
         case ACTION_FETCH_PROJECT_MEMBER_LIST_FULFILLED:
             newState = fetchMemberListFulfilledReducer(state, action.data);

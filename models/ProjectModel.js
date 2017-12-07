@@ -6,6 +6,7 @@ import * as LogUtil from "../util/LogUtil";
 import {findPlatform, getPlatformModel} from "./PlatformModel";
 import {md5} from "../util/EncryptUtil";
 import {getConnection} from "../config/DBConfig";
+import {getUserModel} from "./UserModel";
 const Schema = Mongoose.Schema;
 
 /**
@@ -41,7 +42,7 @@ export const projectModel = (orm, db) => {
 
     // 联表
     ProjectModel.hasMany('platforms', getPlatformModel(), {appId: String}, {autoFetch: true});
-    ProjectModel.hasMany('users');
+    ProjectModel.hasMany('users', getUserModel());
 };
 
 const TAG = 'ProjectModel';

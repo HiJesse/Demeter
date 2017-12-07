@@ -1,91 +1,8 @@
 // base project member api
 import ProjectMemberModel from "../../../models/ProjectMemberModel";
+import * as LogUtil from "../../../util/LogUtil";
 
-/**
- * 根据参数判断用户是否已经加入项目
- * @param params
- * @returns {Promise}
- */
-export const isUserJoinedProject = params =>
-    new Promise((resolve, reject) => {
-        ProjectMemberModel.find(params, (err, data) => {
-            if (data.length === 1) {
-                resolve({isUserJoined: true});
-            } else {
-                reject({isUserJoined: false});
-            }
-        });
-    });
-
-/**
- * 根据参数判断用户是否还没有加入项目
- * @param params
- * @returns {Promise}
- */
-export const isUserNotJoinedProject = params =>
-    new Promise((resolve, reject) => {
-        ProjectMemberModel.find(params, (err, data) => {
-            if (data.length === 1) {
-                reject({isUserNotJoined: false});
-            } else {
-                resolve({isUserNotJoined: true});
-            }
-        });
-    });
-
-/**
- * 根据参数创建项目成员信息
- * @param params
- */
-export const createProjectMemberInfo = params =>
-    new Promise((resolve, reject) => {
-        ProjectMemberModel.create(params, (error) => {
-            if (!error) {
-                resolve({memberJoined: true});
-            } else {
-                reject({memberJoined: false});
-            }
-        });
-    });
-
-/**
- * 根据参数获取项目成员数量, 失败的话返回-1
- * @param params
- * @returns {Promise}
- */
-export const countProjectMembers = params =>
-    new Promise((resolve, reject) => {
-        ProjectMemberModel.count(params, (err, count) => {
-            if (err) {
-                reject({projectMemberCount: -1});
-            } else if (count === 0) {
-                reject({projectMemberCount: count});
-            } else {
-                resolve({projectMemberCount: count});
-            }
-        });
-    });
-
-
-/**
- * 根据参数和页码获取项目列表
- * @param pageSize 第几页
- * @param pageNum 一页的项目数量
- * @param params 查询参数
- */
-export const findProjectMembersByPage = (pageSize, pageNum, params) => new Promise((resolve, reject) => {
-    const query = ProjectMemberModel.find(params);
-    query.skip((pageNum - 1) * pageSize);
-    query.limit(pageSize);
-    query.exec((err, data) => {
-        if (err) {
-            reject({findProjectMembers: false});
-        }
-
-        const projectMembers = data.map(item => ({userId: item.userId}));
-        resolve(projectMembers);
-    });
-});
+const TAG = 'BaseProjectMemberApi';
 
 /**
  * 删除项目成员
@@ -164,3 +81,73 @@ export const findUserJoinedProjects = (pageSize, pageNum, params) =>
             resolve(projectIDs);
         });
     });
+
+
+/**
+ * 查找项目成员
+ * @param project
+ */
+export const findProjectMember = (project) => new Promise((resolve, reject) => {
+    project.getUsers((err, users) => {
+        if (err) {
+            LogUtil.e(`${TAG} findProjectMember pages ${err}`);
+            reject({findProjectMemberError: true})
+        }
+        resolve(users);
+    });
+});
+
+/**
+ * 按照页面容量和页面数切割项目成员
+ * @param members 成员
+ * @param pageSize 页面容量
+ * @param pageNum 页码
+ * @returns {Array} 对应页面的成员列表
+ */
+export const splitMembersByPage = (members, pageSize, pageNum) => {
+    const pageStart = pageSize * (pageNum - 1);
+
+    // 要查询的数量高于总数量则直接返回空组数
+    if (members.length < pageStart) {
+        return [];
+    }
+
+    let onePage = [];
+
+    // 在成员长度内遍历出需要的一页成员
+    for (let i = pageStart; (i < pageSize * pageNum && i < members.length); i++) {
+        onePage.push(members[i]);
+    }
+
+    return onePage;
+};
+
+
+/**
+ * 判断用户是否已经加入项目
+ * @param members 项目成员
+ * @param account 用户
+ */
+export const isUserJoinedProject = (members, account) => new Promise((resolve, reject) => {
+    for (const projectMember in members) {
+        if (projectMember.account === account) {
+            reject();
+        }
+    }
+    resolve({isNotJoinedProject: true})
+});
+
+/**
+ * 添加项目成员
+ * @param project 项目
+ * @param member 成员
+ */
+export const createProjectMemberInfo = (project, member) => new Promise((resolve, reject) => {
+    project.addUsers(member, err => {
+        if (err) {
+            LogUtil.e(`${TAG} addProjectMember ${err}`);
+            reject({addProjectMemberError: true})
+        }
+        resolve();
+    })
+});
