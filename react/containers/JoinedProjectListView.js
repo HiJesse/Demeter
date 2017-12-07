@@ -26,7 +26,7 @@ class JoinedProjectListView extends React.Component {
         }
 
         return (
-            <div style={{flex: 1}}>
+            <div style={projectListViewStyle.view_all}>
                 <ConfirmDialog
                     dialogVisible={this.props.dialogVisible}
                     confirmLoading={this.props.confirmLoading}

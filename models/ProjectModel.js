@@ -42,7 +42,7 @@ export const projectModel = (orm, db) => {
 
     // 联表
     ProjectModel.hasMany('platforms', getPlatformModel(), {appId: String}, {autoFetch: true});
-    ProjectModel.hasMany('users', getUserModel());
+    ProjectModel.hasMany('users', getUserModel(), {}, {reverse: 'projects'});
 };
 
 const TAG = 'ProjectModel';

@@ -43,7 +43,6 @@ import {
 } from "../Status";
 import {buildResponse} from "../../util/AjaxUtil";
 import {isArrayEmpty, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
-import {isAdmin} from "./base/BaseUserApi";
 import {deleteProjectInfo, deleteProjectPlatforms} from "./base/BaseProjectApi";
 import {deleteAllMembers} from "./base/BaseProjectMemberApi";
 import * as LogUtil from "../../util/LogUtil";
@@ -126,7 +125,9 @@ export const deleteProject = (req, res) => {
     const uId = req.body.uId;
     const projectId = req.body.projectId;
 
-    isAdmin({_id: uId}).then(() => {
+    isAdminUser({
+        id: uId
+    }).then(() => {
         return deleteProjectPlatforms(projectId);
     }).then(() => {
         return deleteProjectInfo(projectId);

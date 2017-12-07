@@ -33,3 +33,28 @@ export const concatProjectAndPlatformInfo = (projects) => projects.map((project)
         iosAppId: ios
     }
 });
+
+/**
+ * 按照页面容量和页面数切割数组
+ * @param data 数组数据
+ * @param pageSize 页面容量
+ * @param pageNum 页码
+ * @returns {Array} 切割后的数组
+ */
+export const splitListByPage = (data, pageSize, pageNum) => {
+    const pageStart = pageSize * (pageNum - 1);
+
+    // 要查询的数量高于总数量则直接返回空组数
+    if (data.length < pageStart) {
+        return [];
+    }
+
+    let onePage = [];
+
+    // 在成员长度内遍历出需要的一页成员
+    for (let i = pageStart; (i < pageSize * pageNum && i < data.length); i++) {
+        onePage.push(data[i]);
+    }
+
+    return onePage;
+};
