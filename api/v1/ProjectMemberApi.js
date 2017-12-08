@@ -12,7 +12,7 @@ import {
     RES_FAILED_PROJECT_NOT_EXIST,
     RES_FAILED_QUIT_PROJECT,
     RES_FAILED_USER_IS_NOT_EXIST,
-    RES_FAILED_USER_NONE,
+    RES_FAILED_USER_JOINED_PROJECT,
     RES_FAILED_USER_NOT_JOINED_PROJECT,
     RES_MSG_COUNT_PROJECT,
     RES_MSG_DELETE_PROJECT_MEMBER,
@@ -26,20 +26,19 @@ import {
     RES_MSG_PROJECT_NOT_EXIST,
     RES_MSG_QUIT_PROJECT,
     RES_MSG_USER_IS_NOT_EXIST,
-    RES_MSG_USER_NONE,
+    RES_MSG_USER_JOINED_PROJECT,
     RES_MSG_USER_NOT_JOINED_PROJECT,
     RES_SUCCEED
 } from "../Status";
 import {buildResponse} from "../../util/AjaxUtil";
 import {isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
-import {getProjectInfo} from "./base/BaseProjectApi";
 import {
     createProjectMemberInfo,
-    deleteMember,
+    deleteMemberInfo,
     findProjectMember,
     findUserJoinedProjects,
     isUserJoinedProject,
-    splitMembersByPage
+    isUserNotJoinedProject
 } from "./base/BaseProjectMemberApi";
 import {concatProjectAndPlatformInfo, splitListByPage} from "../../util/ArrayUtil";
 import * as LogUtil from "../../util/LogUtil";
@@ -88,7 +87,7 @@ export const addProjectMember = (req, res) => {
         projectInfo = project;
         return findProjectMember(project);
     }).then(users => {
-        return isUserJoinedProject(users, account);
+        return isUserNotJoinedProject(users, account);
     }).then(() => {
         return createProjectMemberInfo(projectInfo, userInfo);
     }).then(() => {
@@ -116,6 +115,9 @@ export const addProjectMember = (req, res) => {
         } else if (err.findProjectMemberError) {
             status = RES_FAILED_FETCH_PROJECT_MEMBERS;
             msg = RES_MSG_FETCH_PROJECT_MEMBERS;
+        } else if (err.isJoinedProject) {
+            status = RES_FAILED_USER_JOINED_PROJECT;
+            msg = RES_MSG_USER_JOINED_PROJECT;
         }
         res.json(buildResponse(status, {}, msg));
     });
@@ -192,11 +194,13 @@ export const fetchProjectMembers = (req, res) => {
 
 /**
  * 删除项目成员
+ *
  * 1. 校验uId用户是否存在
  * 2. 校验userId用户是否存在
  * 3. 校验projectId项目是否存在
  * 4. 校验userId 是否已经加入项目
  * 5. 删除成员
+ *
  * @param req
  * @param res
  */
@@ -205,44 +209,63 @@ export const deleteProjectMember = (req, res) => {
     const projectId = req.body.projectId;
     const userId = req.body.userId;
 
-    let status = RES_FAILED_DELETE_PROJECT_MEMBER;
-    let msg = RES_MSG_DELETE_PROJECT_MEMBER;
+    LogUtil.i(`${TAG} deleteProjectMember ${uId} ${projectId} ${userId}`);
 
-    if (isStringEmpty(uId) || isStringEmpty(projectId) || isStringEmpty(userId)) {
-        status = RES_FAILED_PARAMS_INVALID;
-        msg = RES_MSG_PARAMS_INVALID;
-        res.json(buildResponse(status, {}, msg));
+    if (isStringEmpty(uId) || isStringEmpty(projectId)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
         return;
     }
 
-    isUserExist({_id: uId}).then(() => {
-        return isUserExist({_id: userId});
+    let status = RES_FAILED_DELETE_PROJECT_MEMBER;
+    let msg = RES_MSG_DELETE_PROJECT_MEMBER;
+
+    let memberInfo, projectInfo;
+
+    isAdminUser({
+        id: uId
     }).then(() => {
-        return getProjectInfo({_id: projectId});
+        return isUserExist({id: userId});
+    }).then(user => {
+        memberInfo = user;
+        return isProjectExist({id: projectId});
+    }).then(project => {
+        projectInfo = project;
+        return findProjectMember(project);
+    }).then(users => {
+        return isUserJoinedProject(users, memberInfo.account);
     }).then(() => {
-        return isUserJoinedProject({projectId: projectId, userId: userId});
+        return deleteMemberInfo(projectInfo, memberInfo);
     }).then(() => {
-        return deleteMember(projectId, userId);
-    }).then(() => {
-        status = RES_SUCCEED;
-        msg = null;
-        res.json(buildResponse(status, {}, msg));
-    }).catch((error) => {
-        if (isObjectEmpty(error)) {
+        res.json(buildResponse(RES_SUCCEED, {}, '删除成功'));
+    }).catch(err => {
+        LogUtil.e(`${TAG} deleteProjectMember ${JSON.stringify(err)}`);
+        if (isObjectEmpty(err)) {
             status = RES_FAILED_PARAMS_INVALID;
             msg = RES_MSG_PARAMS_INVALID;
-        } else if (error.isUserExist === false) {
-            status = RES_FAILED_USER_NONE;
-            msg = RES_MSG_USER_NONE;
-        } else if (error.isProjectExist === false) {
+        } else if (err.isAdminUserError) {
+            status = RES_FAILED_FIND_USER_INFO;
+            msg = RES_MSG_FIND_USER_INFO;
+        } else if (err.userNotExist) {
+            status = RES_FAILED_USER_IS_NOT_EXIST;
+            msg = RES_MSG_USER_IS_NOT_EXIST;
+        } else if (err.isNotAdmin) {
+            status = RES_FAILED_NOT_ADMIN;
+            msg = RES_MSG_NOT_ADMIN;
+        } else if (err.isProjectExistError) {
+            status = RES_FAILED_FETCH_PROJECT;
+            msg = RES_MSG_FETCH_PROJECT;
+        } else if (err.isProjectNotExist) {
             status = RES_FAILED_PROJECT_NOT_EXIST;
             msg = RES_MSG_PROJECT_NOT_EXIST;
-        } else if (error.isUserJoined === false) {
+        } else if (err.findProjectMemberError) {
+            status = RES_FAILED_FETCH_PROJECT_MEMBERS;
+            msg = RES_MSG_FETCH_PROJECT_MEMBERS;
+        } else if (err.isNotJoinedProject) {
             status = RES_FAILED_USER_NOT_JOINED_PROJECT;
             msg = RES_MSG_USER_NOT_JOINED_PROJECT;
         }
         res.json(buildResponse(status, {}, msg));
-    })
+    });
 };
 
 /**
@@ -310,25 +333,53 @@ export const quitProject = (req, res) => {
     const uId = req.body.uId;
     const projectId = req.body.projectId;
 
+    LogUtil.i(`${TAG} quitProject ${uId} ${projectId}`);
+
+    if (isStringEmpty(uId) || isStringEmpty(projectId)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
+
     let status = RES_FAILED_QUIT_PROJECT;
     let msg = RES_MSG_QUIT_PROJECT;
 
-    isUserExist({_id: uId}).then(() => {
-        return isUserJoinedProject({projectId: projectId, userId: uId});
+    let memberInfo, projectInfo;
+
+    isUserExist({
+        id: uId
+    }).then(user => {
+        memberInfo = user;
+        return isProjectExist({id: projectId});
+    }).then(project => {
+        projectInfo = project;
+        return findProjectMember(project);
+    }).then(users => {
+        return isUserJoinedProject(users, memberInfo.account);
     }).then(() => {
-        return deleteMember(projectId, uId);
+        return deleteMemberInfo(projectInfo, memberInfo);
     }).then(() => {
-        status = RES_SUCCEED;
-        msg = null;
-        res.json(buildResponse(status, {}, msg));
-    }).catch((error) => {
-        if (isObjectEmpty(error)) {
-            status = RES_FAILED_FETCH_PROJECT_LIST;
-            msg = RES_MSG_FETCH_PROJECT_LIST;
-        } else if (error.isUserExist === false) {
-            status = RES_FAILED_USER_NONE;
-            msg = RES_MSG_USER_NONE;
-        } else if (error.isUserJoined === false) {
+        res.json(buildResponse(RES_SUCCEED, {}, '删除成功'));
+    }).catch(err => {
+        LogUtil.e(`${TAG} quitProject ${JSON.stringify(err)}`);
+        if (isObjectEmpty(err)) {
+            status = RES_FAILED_QUIT_PROJECT;
+            msg = RES_MSG_QUIT_PROJECT;
+        } else if (err.isAdminUserError) {
+            status = RES_FAILED_FIND_USER_INFO;
+            msg = RES_MSG_FIND_USER_INFO;
+        } else if (err.userNotExist) {
+            status = RES_FAILED_USER_IS_NOT_EXIST;
+            msg = RES_MSG_USER_IS_NOT_EXIST;
+        } else if (err.isProjectExistError) {
+            status = RES_FAILED_FETCH_PROJECT;
+            msg = RES_MSG_FETCH_PROJECT;
+        } else if (err.isProjectNotExist) {
+            status = RES_FAILED_PROJECT_NOT_EXIST;
+            msg = RES_MSG_PROJECT_NOT_EXIST;
+        } else if (err.findProjectMemberError) {
+            status = RES_FAILED_FETCH_PROJECT_MEMBERS;
+            msg = RES_MSG_FETCH_PROJECT_MEMBERS;
+        } else if (err.isNotJoinedProject) {
             status = RES_FAILED_USER_NOT_JOINED_PROJECT;
             msg = RES_MSG_USER_NOT_JOINED_PROJECT;
         }

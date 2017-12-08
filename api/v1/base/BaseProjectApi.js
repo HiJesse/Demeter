@@ -19,22 +19,6 @@ export const deleteProjectInfo = (projectId) => new Promise((resolve, reject) =>
 });
 
 /**
- * 根据参数查找项目信息
- * @param params
- */
-export const getProjectInfo = params => new Promise((resolve, reject) => {
-    ProjectModel.find(params, (err, data) => {
-        if (err) {
-            reject({isProjectExist: false});
-        } else {
-            resolve({
-                projects: data
-            });
-        }
-    });
-});
-
-/**
  * 根据ProjectId删除对应的所有平台数据
  * @param projectId
  */
