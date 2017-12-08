@@ -12,7 +12,7 @@ import {
     ACTION_UPDATE_USER_NICKNAME,
     ACTION_UPDATING_USER_INFO
 } from "../constants/ActionType";
-import {RES_SUCCEED} from "../../api/Status";
+import {RES_SUCCEED} from "../../api/status/Status";
 
 
 /**

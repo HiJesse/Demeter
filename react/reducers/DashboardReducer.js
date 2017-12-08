@@ -1,7 +1,7 @@
 // dashboard reducer
 import {message} from "antd";
 import {ACTION_FETCH_DASHBOARD_DATA, ACTION_FETCH_DASHBOARD_DATA_FULFILLED} from "../constants/ActionType";
-import {RES_SUCCEED} from "../../api/Status";
+import {RES_SUCCEED} from "../../api/status/Status";
 /**
  * 根据提供的列数量 填充出配置数量表的信息
  * @param params

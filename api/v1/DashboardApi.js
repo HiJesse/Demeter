@@ -1,24 +1,17 @@
 // dashboard api
 import {buildResponse} from "../../util/AjaxUtil";
 import {
-    RES_FAILED_COUNT_PROJECT,
-    RES_FAILED_COUNT_USER,
     RES_FAILED_FETCH_DASHBOARD,
-    RES_FAILED_FIND_USER_INFO,
     RES_FAILED_PARAMS_INVALID,
-    RES_FAILED_USER_IS_NOT_EXIST,
-    RES_MSG_COUNT_PROJECT,
-    RES_MSG_COUNT_USER,
     RES_MSG_FETCH_DASHBOARD,
-    RES_MSG_FIND_USER_INFO,
     RES_MSG_PARAMS_INVALID,
-    RES_MSG_USER_IS_NOT_EXIST,
     RES_SUCCEED
-} from "../Status";
-import {isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
+} from "../status/Status";
+import {isStringEmpty} from "../../util/CheckerUtil";
 import {countUser, isUserExist} from "../../models/UserModel";
 import {countProject} from "../../models/ProjectModel";
 import * as LogUtil from "../../util/LogUtil";
+import {buildProjectErrorStatus} from "../status/ProjectErrorMapping";
 
 const TAG = 'UserApi';
 
@@ -60,22 +53,7 @@ export const fetchDashboard = (req, res) => {
         res.json(buildResponse(RES_SUCCEED, result, '查询成功'));
     }).catch((err) => {
         LogUtil.e(`${TAG} fetchUserList ${JSON.stringify(err)}`);
-        if (isObjectEmpty(err)) {
-            status = RES_FAILED_FETCH_DASHBOARD;
-            msg = RES_MSG_FETCH_DASHBOARD;
-        } else if (err.userNotExist) {
-            status = RES_FAILED_USER_IS_NOT_EXIST;
-            msg = RES_MSG_USER_IS_NOT_EXIST;
-        } else if (err.isUserExistError) {
-            status = RES_FAILED_FIND_USER_INFO;
-            msg = RES_MSG_FIND_USER_INFO;
-        } else if (err.countUserError) {
-            status = RES_FAILED_COUNT_USER;
-            msg = RES_MSG_COUNT_USER;
-        } else if (err.countProjectError) {
-            status = RES_FAILED_COUNT_PROJECT;
-            msg = RES_MSG_COUNT_PROJECT;
-        }
+        [status, msg] = buildProjectErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     });
 };

@@ -9,7 +9,7 @@ import {
     ACTION_RESET_PASSWORD_FULFILLED,
     ACTION_UPDATE_USER_INFO_FULFILLED
 } from "../constants/ActionType";
-import {RES_FAILED, RES_SUCCEED} from "../../api/Status";
+import {RES_FAILED, RES_SUCCEED} from "../../api/status/Status";
 
 /**
  * 登录 reducer

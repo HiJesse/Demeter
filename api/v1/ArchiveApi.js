@@ -7,7 +7,7 @@ import {
     RES_MSG_FETCH_PROJECT_PLATFORM,
     RES_MSG_PARAMS_INVALID,
     RES_MSG_UPLOAD_ARCHIVE
-} from "../Status";
+} from "../status/Status";
 import {isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import {findProjectPlatforms} from "./base/BaseProjectApi";
 import {createArchive} from "./base/BaseArchiveApi";

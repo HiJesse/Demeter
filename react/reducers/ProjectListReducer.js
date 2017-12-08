@@ -13,7 +13,7 @@ import {
     ACTION_UPDATE_PROJECT_DIALOG_VISIBLE,
     ACTION_UPDATING_PROJECT_INFO
 } from "../constants/ActionType";
-import {RES_SUCCEED} from "../../api/Status";
+import {RES_SUCCEED} from "../../api/status/Status";
 import {message} from "antd";
 import {isStringEmpty} from "../../util/CheckerUtil";
 import * as React from "react";

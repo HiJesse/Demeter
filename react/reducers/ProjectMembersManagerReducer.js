@@ -10,7 +10,7 @@ import {
     ACTION_SELECT_PROJECT_MEMBER
 } from "../constants/ActionType";
 import {isStringEmpty} from "../../util/CheckerUtil";
-import {RES_SUCCEED} from "../../api/Status";
+import {RES_SUCCEED} from "../../api/status/Status";
 
 /**
  * 添加用户, 校验数据是否合法

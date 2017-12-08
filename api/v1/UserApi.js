@@ -12,43 +12,36 @@ import {
     saveUserInfo
 } from "../../models/UserModel";
 import {
-    RES_FAILED_COUNT_USER,
     RES_FAILED_CREATE_USER,
     RES_FAILED_DELETE_USER,
     RES_FAILED_FETCH_USER_LIST,
     RES_FAILED_FIND_USER_INFO,
     RES_FAILED_LOGIN,
     RES_FAILED_MODIFY_PWD,
-    RES_FAILED_NOT_ADMIN,
     RES_FAILED_PARAMS_INVALID,
     RES_FAILED_RESET_PASSWORD,
     RES_FAILED_UPDATE_USER_INFO,
     RES_FAILED_USER_ERR_PWD,
-    RES_FAILED_USER_IS_EXIST,
-    RES_FAILED_USER_IS_NOT_EXIST,
     RES_FAILED_USER_NONE,
-    RES_MSG_COUNT_USER,
     RES_MSG_CREATE_USER,
     RES_MSG_DELETE_USER,
     RES_MSG_FETCH_USER_LIST,
     RES_MSG_FIND_USER_INFO,
     RES_MSG_LOGIN,
     RES_MSG_MODIFY_PWD,
-    RES_MSG_NOT_ADMIN,
     RES_MSG_PARAMS_INVALID,
     RES_MSG_RESET_PASSWORD,
     RES_MSG_UPDATE_USER_INFO,
     RES_MSG_USER_ERR_PWD,
-    RES_MSG_USER_IS_EXIST,
-    RES_MSG_USER_IS_NOT_EXIST,
     RES_MSG_USER_NONE,
     RES_SUCCEED
-} from "../Status";
-import {isArrayEmpty, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
+} from "../status/Status";
+import {isArrayEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import {md5} from "../../util/EncryptUtil";
 import * as LogUtil from "../../util/LogUtil";
 import {createJsonWebToken} from "../../util/WebTokenUtil";
 import {getFullDate} from "../../util/TimeUtil";
+import {buildUserErrorStatus} from "../status/UserErrorMapping";
 
 const TAG = 'UserApi';
 
@@ -82,13 +75,7 @@ export const login = (req, res) => {
         handleLoginResult(req, res, results);
     }).catch(err => {
         LogUtil.e(`${TAG} login ${JSON.stringify(err)}`);
-        if (isObjectEmpty(err)) {
-            status = RES_FAILED_LOGIN;
-            msg = RES_FAILED_LOGIN;
-        } else if (err.findUserError) {
-            status = RES_FAILED_FIND_USER_INFO;
-            msg = RES_MSG_FIND_USER_INFO;
-        }
+        [status, msg] = buildUserErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     });
 };
@@ -170,19 +157,7 @@ export const modifyPassword = (req, res) => {
         res.json(buildResponse(RES_SUCCEED, {}, '密码修改成功'));
     }).catch(err => {
         LogUtil.e(`${TAG} modifyPassword ${JSON.stringify(err)}`);
-        if (isObjectEmpty(err)) {
-            status = RES_FAILED_MODIFY_PWD;
-            msg = RES_MSG_MODIFY_PWD;
-        } else if (err.userNotExist) {
-            status = RES_FAILED_USER_IS_NOT_EXIST;
-            msg = RES_MSG_USER_IS_NOT_EXIST;
-        } else if (err.invalidPassword) {
-            status = RES_FAILED_USER_ERR_PWD;
-            msg = RES_MSG_USER_ERR_PWD;
-        } else if (err.saveUserInfoError) {
-            status = RES_FAILED_UPDATE_USER_INFO;
-            msg = RES_MSG_UPDATE_USER_INFO;
-        }
+        [status, msg] = buildUserErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     });
 };
@@ -219,13 +194,7 @@ export const getUserInfo = (req, res) => {
         }, msg));
     }).catch(err => {
         LogUtil.e(`${TAG} getUserInfo ${JSON.stringify(err)}`);
-        if (isObjectEmpty(err)) {
-            status = RES_FAILED_LOGIN;
-            msg = RES_FAILED_LOGIN;
-        } else if (err.userNotExist) {
-            status = RES_FAILED_USER_IS_NOT_EXIST;
-            msg = RES_MSG_USER_IS_NOT_EXIST;
-        }
+        [status, msg] = buildUserErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     });
 };
@@ -262,16 +231,7 @@ export const updateUserInfo = (req, res) => {
         res.json(buildResponse(RES_SUCCEED, {}, '更新成功'));
     }).catch(err => {
         LogUtil.e(`${TAG} updateUserInfo ${JSON.stringify(err)}`);
-        if (isObjectEmpty(err)) {
-            status = RES_FAILED_UPDATE_USER_INFO;
-            msg = RES_MSG_UPDATE_USER_INFO;
-        } else if (err.userNotExist) {
-            status = RES_FAILED_USER_IS_NOT_EXIST;
-            msg = RES_MSG_USER_IS_NOT_EXIST;
-        } else if (err.isUserExistError) {
-            status = RES_FAILED_FIND_USER_INFO;
-            msg = RES_MSG_FIND_USER_INFO;
-        }
+        [status, msg] = buildUserErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     });
 };
@@ -316,19 +276,7 @@ export const createUserInfo = (req, res) => {
         res.json(buildResponse(RES_SUCCEED, {}, '创建成功'));
     }).catch((err) => {
         LogUtil.e(`${TAG} createUser ${JSON.stringify(err)}`);
-        if (isObjectEmpty(err)) {
-            status = RES_FAILED_CREATE_USER;
-            msg = RES_MSG_CREATE_USER;
-        } else if (err.isAdminUserError || err.findUserError) {
-            status = RES_FAILED_FIND_USER_INFO;
-            msg = RES_MSG_FIND_USER_INFO;
-        } else if (err.isNotAdmin) {
-            status = RES_FAILED_NOT_ADMIN;
-            msg = RES_MSG_NOT_ADMIN;
-        } else if (err.isUserExist) {
-            status = RES_FAILED_USER_IS_EXIST;
-            msg = RES_MSG_USER_IS_EXIST;
-        }
+        [status, msg] = buildUserErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     });
 };
@@ -368,22 +316,7 @@ export const resetPassword = (req, res) => {
         res.json(buildResponse(RES_SUCCEED, {}, '重置成功'));
     }).catch((err) => {
         LogUtil.e(`${TAG} resetPassword ${JSON.stringify(err)}`);
-        if (isObjectEmpty(err)) {
-            status = RES_FAILED_RESET_PASSWORD;
-            msg = RES_MSG_RESET_PASSWORD;
-        } else if (err.isAdminUserError) {
-            status = RES_FAILED_FIND_USER_INFO;
-            msg = RES_MSG_FIND_USER_INFO;
-        } else if (err.userNotExist) {
-            status = RES_FAILED_USER_IS_NOT_EXIST;
-            msg = RES_MSG_USER_IS_NOT_EXIST;
-        } else if (err.isNotAdmin) {
-            status = RES_FAILED_NOT_ADMIN;
-            msg = RES_MSG_NOT_ADMIN;
-        } else if (err.saveUserInfoError) {
-            status = RES_FAILED_UPDATE_USER_INFO;
-            msg = RES_MSG_UPDATE_USER_INFO;
-        }
+        [status, msg] = buildUserErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     });
 };
@@ -432,22 +365,7 @@ export const fetchUserList = (req, res) => {
         }, '查询成功'));
     }).catch((err) => {
         LogUtil.e(`${TAG} fetchUserList ${JSON.stringify(err)}`);
-        if (isObjectEmpty(err)) {
-            status = RES_FAILED_FETCH_USER_LIST;
-            msg = RES_MSG_FETCH_USER_LIST;
-        } else if (err.isAdminUserError) {
-            status = RES_FAILED_FIND_USER_INFO;
-            msg = RES_MSG_FIND_USER_INFO;
-        } else if (err.userNotExist) {
-            status = RES_FAILED_USER_IS_NOT_EXIST;
-            msg = RES_MSG_USER_IS_NOT_EXIST;
-        } else if (err.isNotAdmin) {
-            status = RES_FAILED_NOT_ADMIN;
-            msg = RES_MSG_NOT_ADMIN;
-        } else if (err.countUserError) {
-            status = RES_FAILED_COUNT_USER;
-            msg = RES_MSG_COUNT_USER;
-        }
+        [status, msg] = buildUserErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     });
 };
@@ -489,19 +407,7 @@ export const deleteUserInfo = (req, res) => {
         res.json(buildResponse(RES_SUCCEED, {}, '删除成功'));
     }).catch((err) => {
         LogUtil.e(`${TAG} fetchUserList ${JSON.stringify(err)}`);
-        if (isObjectEmpty(err)) {
-            status = RES_FAILED_DELETE_USER;
-            msg = RES_MSG_DELETE_USER;
-        } else if (err.isAdminUserError) {
-            status = RES_FAILED_FIND_USER_INFO;
-            msg = RES_MSG_FIND_USER_INFO;
-        } else if (err.userNotExist) {
-            status = RES_FAILED_USER_IS_NOT_EXIST;
-            msg = RES_MSG_USER_IS_NOT_EXIST;
-        } else if (err.isNotAdmin || err.isAdminAccount) {
-            status = RES_FAILED_NOT_ADMIN;
-            msg = RES_MSG_NOT_ADMIN;
-        }
+        [status, msg] = buildUserErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     });
 };
@@ -540,19 +446,7 @@ export const updateUserInfoByAdmin = (req, res) => {
         res.json(buildResponse(RES_SUCCEED, {}, '更新成功'));
     }).catch((err) => {
         LogUtil.e(`${TAG} updateUserInfoByAdmin ${JSON.stringify(err)}`);
-        if (isObjectEmpty(err)) {
-            status = RES_FAILED_UPDATE_USER_INFO;
-            msg = RES_MSG_UPDATE_USER_INFO;
-        } else if (err.isAdminUserError) {
-            status = RES_FAILED_FIND_USER_INFO;
-            msg = RES_MSG_FIND_USER_INFO;
-        } else if (err.userNotExist) {
-            status = RES_FAILED_USER_IS_NOT_EXIST;
-            msg = RES_MSG_USER_IS_NOT_EXIST;
-        } else if (err.isNotAdmin) {
-            status = RES_FAILED_NOT_ADMIN;
-            msg = RES_MSG_NOT_ADMIN;
-        }
+        [status, msg] = buildUserErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     });
 };

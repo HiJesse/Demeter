@@ -6,7 +6,7 @@ import {modifyPasswordAction} from "../actions/UserAction";
 import ModifyPasswordView from "../components/ModifyPasswordView";
 import {modifyStyle} from "./styles/ModifyPasswordStyle";
 import {goToLoginPage} from "../../util/RouterUtil";
-import {RES_SUCCEED} from "../../api/Status";
+import {RES_SUCCEED} from "../../api/status/Status";
 
 
 class ModifyPasswordPage extends React.Component {

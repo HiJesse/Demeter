@@ -2,7 +2,7 @@
 import fetch from "isomorphic-fetch";
 import "rxjs";
 import {Observable} from "rxjs";
-import {RES_FAILED, RES_FAILED_EX, RES_MSG_EX, RES_SUCCEED} from "../api/Status";
+import {RES_FAILED, RES_FAILED_EX, RES_MSG_EX, RES_SUCCEED} from "../api/status/Status";
 
 export const AJAX_METHOD = {
     GET: 'GET',

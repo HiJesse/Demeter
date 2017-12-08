@@ -12,7 +12,7 @@ import * as LogUtil from "../util/LogUtil";
 import {ormExpress} from "./DBConfig";
 import * as Config from "./Config";
 import api_v1 from "../api/api_v1";
-import {RES_FAILED_TOKEN, RES_MSG_TOKEN} from "../api/Status";
+import {RES_FAILED_TOKEN, RES_MSG_TOKEN} from "../api/status/Status";
 
 const app = Express();
 

@@ -48,19 +48,16 @@ export const RES_MSG_DELETE_USER = '删除用户失败';
 export const RES_FAILED_MATCHED_USER_LIST = 1009;
 export const RES_MSG_MATCHED_USER_LIST = '没有查询到满足条件的用户列表';
 // 查询用户信息失败
-export const RES_FAILED_FIND_USERS_INFO = 1010;
-export const RES_MSG_FIND_USERS_INFO = '查询用户信息失败';
+export const RES_FAILED_FIND_USER_INFO = 1010;
+export const RES_MSG_FIND_USER_INFO = '查询用户信息失败';
 // 账号不存在
 export const RES_FAILED_USER_IS_EXIST = 1011;
 export const RES_MSG_USER_IS_EXIST = '账号已经存在';
 // 登录失败
 export const RES_FAILED_LOGIN = 1012;
 export const RES_MSG_LOGIN = '登录失败';
-// 查询用户信息失败
-export const RES_FAILED_FIND_USER_INFO = 1013;
-export const RES_MSG_FIND_USER_INFO = '查询用户信息失败';
 // 用户信息不存在
-export const RES_FAILED_USER_IS_NOT_EXIST = 1014;
+export const RES_FAILED_USER_IS_NOT_EXIST = 1013;
 export const RES_MSG_USER_IS_NOT_EXIST = '用户不存在';
 
 //------------项目

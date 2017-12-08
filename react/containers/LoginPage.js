@@ -6,7 +6,7 @@ import {login, loginAction} from "../actions/UserAction";
 import {Button, Checkbox, Form, Icon, Input} from "antd";
 import FooterView from "../components/FooterView";
 import {goToHomePage, goToModifyPasswordPage} from "../../util/RouterUtil";
-import {RES_SUCCEED} from "../../api/Status";
+import {RES_SUCCEED} from "../../api/status/Status";
 import {FORM_RULE_ACCOUNT, FROM_RULE_PASSWORD} from "../constants/FormRule";
 
 const FormItem = Form.Item;

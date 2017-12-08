@@ -11,7 +11,7 @@ import {
     ACTION_UPLOAD_LOGO
 } from "../constants/ActionType";
 import {message} from "antd";
-import {RES_SUCCEED} from "../../api/Status";
+import {RES_SUCCEED} from "../../api/status/Status";
 import {PROJECT_LOGO} from "../constants/FileConstant";
 
 /**
