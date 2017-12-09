@@ -9,10 +9,13 @@ import {
     RES_MSG_UPLOAD_ARCHIVE
 } from "../status/Status";
 import {isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
-import {findProjectPlatforms} from "./base/BaseProjectApi";
-import {createArchive} from "./base/BaseArchiveApi";
 import * as LogUtil from "../../util/LogUtil";
 
+const findProjectPlatforms = () => {
+};
+
+const createArchive = () => {
+};
 
 /**
  * 上传文档接口, cli使用

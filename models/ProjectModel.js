@@ -1,25 +1,12 @@
 // project models
-import Mongoose from "mongoose";
-import {getDate, getFullDate, getTimeStamp} from "../util/TimeUtil";
+import {getFullDate, getTimeStamp} from "../util/TimeUtil";
 import {isArrayEmpty, isObjectEmpty} from "../util/CheckerUtil";
 import * as LogUtil from "../util/LogUtil";
 import {findPlatform, getPlatformModel} from "./PlatformModel";
 import {md5} from "../util/EncryptUtil";
 import {getConnection} from "../config/DBConfig";
 import {getUserModel} from "./UserModel";
-const Schema = Mongoose.Schema;
-
-/**
- * 项目schema 包含项目基本信息
- */
-const ProjectSchema = new Schema({
-    projectName: {type: String, unique: true},
-    avatar: {type: String},
-    des: {type: String, default: '什么都没写'},
-    createdDate: {type: String, default: getDate()},
-});
-
-export default Mongoose.model('Project', ProjectSchema);
+import {getArchiveModel} from "./ArchiveModel";
 
 
 let ProjectModel;
@@ -43,6 +30,7 @@ export const projectModel = (orm, db) => {
     // 联表
     ProjectModel.hasMany('platforms', getPlatformModel(), {appId: String}, {autoFetch: true});
     ProjectModel.hasMany('users', getUserModel(), {}, {reverse: 'projects'});
+    ProjectModel.hasMany('archives', getArchiveModel(), {}, {reverse: 'project'});
 };
 
 const TAG = 'ProjectModel';
@@ -53,6 +41,7 @@ const TAG = 'ProjectModel';
  */
 export const getProjectModel = () => {
     if (isObjectEmpty(ProjectModel)) {
+        LogUtil.e(`${TAG} getProjectModel empty`);
         throw {projectModelError: true};
     }
     return ProjectModel;

@@ -1,21 +1,8 @@
 // user model
-import Mongoose from "mongoose";
 import * as LogUtil from "../util/LogUtil";
 import {isArrayEmpty, isObjectEmpty} from "../util/CheckerUtil";
 import {md5} from "../util/EncryptUtil";
 import {getFullDate} from "../util/TimeUtil";
-const Schema = Mongoose.Schema;
-
-const UserSchema = new Schema({
-    nickName: {type: String, default: '匿名'},
-    account: {type: String, unique: true},
-    pwd: {type: String},
-    isAdmin: {type: Boolean, default: false},
-    accessToken: {type: String},
-});
-
-
-export default Mongoose.model('User', UserSchema);
 
 let UserModel;
 
@@ -66,6 +53,7 @@ export const USER_ADMIN = {
  */
 export const getUserModel = () => {
     if (isObjectEmpty(UserModel)) {
+        LogUtil.e(`${TAG} getUserModel empty`);
         throw {userModelError: true};
     }
     return UserModel;

@@ -1,19 +1,6 @@
 // platform model
-import Mongoose from "mongoose";
 import {isObjectEmpty} from "../util/CheckerUtil";
 import * as LogUtil from "../util/LogUtil";
-const Schema = Mongoose.Schema;
-
-/**
- * 平台schema 正常包括 0 Android 1 IOS
- */
-const PlatformSchema = new Schema({
-    platformId: {type: Number, unique: true},
-    des: {type: String, default: 'Android'},
-});
-
-
-export default Mongoose.model('Platform', PlatformSchema);
 
 const TAG = 'PlatformModel';
 
@@ -57,6 +44,7 @@ export const PLATFORM_IOS = {
  */
 export const getPlatformModel = () => {
     if (isObjectEmpty(PlatformModel)) {
+        LogUtil.e(`${TAG} getPlatformModel empty`);
         throw {platformModelError: true};
     }
     return PlatformModel;
