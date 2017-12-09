@@ -2,6 +2,7 @@
 import {
     countProject,
     createProject,
+    deleteProjectInfo,
     findProject,
     findProjectByPage,
     isProjectExist,
@@ -11,26 +12,18 @@ import orm from "orm";
 import {
     RES_FAILED_CREATE_PROJECT,
     RES_FAILED_DELETE_PROJECT,
-    RES_FAILED_DELETE_PROJECT_ALL_MEMBERS,
-    RES_FAILED_DELETE_PROJECT_PLATFORMS,
     RES_FAILED_FETCH_PROJECT_LIST,
-    RES_FAILED_NOT_ADMIN,
     RES_FAILED_PARAMS_INVALID,
     RES_FAILED_UPDATE_PROJECT_INFO,
     RES_MSG_CREATE_PROJECT,
     RES_MSG_DELETE_PROJECT,
-    RES_MSG_DELETE_PROJECT_ALL_MEMBERS,
-    RES_MSG_DELETE_PROJECT_PLATFORMS,
     RES_MSG_FETCH_PROJECT_LIST,
-    RES_MSG_NOT_ADMIN,
     RES_MSG_PARAMS_INVALID,
     RES_MSG_UPDATE_PROJECT_INFO,
     RES_SUCCEED
 } from "../status/Status";
 import {buildResponse} from "../../util/AjaxUtil";
 import {isArrayEmpty, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
-import {deleteProjectInfo, deleteProjectPlatforms} from "./base/BaseProjectApi";
-import {deleteAllMembers} from "./base/BaseProjectMemberApi";
 import * as LogUtil from "../../util/LogUtil";
 import {getFullDate} from "../../util/TimeUtil";
 import {isAdminUser, isUserExist} from "../../models/UserModel";
@@ -90,42 +83,39 @@ export const createProjectInfo = (req, res) => {
 
 /**
  * 删除项目
+ *
  * 1. 校验请求者身份
- * 2. 删除项目相关平台信息
+ * 2. 验证项目是否存在
  * 3. 删除项目信息
+ *
  * @param req
  * @param res
  */
 export const deleteProject = (req, res) => {
-    let status = RES_FAILED_DELETE_PROJECT;
-    let msg = RES_MSG_DELETE_PROJECT;
-
     const uId = req.body.uId;
     const projectId = req.body.projectId;
+
+    LogUtil.i(`${TAG} deleteProject ${uId} ${projectId}`);
+
+    if (isStringEmpty(uId) || isStringEmpty(projectId)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
+
+    let status = RES_FAILED_DELETE_PROJECT;
+    let msg = RES_MSG_DELETE_PROJECT;
 
     isAdminUser({
         id: uId
     }).then(() => {
-        return deleteProjectPlatforms(projectId);
+        return isProjectExist({id: projectId});
+    }).then(project => {
+        return deleteProjectInfo(project);
     }).then(() => {
-        return deleteProjectInfo(projectId);
-    }).then(() => {
-        return deleteAllMembers(projectId);
-    }).then(() => {
-        status = RES_SUCCEED;
-        msg = null;
-        res.json(buildResponse(status, {}, msg));
-    }).catch((error) => {
-        if (error.isAdmin === false) {
-            status = RES_FAILED_NOT_ADMIN;
-            msg = RES_MSG_NOT_ADMIN;
-        } else if (error.projectPlatformsDeleted === false) {
-            status = RES_FAILED_DELETE_PROJECT_PLATFORMS;
-            msg = RES_MSG_DELETE_PROJECT_PLATFORMS;
-        } else if (error.projectAllMemberDeleted === false) {
-            status = RES_FAILED_DELETE_PROJECT_ALL_MEMBERS;
-            msg = RES_MSG_DELETE_PROJECT_ALL_MEMBERS;
-        }
+        res.json(buildResponse(RES_SUCCEED, {}, '删除成功'));
+    }).catch(err => {
+        LogUtil.e(`${TAG} deleteProject ${JSON.stringify(err)}`);
+        [status, msg] = buildProjectErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     })
 

@@ -217,3 +217,18 @@ export const findProjectByPage = (findParams, pageSize, pageNum) => new Promise(
         });
     });
 });
+
+/**
+ * 根据参数项目信息
+ * @param project 项目实例
+ */
+export const deleteProjectInfo = project => new Promise((resolve, reject) => {
+    project.remove((err) => {
+        if (err) {
+            LogUtil.e(`${TAG} deleteProjectInfo ${err}`);
+            reject({deleteProjectInfoError: true});
+        } else {
+            resolve();
+        }
+    });
+});

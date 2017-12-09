@@ -215,16 +215,18 @@ export const fetchJoinedProjectList = (req, res) => {
 
     let status = RES_FAILED_FETCH_PROJECT_LIST;
     let msg = RES_MSG_FETCH_PROJECT_LIST;
+    let projectCount = 0;
 
     isUserExist({
         id: uId
     }).then(user => {
         return findUserJoinedProjects(user);
     }).then((projects) => {
+        projectCount = projects.length;
         projects = splitListByPage(projects, pageSize, pageNum);
         res.json(buildResponse(RES_SUCCEED, {
             projectList: concatProjectAndPlatformInfo(projects),
-            projectCount: projects.length,
+            projectCount: projectCount,
             pageNum: pageNum
         }, '获取成功'));
     }).catch(err => {

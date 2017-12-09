@@ -1,25 +1,7 @@
 // base project member api
-import ProjectMemberModel from "../../../models/ProjectMemberModel";
 import * as LogUtil from "../../../util/LogUtil";
 
 const TAG = 'BaseProjectMemberApi';
-
-/**
- * 删除项目所有成员
- * @param projectId
- */
-export const deleteAllMembers = (projectId) => new Promise((resolve, reject) => {
-    ProjectMemberModel.remove({
-        projectId: projectId,
-    }, (err) => {
-        if (err) {
-            reject({projectAllMemberDeleted: false});
-        } else {
-            resolve({projectAllMemberDeleted: true});
-        }
-    });
-});
-
 
 /**
  * 查找项目成员
