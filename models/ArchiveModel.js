@@ -2,6 +2,7 @@
 import {getFullDate} from "../util/TimeUtil";
 import {isObjectEmpty} from "../util/CheckerUtil";
 import * as LogUtil from "../util/LogUtil";
+import {getConnection} from "../config/DBConfig";
 
 const TAG = 'ArchiveModel';
 
@@ -36,3 +37,47 @@ export const getArchiveModel = () => {
     }
     return ArchiveModel;
 };
+
+/**
+ * 创建文档记录 事务
+ *
+ * 1. 创建事务
+ * 2. 创建文档
+ * 3. 把文档记录加入对应的项目中
+ *
+ * @param params 创建文档的参数
+ * @param project 文档对应的项目
+ */
+export const createArchive = (params, project) => new Promise((resolve, reject) => {
+    getConnection().transaction((err, transaction) => {
+        if (err) {
+            LogUtil.e(`${TAG} createArchive transaction ${err}`);
+            reject({createArchiveError: true});
+        }
+
+        getArchiveModel().create(params, (err, archive) => {
+            if (err) {
+                LogUtil.e(`${TAG} createArchive ${err}`);
+                reject({createArchiveError: true});
+            }
+
+            project.addArchives(archive, err => {
+                if (err) {
+                    LogUtil.e(`${TAG} addArchiveToProject ${err}`);
+                    reject({addArchiveToProjectError: true})
+                } else {
+                    resolve();
+                }
+
+            });
+
+        });
+
+        transaction.commit(err => {
+            if (err) {
+                LogUtil.e(`${TAG} createArchive transaction commit ${err}`);
+                reject({createArchiveError: true});
+            }
+        });
+    });
+});

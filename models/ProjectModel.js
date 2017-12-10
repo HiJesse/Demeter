@@ -27,9 +27,22 @@ export const projectModel = (orm, db) => {
         tableName: 'project'
     });
 
-    // 联表
-    ProjectModel.hasMany('platforms', getPlatformModel(), {appId: String}, {autoFetch: true});
-    ProjectModel.hasMany('users', getUserModel(), {}, {reverse: 'projects'});
+    // 联表 一对多 平台
+    ProjectModel.hasMany('platforms', getPlatformModel(), {
+        appId: {type: 'text', require: true},
+    }, {
+        autoFetch: true,
+        key: true,
+        reverse: 'projects'
+    });
+
+    // 联表 多对多 项目成员
+    ProjectModel.hasMany('users', getUserModel(), {}, {
+        key: true,
+        reverse: 'projects',
+    });
+
+    // 联表 一对多 文档
     ProjectModel.hasMany('archives', getArchiveModel(), {}, {reverse: 'project'});
 };
 
@@ -102,6 +115,8 @@ const createProjectPlatform = (project, resolve, reject) => {
                 appId: md5(project.id + platform.id + getTimeStamp() + '')
             }, err => {
                 if (err) {
+                    LogUtil.e(`${TAG} addPlatformToProject ${err}`);
+                    reject({addPlatformToProjectError: true});
                     throw err;
                 } else if (i === platforms.length - 1) {
                     resolve(project);

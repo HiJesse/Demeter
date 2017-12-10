@@ -9,6 +9,7 @@ import {createPlatform, findPlatform, PLATFORM_ANDROID, PLATFORM_IOS, platformMo
 import {projectModel} from "../models/ProjectModel";
 import {ormTransaction} from "../models/plugins/ORMTransaction";
 import {archiveModel} from "../models/ArchiveModel";
+import {projectPlatformModel} from "../models/ProjectPlatformModel";
 
 /**
  * 数据库连接
@@ -78,6 +79,7 @@ const setup = (db, callback) => {
     platformModel(orm, db);
     archiveModel(orm, db);
     projectModel(orm, db);
+    projectPlatformModel(orm, db);
 
     db.sync((error) => {
         if (error) {

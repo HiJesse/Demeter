@@ -96,8 +96,8 @@ export const RES_MSG_COUNT_PROJECT_EMPTY = '未查询到相关项目';
 export const RES_FAILED_UPDATE_PROJECT_INFO = 2010;
 export const RES_MSG_UPDATE_PROJECT_INFO = '更新项目信息失败';
 // 更新项目信息失败
-export const RES_FAILED_UPDATE_PROJECT_DES = 2011;
-export const RES_MSG_UPDATE_PROJECT_DES = '项目描述不能低于三个字符';
+export const RES_FAILED_COUNT_PROJECT_PLATFORM = 2011;
+export const RES_MSG_COUNT_PROJECT_PLATFORM = '未查询到项目平台';
 // 添加项目成员失败
 export const RES_FAILED_PROJECT_ADD_MEMBER = 2012;
 export const RES_MSG_PROJECT_ADD_MEMBER = '添加项目成员失败';

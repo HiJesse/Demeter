@@ -3,15 +3,19 @@ import {isObjectEmpty} from "../../util/CheckerUtil";
 import {buildUserErrorStatus} from "./UserErrorMapping";
 import {
     RES_FAILED_COUNT_PROJECT,
+    RES_FAILED_COUNT_PROJECT_PLATFORM,
     RES_FAILED_FETCH_PROJECT,
     RES_FAILED_FETCH_PROJECT_MEMBERS,
+    RES_FAILED_FETCH_PROJECT_PLATFORM,
     RES_FAILED_PROJECT_IS_EXIST,
     RES_FAILED_PROJECT_NOT_EXIST,
     RES_FAILED_USER_JOINED_PROJECT,
     RES_FAILED_USER_NOT_JOINED_PROJECT,
     RES_MSG_COUNT_PROJECT,
+    RES_MSG_COUNT_PROJECT_PLATFORM,
     RES_MSG_FETCH_PROJECT,
     RES_MSG_FETCH_PROJECT_MEMBERS,
+    RES_MSG_FETCH_PROJECT_PLATFORM,
     RES_MSG_PROJECT_IS_EXIST,
     RES_MSG_PROJECT_NOT_EXIST,
     RES_MSG_USER_JOINED_PROJECT,
@@ -54,6 +58,12 @@ export const buildProjectErrorStatus = (err, code, msg) => {
     } else if (err.isJoinedProject) {
         code = RES_FAILED_USER_JOINED_PROJECT;
         msg = RES_MSG_USER_JOINED_PROJECT;
+    } else if (err.isProjectPlatformExistError) {
+        code = RES_FAILED_FETCH_PROJECT_PLATFORM;
+        msg = RES_MSG_FETCH_PROJECT_PLATFORM;
+    } else if (err.isProjectPlatformNotExist) {
+        code = RES_FAILED_COUNT_PROJECT_PLATFORM;
+        msg = RES_MSG_COUNT_PROJECT_PLATFORM;
     }
 
     return [code, msg];
