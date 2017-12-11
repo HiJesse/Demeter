@@ -75,5 +75,7 @@ router.get('/dashboard/fetchDashboard', dashboard.fetchDashboard);
 
 // 上传文档
 router.post('/archive/uploadArchive', ProjectArchiveMulter.single('archive'), archive.uploadArchive);
+// 获取文档列表
+router.get('/archive/fetchArchiveList', archive.fetchArchiveList);
 
 export default router;

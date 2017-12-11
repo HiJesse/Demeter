@@ -5,6 +5,7 @@ const URL_MODULE = {
     USER: 'user/',
     PROJECT: 'project/',
     DASHBOARD: 'dashboard/',
+    ARCHIVE: 'archive/',
 };
 
 // 登录
@@ -47,3 +48,8 @@ export const URL_QUIT_PROJECT = URL_DOMAIN + URL_VERSION + URL_MODULE.PROJECT + 
 
 // 获取仪表盘数据
 export const URL_FETCH_DASHBOARD = URL_DOMAIN + URL_VERSION + URL_MODULE.DASHBOARD + 'fetchDashboard';
+
+// 创建文档 cli用
+export const URL_CREATE_ARCHIVE = URL_DOMAIN + URL_VERSION + URL_MODULE.ARCHIVE + 'uploadArchive';
+// 获取文档列表
+export const URL_FETCH_ARCHIVE_LIST = URL_DOMAIN + URL_VERSION + URL_MODULE.ARCHIVE + 'fetchArchiveList';

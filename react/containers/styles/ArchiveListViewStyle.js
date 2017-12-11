@@ -4,6 +4,7 @@ export const ArchiveListStyle = {
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'start',
+        alignSelf: 'start'
     },
     view_selects: {
         display: 'flex',
