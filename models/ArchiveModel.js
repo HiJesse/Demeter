@@ -15,6 +15,7 @@ let ArchiveModel;
  */
 export const archiveModel = (orm, db) => {
     ArchiveModel = db.define('archive', {
+        projectId: {type: 'number', require: true}, // 项目ID
         platformId: {type: 'number', require: true}, // 平台ID
         des: {type: 'text', default: '什么都没写'}, // 文档描述
         archiveName: {type: 'text', required: true}, // 文档名称
@@ -78,6 +79,33 @@ export const createArchive = (params, project) => new Promise((resolve, reject) 
                 LogUtil.e(`${TAG} createArchive transaction commit ${err}`);
                 reject({createArchiveError: true});
             }
+        });
+    });
+});
+
+/**
+ * 按页查找文档列表
+ * @param findParams 查找参数
+ * @param pageSize 一页容量
+ * @param pageNum 页码
+ */
+export const findArchiveByPage = (findParams, pageSize, pageNum) => new Promise((resolve, reject) => {
+    const archive = getArchiveModel();
+
+    archive.settings.set("pagination.perpage", pageSize);
+
+    archive.pages(findParams, (err, pages) => {
+        if (err) {
+            LogUtil.e(`${TAG} findArchiveByPage pages ${err}`);
+            reject({findArchivePage: true})
+        }
+
+        archive.page(findParams, pageNum).run(function (err, project) {
+            if (err) {
+                LogUtil.e(`${TAG} findArchiveByPage page ${err}`);
+                reject({findArchivePage: true})
+            }
+            resolve(project);
         });
     });
 });

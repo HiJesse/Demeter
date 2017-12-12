@@ -52,5 +52,7 @@ export const fetchArchivesAction = (uId, projectId, platformId) => ({
         uId: uId,
         projectId: projectId,
         platformId: platformId,
+        pageSize: 10,
+        pageNum: 1,
     }
 });

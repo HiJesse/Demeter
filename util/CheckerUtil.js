@@ -13,6 +13,9 @@ export function isArrayEmpty(val) {
     return val === undefined || val === null || val.length === 0;
 }
 
+// number invalid checker
+export const isNumberInvalid = num => typeof num === 'number' && !isNaN(num);
+
 /**
  * 字符串val的长度是否最少为length
  * @param val

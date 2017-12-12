@@ -36,7 +36,7 @@ import {
     RES_MSG_USER_NONE,
     RES_SUCCEED
 } from "../status/Status";
-import {isArrayEmpty, isStringEmpty} from "../../util/CheckerUtil";
+import {isArrayEmpty, isNumberInvalid, isStringEmpty} from "../../util/CheckerUtil";
 import {md5} from "../../util/EncryptUtil";
 import * as LogUtil from "../../util/LogUtil";
 import {createJsonWebToken} from "../../util/WebTokenUtil";
@@ -339,7 +339,7 @@ export const fetchUserList = (req, res) => {
 
     LogUtil.i(`${TAG} fetchUserList ${uId} ${accountSearch} ${pageNum}`);
 
-    if (isStringEmpty(uId) || pageSize < 0 || pageNum < 0) {
+    if (isStringEmpty(uId) || !isNumberInvalid(pageSize) || !isNumberInvalid(pageNum)) {
         res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
         return;
     }

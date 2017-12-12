@@ -10,6 +10,7 @@ const JWT = {
         '/modifyPassword',
         // 资源白名单
         /^\/upload\/project_logo\/.*/,
+        /^\/upload\/project_archive\/.*/,
         /^\/image\/.*/,
         /^\/assets\/.*/,
         // 接口白名单

@@ -20,3 +20,6 @@ export const UPLOAD_PROJECT_ARCHIVE = 'project_archive/';
 export const URL_PROJECT_LOGO_DEFAULT = URL_PUBLIC_IMAGE + 'project_logo.png';
 // 项目logo路径
 export const URL_PROJECT_LOGO = URL_PUBLIC_UPLOAD + UPLOAD_PROJECT_LOGO;
+
+// 文档下载路径
+export const URL_ARCHIVE = URL_PUBLIC_UPLOAD + UPLOAD_PROJECT_ARCHIVE;

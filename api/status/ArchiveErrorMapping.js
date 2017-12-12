@@ -2,6 +2,7 @@
 import {isObjectEmpty} from "../../util/CheckerUtil";
 import {buildUserErrorStatus} from "./UserErrorMapping";
 import {buildProjectErrorStatus} from "./ProjectErrorMapping";
+import {RES_FAILED_CONCAT_ARCHIVE_PROJECT, RES_MSG_CONCAT_ARCHIVE_PROJECT} from "./Status";
 
 /**
  * 构建文档模块的错误信息
@@ -20,6 +21,11 @@ export const buildArchiveErrorStatus = (err, code, msg) => {
 
     // 过滤用户错误
     [code, msg] = buildProjectErrorStatus(err, code, msg);
+
+    if (err.concatArchiveAndProjectInfoError) {
+        code = RES_FAILED_CONCAT_ARCHIVE_PROJECT;
+        msg = RES_MSG_CONCAT_ARCHIVE_PROJECT;
+    }
 
     return [code, msg];
 

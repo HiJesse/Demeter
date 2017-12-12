@@ -9,15 +9,16 @@ import {
     RES_MSG_UPLOAD_ARCHIVE,
     RES_SUCCEED
 } from "../status/Status";
-import {isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
+import {isNumberInvalid, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import * as LogUtil from "../../util/LogUtil";
 import {isProjectPlatformExist} from "../../models/ProjectPlatformModel";
-import {isProjectExist} from "../../models/ProjectModel";
-import {createArchive} from "../../models/ArchiveModel";
+import {findProject, isProjectExist} from "../../models/ProjectModel";
+import {createArchive, findArchiveByPage} from "../../models/ArchiveModel";
 import {getFullDate} from "../../util/TimeUtil";
 import {isUserExist} from "../../models/UserModel";
 import {buildArchiveErrorStatus} from "../status/ArchiveErrorMapping";
 import {findUserJoinedProjects} from "./base/BaseProjectMemberApi";
+import {concatArchiveAndProjectInfo, splitProjectID} from "../../util/ArrayUtil";
 
 const TAG = 'ArchiveApi';
 
@@ -55,6 +56,7 @@ export const uploadArchive = (req, res) => {
         });
     }).then(project => {
         const createArchiveParams = {
+            projectId: project.id,
             platformId: platformId,
             archiveName: archive.originalname,
             archivePath: archive.filename,
@@ -96,20 +98,30 @@ export const fetchArchiveList = (req, res) => {
 
     LogUtil.i(`${TAG} fetchArchiveList ${uId} ${projectId} ${platformId} ${pageSize} ${pageNum}`);
 
-    if (isStringEmpty(uId)) {
+    if (isStringEmpty(uId) || !isNumberInvalid(pageSize) || !isNumberInvalid(pageNum)) {
         res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
         return;
     }
 
     let status = RES_FAILED_FETCH_ARCHIVE;
     let msg = RES_MSG_FETCH_ARCHIVE;
+    let projectList;
 
     isUserExist({
         id: uId
     }).then(user => {
-        return findUserJoinedProjects(user);
+        if (user.admin) { // 如果是管理员则查询所有项目
+            return findProject({});
+        } else {
+            return findUserJoinedProjects(user);
+        }
     }).then(projects => {
-        res.json(buildResponse(RES_SUCCEED, {}, '查询成功'));
+        projectList = projects;
+        return findArchiveByPage({
+            id: splitProjectID(projects)
+        }, pageSize, pageNum);
+    }).then(archives => {
+        res.json(buildResponse(RES_SUCCEED, concatArchiveAndProjectInfo(archives, projectList), '查询成功'));
     }).catch(err => {
         LogUtil.e(`${TAG} fetchArchiveList ${JSON.stringify(err)}`);
         [status, msg] = buildArchiveErrorStatus(err, status, msg);

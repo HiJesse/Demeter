@@ -23,7 +23,7 @@ import {
     RES_SUCCEED
 } from "../status/Status";
 import {buildResponse} from "../../util/AjaxUtil";
-import {isArrayEmpty, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
+import {isArrayEmpty, isNumberInvalid, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import * as LogUtil from "../../util/LogUtil";
 import {getFullDate} from "../../util/TimeUtil";
 import {isAdminUser, isUserExist} from "../../models/UserModel";
@@ -140,7 +140,7 @@ export const fetchProjectList = (req, res) => {
 
     LogUtil.i(`${TAG} fetchProjectList ${uId} ${nameSearch}`);
 
-    if (isStringEmpty(uId)) {
+    if (isStringEmpty(uId) || !isNumberInvalid(pageSize) || !isNumberInvalid(pageNum)) {
         res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
         return;
     }
