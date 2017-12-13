@@ -36,6 +36,7 @@ export const fetchAllProjectsAction = uId => ({
     type: ACTION_ARCHIVE_FETCH_ALL_PROJECTS,
     data: {
         uId: uId,
+        pageNum: 1,
         pageSize: 100,
     }
 });

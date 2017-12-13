@@ -121,7 +121,11 @@ export const fetchArchiveList = (req, res) => {
             id: splitProjectID(projects)
         }, pageSize, pageNum);
     }).then(archives => {
-        res.json(buildResponse(RES_SUCCEED, concatArchiveAndProjectInfo(archives, projectList), '查询成功'));
+        res.json(buildResponse(RES_SUCCEED, {
+            archiveList: concatArchiveAndProjectInfo(archives, projectList),
+            archiveCount: archives.length,
+            pageNum: pageNum
+        }, '查询成功'));
     }).catch(err => {
         LogUtil.e(`${TAG} fetchArchiveList ${JSON.stringify(err)}`);
         [status, msg] = buildArchiveErrorStatus(err, status, msg);
