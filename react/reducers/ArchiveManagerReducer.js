@@ -1,5 +1,6 @@
 // archive manager
 import {
+    ACTION_ARCHIVE_DELETE_ARCHIVE_FULFILLED,
     ACTION_ARCHIVE_FETCH_ALL_PROJECTS_FULFILLED,
     ACTION_ARCHIVE_FETCH_ARCHIVES_FULFILLED,
     ACTION_ARCHIVE_SELECT_PLATFORM,
@@ -60,6 +61,7 @@ const fetchAllArchivesReducer = (state, action) => {
                 projectName: item.projectName,
                 projectLogo: item.avatar,
             },
+            archiveId: item.id,
             platform: item.platformId,
             archiveName: item.archiveName,
             archiveDes: item.des,
@@ -77,6 +79,26 @@ const fetchAllArchivesReducer = (state, action) => {
     };
 };
 
+/**
+ * 删除文档, 成功的话则刷新table数据
+ * @param state
+ * @param action
+ * @returns {*}
+ */
+function deleteArchiveReducer(state, action) {
+    const succeed = action.status === RES_SUCCEED;
+    if (!succeed) {
+        message.error(action.msg);
+        return {
+            ...state
+        };
+    }
+    return {
+        ...state,
+        needRefreshData: true
+    };
+}
+
 const initialArchive = {
     selectedProject: null, // 已选择的项目
     selectedPlatform: null, // 已选择的平台
@@ -93,6 +115,7 @@ const initialArchive = {
     pageNum: 1, // 当前页码
     pageSize: 10, // 页面容量
     pageLoading: false, // 文档table刷新
+    needRefreshData: false, // 是否需要刷新数据
 };
 
 /**
@@ -121,6 +144,9 @@ export function archive(state = initialArchive, action) {
             break;
         case ACTION_ARCHIVE_FETCH_ARCHIVES_FULFILLED:
             newState = fetchAllArchivesReducer(state, action.data);
+            break;
+        case ACTION_ARCHIVE_DELETE_ARCHIVE_FULFILLED:
+            newState = deleteArchiveReducer(state, action.data);
             break;
         default:
     }

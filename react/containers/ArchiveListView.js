@@ -3,6 +3,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {getUID} from "../utils/StorageUtil";
 import {
+    deleteArchiveAction,
     fetchAllProjectsAction,
     fetchArchivesAction,
     selectPlatformAction,
@@ -19,10 +20,19 @@ class ArchiveListView extends React.Component {
 
     componentDidMount() {
         this.props.fetchAllProjects();
-        this.props.fetchArchives(null, null);
+        this.props.fetchArchives(this.props.pageSize, this.props.pageNum, null, null);
     }
 
     render() {
+        if (this.props.needRefreshData) {
+            this.props.fetchArchives(
+                this.props.pageSize,
+                this.props.pageNum,
+                this.props.selectedProject,
+                this.props.selectedPlatform
+            );
+        }
+
         return (
             <div style={ArchiveListStyle.view_all}>
                 {this._renderSelects()}
@@ -38,8 +48,11 @@ class ArchiveListView extends React.Component {
                         current: this.props.pageNum
                     }}
                     onChange={(pagination) => {
-                        this.props.pageLoadingVisible(true);
-                        this.props.fetchUserList(pagination.pageSize, pagination.current, this.props.accountSearch);
+                        this.props.fetchArchives(
+                            pagination.pageSize,
+                            pagination.current,
+                            this.props.selectedProject,
+                            this.props.selectedPlatform);
                     }}/>
             </div>
         );
@@ -62,7 +75,12 @@ class ArchiveListView extends React.Component {
                     optionFilterProp="children"
                     onChange={project => {
                         this.props.selectProject(project);
-                        this.props.fetchArchives(project, this.props.selectedPlatform);
+                        this.props.fetchArchives(
+                            this.props.pageSize,
+                            1,
+                            project,
+                            this.props.selectedPlatform
+                        );
                     }}
                     filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
@@ -76,7 +94,12 @@ class ArchiveListView extends React.Component {
                     optionFilterProp="children"
                     onChange={platform => {
                         this.props.selectPlatform(platform);
-                        this.props.fetchArchives(this.props.selectedProject, platform);
+                        this.props.fetchArchives(
+                            this.props.pageSize,
+                            1,
+                            this.props.selectedProject,
+                            platform
+                        );
                     }}
                     filterOption={filterOption}
                 >
@@ -205,6 +228,7 @@ class ArchiveListView extends React.Component {
                 <Popconfirm
                     title="确认删除文档?"
                     onConfirm={() => {
+                        this.props.deleteArchive(this.props.archiveList[index].archiveId);
                     }}>
                     <a href="#">{'删除文档'}</a>
                 </Popconfirm>
@@ -233,7 +257,9 @@ function mapDispatchToProps(dispatch) {
         selectProject: project => dispatch(selectProjectAction(project)),
         selectPlatform: platform => dispatch(selectPlatformAction(platform)),
         fetchAllProjects: () => dispatch(fetchAllProjectsAction(getUID())),
-        fetchArchives: (projectId, platformId) => dispatch(fetchArchivesAction(getUID(), projectId, platformId))
+        fetchArchives: (pageSize, pageNum, projectId, platformId) =>
+            dispatch(fetchArchivesAction(getUID(), pageSize, pageNum, projectId, platformId)),
+        deleteArchive: archiveId => dispatch(deleteArchiveAction(getUID(), archiveId)),
     }
 }
 

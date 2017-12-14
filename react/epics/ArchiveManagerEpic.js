@@ -1,13 +1,15 @@
 // archive epics
 import {combineEpics} from "redux-observable";
 import {
+    ACTION_ARCHIVE_DELETE_ARCHIVE,
+    ACTION_ARCHIVE_DELETE_ARCHIVE_FULFILLED,
     ACTION_ARCHIVE_FETCH_ALL_PROJECTS,
     ACTION_ARCHIVE_FETCH_ALL_PROJECTS_FULFILLED,
     ACTION_ARCHIVE_FETCH_ARCHIVES,
     ACTION_ARCHIVE_FETCH_ARCHIVES_FULFILLED
 } from "../constants/ActionType";
 import {AJAX_METHOD, ajaxRequest} from "../../util/AjaxUtil";
-import {URL_FETCH_ARCHIVE_LIST, URL_FETCH_PROJECT_LIST} from "../constants/Url";
+import {URL_DELETE_ARCHIVE_LIST, URL_FETCH_ARCHIVE_LIST, URL_FETCH_PROJECT_LIST} from "../constants/Url";
 
 /**
  * 获取项目所有列表 epic
@@ -35,11 +37,25 @@ export const fetchArchivesEpic = action$ =>
             params: action.data
         }));
 
+/**
+ * 删除文档 epic
+ * @param action$
+ */
+export const deleteArchiveEpic = action$ =>
+    action$.ofType(ACTION_ARCHIVE_DELETE_ARCHIVE)
+        .mergeMap(action => ajaxRequest({
+            actionType: ACTION_ARCHIVE_DELETE_ARCHIVE_FULFILLED,
+            method: AJAX_METHOD.POST,
+            url: URL_DELETE_ARCHIVE_LIST,
+            params: action.data
+        }));
+
 
 /**
  * archive epic方法汇总
  */
 export const ArchiveManagerEpics = combineEpics(
     fetchProjectsEpic,
-    fetchArchivesEpic
+    fetchArchivesEpic,
+    deleteArchiveEpic
 );

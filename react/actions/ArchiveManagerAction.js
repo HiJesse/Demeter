@@ -1,5 +1,6 @@
 // archive actions
 import {
+    ACTION_ARCHIVE_DELETE_ARCHIVE,
     ACTION_ARCHIVE_FETCH_ALL_PROJECTS,
     ACTION_ARCHIVE_FETCH_ARCHIVES,
     ACTION_ARCHIVE_SELECT_PLATFORM,
@@ -44,16 +45,31 @@ export const fetchAllProjectsAction = uId => ({
 /**
  * 根据用户ID 项目id 平台id获取对应的文档
  * @param uId
+ * @param pageSize
+ * @param pageNum
  * @param projectId
  * @param platformId
  */
-export const fetchArchivesAction = (uId, projectId, platformId) => ({
+export const fetchArchivesAction = (uId, pageSize, pageNum, projectId, platformId) => ({
     type: ACTION_ARCHIVE_FETCH_ARCHIVES,
     data: {
         uId: uId,
         projectId: projectId,
         platformId: platformId,
-        pageSize: 10,
-        pageNum: 1,
+        pageSize: pageSize,
+        pageNum: pageNum,
+    }
+});
+
+/**
+ * 删除文档
+ * @param uId
+ * @param archiveId
+ */
+export const deleteArchiveAction = (uId, archiveId) => ({
+    type: ACTION_ARCHIVE_DELETE_ARCHIVE,
+    data: {
+        uId: uId,
+        archiveId: archiveId,
     }
 });
