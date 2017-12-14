@@ -1,4 +1,5 @@
 // archive api
+import orm from "orm";
 import {buildResponse} from "../../util/AjaxUtil";
 import {
     RES_FAILED_FETCH_ARCHIVE,
@@ -82,8 +83,8 @@ export const uploadArchive = (req, res) => {
  * 分页获取文档列表 支持按项目 | 平台 | 文档说明模糊匹配
  *
  * 1. 校验用户是否存在
- * 2. 反查用户已加入的项目
- * 3. 根据项目信息查询文档信息
+ * 2. 模糊查询查用户已加入的项目
+ * 3. 根据项目信息模糊查询文档信息
  * 4. 分页整合数据
  *
  * @param req
@@ -107,18 +108,24 @@ export const fetchArchiveList = (req, res) => {
     let msg = RES_MSG_FETCH_ARCHIVE;
     let projectList;
 
+    // 模糊查询
+    const projectLike = isStringEmpty(projectId) || projectId === 'null' ? '%' : projectId + '%';
+    const platformLike = isStringEmpty(platformId) || platformId === 'null' ? '%' : platformId + '%';
+    const projectLikeParams = {id: orm.like(projectLike)};
+
     isUserExist({
         id: uId
     }).then(user => {
         if (user.admin) { // 如果是管理员则查询所有项目
-            return findProject({});
+            return findProject(projectLikeParams);
         } else {
-            return findUserJoinedProjects(user);
+            return findUserJoinedProjects(user, projectLikeParams);
         }
     }).then(projects => {
         projectList = projects;
         return findArchiveByPage({
-            id: splitProjectID(projects)
+            projectId: splitProjectID(projects),
+            platformId: orm.like(platformLike)
         }, pageSize, pageNum);
     }).then(archives => {
         res.json(buildResponse(RES_SUCCEED, {

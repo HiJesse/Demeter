@@ -25,7 +25,8 @@ const fetchAllProjectsReducer = (state, action) => {
     }
 
     const projectList = action.data.projectList.map((item, index) => ({
-        value: item.projectId,
+        key: index,
+        value: String(item.id),
         name: item.projectName
     }));
 
@@ -81,10 +82,10 @@ const initialArchive = {
     selectedPlatform: null, // 已选择的平台
     projectList: [], // 项目列表
     platformList: [{
-        value: 0,
+        value: '1',
         name: 'Android'
     }, {
-        value: 1,
+        value: '2',
         name: 'IOS'
     }], // 平台列表
     archiveCount: 0, // 文档数量

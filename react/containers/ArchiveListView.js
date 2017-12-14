@@ -51,6 +51,8 @@ class ArchiveListView extends React.Component {
      * @private
      */
     _renderSelects() {
+        const filterOption = (input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+
         return (
             <div style={ArchiveListStyle.view_selects}>
                 <Select
@@ -58,9 +60,9 @@ class ArchiveListView extends React.Component {
                     style={ArchiveListStyle.select_item}
                     placeholder="选择项目"
                     optionFilterProp="children"
-                    onChange={value => {
-                        this.props.selectProject(value);
-                        this.props.fetchAllProjects(value, this.props.selectedPlatform);
+                    onChange={project => {
+                        this.props.selectProject(project);
+                        this.props.fetchArchives(project, this.props.selectedPlatform);
                     }}
                     filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
@@ -72,11 +74,11 @@ class ArchiveListView extends React.Component {
                     style={ArchiveListStyle.select_item}
                     placeholder="选择平台"
                     optionFilterProp="children"
-                    onChange={value => {
-                        this.props.selectPlatform(value);
-                        this.props.fetchAllProjects(this.props.selectedProject, value);
+                    onChange={platform => {
+                        this.props.selectPlatform(platform);
+                        this.props.fetchArchives(this.props.selectedProject, platform);
                     }}
-                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    filterOption={filterOption}
                 >
                     {this._buildSelectOptions(this.props.platformList)}
                 </Select>
@@ -91,9 +93,14 @@ class ArchiveListView extends React.Component {
      * @private
      */
     _buildSelectOptions(data) {
-        return data.map((item) => {
+        return data.map((item, index) => {
             return (
-                <Option value={item.value}>{item.name}</Option>
+                <Select.Option
+                    key={index}
+                    value={item.value}
+                >
+                    {item.name}
+                </Select.Option>
             );
         });
     }

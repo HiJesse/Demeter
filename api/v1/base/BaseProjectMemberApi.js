@@ -62,10 +62,11 @@ export const createProjectMemberInfo = (project, member) => new Promise((resolve
 
 /**
  * 获取用户已加入的项目列表
- * @param user
+ * @param user 用户实例
+ * @param projectParams 查询项目实例
  */
-export const findUserJoinedProjects = user => new Promise((resolve, reject) => {
-    user.getProjects((err, projects) => {
+export const findUserJoinedProjects = (user, projectParams) => new Promise((resolve, reject) => {
+    user.getProjects(projectParams, (err, projects) => {
         if (err) {
             LogUtil.e(`${TAG} findUserJoinedProjects ${err}`);
             reject({findUserJoinedProjectsError: true})

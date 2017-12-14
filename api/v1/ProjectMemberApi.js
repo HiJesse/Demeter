@@ -220,7 +220,7 @@ export const fetchJoinedProjectList = (req, res) => {
     isUserExist({
         id: uId
     }).then(user => {
-        return findUserJoinedProjects(user);
+        return findUserJoinedProjects(user, {});
     }).then((projects) => {
         projectCount = projects.length;
         projects = splitListByPage(projects, pageSize, pageNum);
