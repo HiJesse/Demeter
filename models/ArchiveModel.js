@@ -126,6 +126,21 @@ export const findArchive = params => new Promise((resolve, reject) => {
 });
 
 /**
+ * 计算符合参数的文档总数
+ * @param params
+ */
+export const countArchive = params => new Promise((resolve, reject) => {
+    getArchiveModel().count(params, (err, count) => {
+        if (err) {
+            LogUtil.e(`${TAG} countArchive ${err}`);
+            reject({countArchiveError: true});
+        } else {
+            resolve(count);
+        }
+    });
+});
+
+/**
  * 判断文档是否存在
  *
  * 异常返回 isArchiveExist

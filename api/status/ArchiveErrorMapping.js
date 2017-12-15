@@ -5,10 +5,12 @@ import {buildProjectErrorStatus} from "./ProjectErrorMapping";
 import {
     RES_FAILED_ARCHIVE_NOT_EXIST,
     RES_FAILED_CONCAT_ARCHIVE_PROJECT,
+    RES_FAILED_COUNT_ARCHIVE,
     RES_FAILED_DELETE_ARCHIVE,
     RES_FAILED_FETCH_ARCHIVES,
     RES_MSG_ARCHIVE_NOT_EXIST,
     RES_MSG_CONCAT_ARCHIVE_PROJECT,
+    RES_MSG_COUNT_ARCHIVE,
     RES_MSG_DELETE_ARCHIVE,
     RES_MSG_FETCH_ARCHIVES
 } from "./Status";
@@ -43,6 +45,9 @@ export const buildArchiveErrorStatus = (err, code, msg) => {
     } else if (err.deleteArchiveInfoError) {
         code = RES_FAILED_DELETE_ARCHIVE;
         msg = RES_MSG_DELETE_ARCHIVE;
+    } else if (err.countArchiveError) {
+        code = RES_FAILED_COUNT_ARCHIVE;
+        msg = RES_MSG_COUNT_ARCHIVE;
     }
 
     return [code, msg];

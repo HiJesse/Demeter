@@ -16,7 +16,13 @@ import {isNumberInvalid, isObjectEmpty, isStringEmpty} from "../../util/CheckerU
 import * as LogUtil from "../../util/LogUtil";
 import {isProjectPlatformExist} from "../../models/ProjectPlatformModel";
 import {findProject, isProjectExist} from "../../models/ProjectModel";
-import {createArchive, deleteArchiveInfo, findArchiveByPage, isArchiveExist} from "../../models/ArchiveModel";
+import {
+    countArchive,
+    createArchive,
+    deleteArchiveInfo,
+    findArchiveByPage,
+    isArchiveExist
+} from "../../models/ArchiveModel";
 import {getFullDate} from "../../util/TimeUtil";
 import {isAdminUser, isUserExist} from "../../models/UserModel";
 import {buildArchiveErrorStatus} from "../status/ArchiveErrorMapping";
@@ -109,6 +115,7 @@ export const fetchArchiveList = (req, res) => {
     let status = RES_FAILED_FETCH_ARCHIVE;
     let msg = RES_MSG_FETCH_ARCHIVE;
     let projectList;
+    let projectCount = 0;
 
     // 模糊查询
     const projectLike = isStringEmpty(projectId) || projectId === 'null' ? '%' : projectId + '%';
@@ -125,14 +132,20 @@ export const fetchArchiveList = (req, res) => {
         }
     }).then(projects => {
         projectList = projects;
-        return findArchiveByPage({
+        return countArchive({
             projectId: splitProjectID(projects),
+            platformId: orm.like(platformLike)
+        });
+    }).then(count => {
+        projectCount = count;
+        return findArchiveByPage({
+            projectId: splitProjectID(projectList),
             platformId: orm.like(platformLike)
         }, pageSize, pageNum);
     }).then(archives => {
         res.json(buildResponse(RES_SUCCEED, {
             archiveList: concatArchiveAndProjectInfo(archives, projectList),
-            archiveCount: archives.length,
+            archiveCount: projectCount,
             pageNum: pageNum
         }, '查询成功'));
     }).catch(err => {

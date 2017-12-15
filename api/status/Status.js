@@ -152,3 +152,6 @@ export const RES_MSG_FETCH_ARCHIVES = '查询文档信息失败';
 // 查询文档信息失败
 export const RES_FAILED_ARCHIVE_NOT_EXIST = 4005;
 export const RES_MSG_ARCHIVE_NOT_EXIST = '文档不存在';
+// 查询文档总数失败
+export const RES_FAILED_COUNT_ARCHIVE = 4006;
+export const RES_MSG_COUNT_ARCHIVE = '查询文档总数失败';
