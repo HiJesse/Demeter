@@ -22,6 +22,7 @@ const fetchAllProjectsReducer = (state, action) => {
         return {
             ...state,
             projectList: [],
+            needRefreshData: false
         };
     }
 
@@ -34,6 +35,7 @@ const fetchAllProjectsReducer = (state, action) => {
     return {
         ...state,
         projectList: projectList,
+        needRefreshData: false
     };
 };
 
@@ -50,6 +52,7 @@ const fetchAllArchivesReducer = (state, action) => {
             ...state,
             archiveList: [],
             pageLoading: false,
+            needRefreshData: false
         };
     }
 
@@ -76,6 +79,7 @@ const fetchAllArchivesReducer = (state, action) => {
         archiveCount: action.data.archiveCount,
         pageNum: action.data.pageNum,
         pageLoading: false,
+        needRefreshData: false
     };
 };
 

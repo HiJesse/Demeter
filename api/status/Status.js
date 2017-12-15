@@ -143,3 +143,12 @@ export const RES_MSG_FETCH_ARCHIVE = '获取文档列表列表失败';
 // 合并项目和文档信息失败
 export const RES_FAILED_CONCAT_ARCHIVE_PROJECT = 4002;
 export const RES_MSG_CONCAT_ARCHIVE_PROJECT = '合并文档信息失败';
+// 删除文档信息失败
+export const RES_FAILED_DELETE_ARCHIVE = 4003;
+export const RES_MSG_DELETE_ARCHIVE = '删除文档信息失败';
+// 查询文档信息失败
+export const RES_FAILED_FETCH_ARCHIVES = 4004;
+export const RES_MSG_FETCH_ARCHIVES = '查询文档信息失败';
+// 查询文档信息失败
+export const RES_FAILED_ARCHIVE_NOT_EXIST = 4005;
+export const RES_MSG_ARCHIVE_NOT_EXIST = '文档不存在';

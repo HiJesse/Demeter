@@ -77,5 +77,7 @@ router.get('/dashboard/fetchDashboard', dashboard.fetchDashboard);
 router.post('/archive/uploadArchive', ProjectArchiveMulter.single('archive'), archive.uploadArchive);
 // 获取文档列表
 router.get('/archive/fetchArchiveList', archive.fetchArchiveList);
+// 删除文档
+router.post('/archive/deleteArchive', archive.deleteArchive);
 
 export default router;

@@ -2,9 +2,11 @@
 import orm from "orm";
 import {buildResponse} from "../../util/AjaxUtil";
 import {
+    RES_FAILED_DELETE_ARCHIVE,
     RES_FAILED_FETCH_ARCHIVE,
     RES_FAILED_PARAMS_INVALID,
     RES_FAILED_UPLOAD_ARCHIVE,
+    RES_MSG_DELETE_ARCHIVE,
     RES_MSG_FETCH_ARCHIVE,
     RES_MSG_PARAMS_INVALID,
     RES_MSG_UPLOAD_ARCHIVE,
@@ -14,9 +16,9 @@ import {isNumberInvalid, isObjectEmpty, isStringEmpty} from "../../util/CheckerU
 import * as LogUtil from "../../util/LogUtil";
 import {isProjectPlatformExist} from "../../models/ProjectPlatformModel";
 import {findProject, isProjectExist} from "../../models/ProjectModel";
-import {createArchive, findArchiveByPage} from "../../models/ArchiveModel";
+import {createArchive, deleteArchiveInfo, findArchiveByPage, isArchiveExist} from "../../models/ArchiveModel";
 import {getFullDate} from "../../util/TimeUtil";
-import {isUserExist} from "../../models/UserModel";
+import {isAdminUser, isUserExist} from "../../models/UserModel";
 import {buildArchiveErrorStatus} from "../status/ArchiveErrorMapping";
 import {findUserJoinedProjects} from "./base/BaseProjectMemberApi";
 import {concatArchiveAndProjectInfo, splitProjectID} from "../../util/ArrayUtil";
@@ -135,6 +137,45 @@ export const fetchArchiveList = (req, res) => {
         }, '查询成功'));
     }).catch(err => {
         LogUtil.e(`${TAG} fetchArchiveList ${JSON.stringify(err)}`);
+        [status, msg] = buildArchiveErrorStatus(err, status, msg);
+        res.json(buildResponse(status, {}, msg));
+    });
+};
+
+/**
+ * 删除文档
+ *
+ * 1. 用户鉴权
+ * 2. 文档是否存在
+ * 3. 删除文档
+ *
+ * @param req
+ * @param res
+ */
+export const deleteArchive = (req, res) => {
+    const uId = req.body.uId;
+    const archiveId = req.body.archiveId;
+
+    LogUtil.i(`${TAG} deleteArchive ${uId} ${archiveId}`);
+
+    if (isStringEmpty(uId) || !isNumberInvalid(archiveId)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
+
+    let status = RES_FAILED_DELETE_ARCHIVE;
+    let msg = RES_MSG_DELETE_ARCHIVE;
+
+    isAdminUser({
+        id: uId
+    }).then(() => {
+        return isArchiveExist({id: archiveId});
+    }).then(archive => {
+        return deleteArchiveInfo(archive);
+    }).then(() => {
+        res.json(buildResponse(RES_SUCCEED, {}, '删除成功'));
+    }).catch(err => {
+        LogUtil.e(`${TAG} deleteArchive ${JSON.stringify(err)}`);
         [status, msg] = buildArchiveErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     });

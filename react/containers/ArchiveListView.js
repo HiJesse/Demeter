@@ -249,6 +249,7 @@ function select(state) {
         pageNum: archive.pageNum, // 当前页码
         archiveCount: archive.archiveCount, // 文档总数
         pageLoading: archive.pageLoading, // 分页loading
+        needRefreshData: archive.needRefreshData, // 是否需要刷新数据
     };
 }
 

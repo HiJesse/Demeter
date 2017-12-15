@@ -1,6 +1,6 @@
 // archive model
 import {getFullDate} from "../util/TimeUtil";
-import {isObjectEmpty} from "../util/CheckerUtil";
+import {isArrayEmpty, isObjectEmpty} from "../util/CheckerUtil";
 import * as LogUtil from "../util/LogUtil";
 import {getConnection} from "../config/DBConfig";
 
@@ -107,5 +107,56 @@ export const findArchiveByPage = (findParams, pageSize, pageNum) => new Promise(
             }
             resolve(project);
         });
+    });
+});
+
+/**
+ * 根据参数查找文档
+ * @param params
+ */
+export const findArchive = params => new Promise((resolve, reject) => {
+    getArchiveModel().find(params, (err, results) => {
+        if (err) {
+            LogUtil.e(`${TAG} findArchive ${err}`);
+            reject({findArchiveError: true});
+        } else {
+            resolve(results);
+        }
+    });
+});
+
+/**
+ * 判断文档是否存在
+ *
+ * 异常返回 isArchiveExist
+ * 用户不存在返回 isArchiveExistNotExist
+ *
+ * @param params
+ */
+export const isArchiveExist = params => new Promise((resolve, reject) => {
+    getArchiveModel().find(params, (err, results) => {
+        if (err) {
+            LogUtil.e(`${TAG} isArchiveExist ${err}`);
+            reject({isArchiveExistError: true});
+        } else if (isArrayEmpty(results)) {
+            reject({isArchiveExistNotExist: true});
+        } else {
+            resolve(results[0]);
+        }
+    });
+});
+
+/**
+ * 根据参数删除文档信息
+ * @param archive 文档实例
+ */
+export const deleteArchiveInfo = archive => new Promise((resolve, reject) => {
+    archive.remove((err) => {
+        if (err) {
+            LogUtil.e(`${TAG} deleteArchiveInfo ${err}`);
+            reject({deleteArchiveInfoError: true});
+        } else {
+            resolve();
+        }
     });
 });
