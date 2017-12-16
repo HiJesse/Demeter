@@ -10,3 +10,25 @@ export const getUID = () => localStorage.uId;
  * @param uId
  */
 export const setUID = uId => localStorage.uId = uId;
+
+/**
+ * 设置 token
+ * @param token
+ */
+export const setToken = token => localStorage.token = token;
+
+/**
+ * 获取 token
+ */
+export const getToken = () => localStorage.token;
+
+/**
+ * 设置管理员
+ * @param isAdmin
+ */
+export const setAdmin = isAdmin => localStorage.isAdmin = isAdmin;
+
+/**
+ * 获取是否为管理员
+ */
+export const isAdmin = () => localStorage.isAdmin === 'true';

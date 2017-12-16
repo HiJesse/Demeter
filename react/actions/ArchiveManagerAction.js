@@ -32,13 +32,15 @@ export const selectPlatformAction = platform => ({
 /**
  * 根据用户ID获取当前用户可以访问的项目列表
  * @param uId
+ * @param isAdmin
  */
-export const fetchAllProjectsAction = uId => ({
+export const fetchAllProjectsAction = (uId, isAdmin) => ({
     type: ACTION_ARCHIVE_FETCH_ALL_PROJECTS,
     data: {
         uId: uId,
         pageNum: 1,
         pageSize: 100,
+        isAdmin: isAdmin,
     }
 });
 

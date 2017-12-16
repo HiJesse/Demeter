@@ -1,6 +1,7 @@
 // archive manager
 import React from "react";
 import {connect} from "react-redux";
+import * as StorageUtil from "../utils/StorageUtil";
 import {getUID} from "../utils/StorageUtil";
 import {
     deleteArchiveAction,
@@ -212,19 +213,16 @@ class ArchiveListView extends React.Component {
     }
 
     /**
-     * 构建表格中行为列
+     * 构建表格中行为列, 管理员: 删除文档
      * @param index
      * @returns {XML}
      * @private
      */
     _buildOperationColumn(index) {
-        return (
-            <span style={ArchiveListStyle.view_operation}>
-                <a onClick={() => {
-                }}>
-                    {'下载'}
-                </a>
+        let deleteArchiveView = null;
 
+        if (StorageUtil.isAdmin()) {
+            deleteArchiveView = (
                 <Popconfirm
                     title="确认删除文档?"
                     onConfirm={() => {
@@ -232,6 +230,17 @@ class ArchiveListView extends React.Component {
                     }}>
                     <a href="#">{'删除文档'}</a>
                 </Popconfirm>
+            );
+        }
+
+        return (
+            <span style={ArchiveListStyle.view_operation}>
+                <a onClick={() => {
+                }}>
+                    {'下载'}
+                </a>
+
+                {deleteArchiveView}
             </span>
         );
     }
@@ -257,7 +266,7 @@ function mapDispatchToProps(dispatch) {
     return {
         selectProject: project => dispatch(selectProjectAction(project)),
         selectPlatform: platform => dispatch(selectPlatformAction(platform)),
-        fetchAllProjects: () => dispatch(fetchAllProjectsAction(getUID())),
+        fetchAllProjects: () => dispatch(fetchAllProjectsAction(getUID(), StorageUtil.isAdmin())),
         fetchArchives: (pageSize, pageNum, projectId, platformId) =>
             dispatch(fetchArchivesAction(getUID(), pageSize, pageNum, projectId, platformId)),
         deleteArchive: archiveId => dispatch(deleteArchiveAction(getUID(), archiveId)),

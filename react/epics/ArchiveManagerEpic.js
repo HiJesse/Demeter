@@ -9,7 +9,12 @@ import {
     ACTION_ARCHIVE_FETCH_ARCHIVES_FULFILLED
 } from "../constants/ActionType";
 import {AJAX_METHOD, ajaxRequest} from "../../util/AjaxUtil";
-import {URL_DELETE_ARCHIVE_LIST, URL_FETCH_ARCHIVE_LIST, URL_FETCH_PROJECT_LIST} from "../constants/Url";
+import {
+    URL_DELETE_ARCHIVE_LIST,
+    URL_FETCH_ARCHIVE_LIST,
+    URL_FETCH_JOINED_PROJECT_LIST,
+    URL_FETCH_PROJECT_LIST
+} from "../constants/Url";
 
 /**
  * 获取项目所有列表 epic
@@ -20,7 +25,7 @@ export const fetchProjectsEpic = action$ =>
         .mergeMap(action => ajaxRequest({
             actionType: ACTION_ARCHIVE_FETCH_ALL_PROJECTS_FULFILLED,
             method: AJAX_METHOD.GET,
-            url: URL_FETCH_PROJECT_LIST,
+            url: action.data.isAdmin ? URL_FETCH_PROJECT_LIST : URL_FETCH_JOINED_PROJECT_LIST,
             params: action.data
         }));
 

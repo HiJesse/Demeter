@@ -23,12 +23,13 @@ function loginReducer(state, action) {
     } else {
         message.error(action.msg);
     }
-
+    
     return {
         ...state,
         loginStatus: action.status,
         uId: action.data.uId,
-        token: action.data.token
+        token: action.data.token,
+        isAdmin: action.data.isAdmin,
     };
 }
 

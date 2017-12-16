@@ -8,6 +8,7 @@ import FooterView from "../components/FooterView";
 import {goToHomePage, goToModifyPasswordPage} from "../../util/RouterUtil";
 import {RES_SUCCEED} from "../../api/status/Status";
 import {FORM_RULE_ACCOUNT, FROM_RULE_PASSWORD} from "../constants/FormRule";
+import * as StorageUtil from "../utils/StorageUtil";
 
 const FormItem = Form.Item;
 
@@ -93,21 +94,26 @@ class LoginPage extends React.Component {
      * @private
      */
     _loginStatus() {
-        if (this.props.loginStatus === RES_SUCCEED) {
-            localStorage.token = this.props.token;
-            localStorage.uId = this.props.uId;
-            goToHomePage(this.props.history);
+        if (this.props.loginStatus !== RES_SUCCEED) {
+            return;
         }
+
+        StorageUtil.setUID(this.props.uId);
+        StorageUtil.setToken(this.props.token);
+        StorageUtil.setAdmin(this.props.isAdmin);
+        goToHomePage(this.props.history);
     }
 }
 
 const LoginPageForm = Form.create()(LoginPage);
 
 function select(state) {
+    const user = state.user;
     return {
-        loginStatus: state.user.loginStatus, // 登录状态
-        uId: state.user.uId, // 用户uId
-        token: state.user.token // 用户token
+        loginStatus: user.loginStatus, // 登录状态
+        uId: user.uId, // 用户uId
+        token: user.token, // 用户token
+        isAdmin: user.isAdmin, // 是否为管理员
     };
 }
 
