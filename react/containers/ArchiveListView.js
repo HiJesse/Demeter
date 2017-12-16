@@ -8,11 +8,14 @@ import {
     fetchAllProjectsAction,
     fetchArchivesAction,
     selectPlatformAction,
-    selectProjectAction
+    selectProjectAction,
+    setDownloadArchiveInfoAction,
+    showDownloadArchiveDialogAction
 } from "../actions/ArchiveManagerAction";
 import {Icon, Popconfirm, Select, Table} from "antd";
 import {ArchiveListStyle} from "./styles/ArchiveListViewStyle";
 import {isStringEmpty} from "../../util/CheckerUtil";
+import DownloadArchiveDialog from "../components/DownloadArchiveDialog";
 
 /**
  * 归档管理页
@@ -36,6 +39,7 @@ class ArchiveListView extends React.Component {
 
         return (
             <div style={ArchiveListStyle.view_all}>
+                {this._renderDownloadArchiveDialog()}
                 {this._renderSelects()}
                 <Table
                     bordered
@@ -56,6 +60,24 @@ class ArchiveListView extends React.Component {
                             this.props.selectedPlatform);
                     }}/>
             </div>
+        );
+    }
+
+    /**
+     * 绘制下载文档弹窗
+     * @returns {XML}
+     * @private
+     */
+    _renderDownloadArchiveDialog() {
+        return (
+            <DownloadArchiveDialog
+                data={this.props.downloadArchiveInfo}
+                dialogVisible={this.props.downloadDialogVisible}
+                onDismiss={() => {
+                    this.props.setDownloadArchiveInfo(-1);
+                    this.props.showDownloadDialog(false);
+                }}
+            />
         );
     }
 
@@ -236,6 +258,8 @@ class ArchiveListView extends React.Component {
         return (
             <span style={ArchiveListStyle.view_operation}>
                 <a onClick={() => {
+                    this.props.setDownloadArchiveInfo(index);
+                    this.props.showDownloadDialog(true);
                 }}>
                     {'下载'}
                 </a>
@@ -259,6 +283,8 @@ function select(state) {
         archiveCount: archive.archiveCount, // 文档总数
         pageLoading: archive.pageLoading, // 分页loading
         needRefreshData: archive.needRefreshData, // 是否需要刷新数据
+        downloadDialogVisible: archive.downloadDialogVisible, // 是否显示下载文档dialog
+        downloadArchiveInfo: archive.downloadArchiveInfo, // 要下载文档的信息
     };
 }
 
@@ -270,6 +296,8 @@ function mapDispatchToProps(dispatch) {
         fetchArchives: (pageSize, pageNum, projectId, platformId) =>
             dispatch(fetchArchivesAction(getUID(), pageSize, pageNum, projectId, platformId)),
         deleteArchive: archiveId => dispatch(deleteArchiveAction(getUID(), archiveId)),
+        showDownloadDialog: visible => dispatch(showDownloadArchiveDialogAction(visible)),
+        setDownloadArchiveInfo: index => dispatch(setDownloadArchiveInfoAction(index)),
     }
 }
 

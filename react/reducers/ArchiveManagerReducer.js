@@ -4,7 +4,9 @@ import {
     ACTION_ARCHIVE_FETCH_ALL_PROJECTS_FULFILLED,
     ACTION_ARCHIVE_FETCH_ARCHIVES_FULFILLED,
     ACTION_ARCHIVE_SELECT_PLATFORM,
-    ACTION_ARCHIVE_SELECT_PROJECT
+    ACTION_ARCHIVE_SELECT_PROJECT,
+    ACTION_ARCHIVE_SET_DOWNLOAD_INFO,
+    ACTION_DOWNLOAD_ARCHIVE_DIALOG_VISIBLE
 } from "../constants/ActionType";
 import {RES_SUCCEED} from "../../api/status/Status";
 import {message} from "antd";
@@ -70,6 +72,7 @@ const fetchAllArchivesReducer = (state, action) => {
             archiveDes: item.des,
             archiveSize: bytesToSize(item.archiveSize),
             archiveCreatedAt: item.createdAt,
+            archivePath: item.archivePath,
         };
     });
 
@@ -103,6 +106,26 @@ function deleteArchiveReducer(state, action) {
     };
 }
 
+/**
+ * 获取当前选中要下载文档的信息
+ * @param state
+ * @param action
+ * @returns {{downloadArchiveInfo: {}}}
+ */
+const setDownloadArchiveInfoReducer = (state, action) => {
+    const index = action.downloadArchiveIndex;
+    let downloadArchiveInfo = {};
+
+    if (index >= 0 && state.archiveList.length > index) {
+        downloadArchiveInfo = state.archiveList[index];
+    }
+
+    return {
+        ...state,
+        downloadArchiveInfo: downloadArchiveInfo
+    }
+};
+
 const initialArchive = {
     selectedProject: null, // 已选择的项目
     selectedPlatform: null, // 已选择的平台
@@ -120,6 +143,8 @@ const initialArchive = {
     pageSize: 10, // 页面容量
     pageLoading: false, // 文档table刷新
     needRefreshData: false, // 是否需要刷新数据
+    downloadDialogVisible: false, // 是否显示下载文档弹窗
+    downloadArchiveInfo: {}, // 需要下载的文档信息
 };
 
 /**
@@ -151,6 +176,15 @@ export function archive(state = initialArchive, action) {
             break;
         case ACTION_ARCHIVE_DELETE_ARCHIVE_FULFILLED:
             newState = deleteArchiveReducer(state, action.data);
+            break;
+        case ACTION_DOWNLOAD_ARCHIVE_DIALOG_VISIBLE:
+            newState = {
+                ...state,
+                downloadDialogVisible: action.data.downloadDialogVisible,
+            };
+            break;
+        case ACTION_ARCHIVE_SET_DOWNLOAD_INFO:
+            newState = setDownloadArchiveInfoReducer(state, action.data);
             break;
         default:
     }

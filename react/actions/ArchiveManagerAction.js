@@ -4,7 +4,9 @@ import {
     ACTION_ARCHIVE_FETCH_ALL_PROJECTS,
     ACTION_ARCHIVE_FETCH_ARCHIVES,
     ACTION_ARCHIVE_SELECT_PLATFORM,
-    ACTION_ARCHIVE_SELECT_PROJECT
+    ACTION_ARCHIVE_SELECT_PROJECT,
+    ACTION_ARCHIVE_SET_DOWNLOAD_INFO,
+    ACTION_DOWNLOAD_ARCHIVE_DIALOG_VISIBLE
 } from "../constants/ActionType";
 
 /**
@@ -73,5 +75,27 @@ export const deleteArchiveAction = (uId, archiveId) => ({
     data: {
         uId: uId,
         archiveId: archiveId,
+    }
+});
+
+/**
+ * 是否显示下载文档弹窗
+ * @param visible
+ */
+export const showDownloadArchiveDialogAction = visible => ({
+    type: ACTION_DOWNLOAD_ARCHIVE_DIALOG_VISIBLE,
+    data: {
+        downloadDialogVisible: visible
+    }
+});
+
+/**
+ * 设置要下载的文档信息
+ * @param index
+ */
+export const setDownloadArchiveInfoAction = index => ({
+    type: ACTION_ARCHIVE_SET_DOWNLOAD_INFO,
+    data: {
+        downloadArchiveIndex: index
     }
 });
