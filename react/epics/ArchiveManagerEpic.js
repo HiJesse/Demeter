@@ -1,6 +1,9 @@
 // archive epics
 import {combineEpics} from "redux-observable";
+import {Observable} from "rxjs";
 import {
+    ACTION_ARCHIVE_BUILD_DOWNLOAD_QR_CODE,
+    ACTION_ARCHIVE_BUILD_DOWNLOAD_QR_CODE_FULFILLED,
     ACTION_ARCHIVE_DELETE_ARCHIVE,
     ACTION_ARCHIVE_DELETE_ARCHIVE_FULFILLED,
     ACTION_ARCHIVE_FETCH_ALL_PROJECTS,
@@ -15,6 +18,9 @@ import {
     URL_FETCH_JOINED_PROJECT_LIST,
     URL_FETCH_PROJECT_LIST
 } from "../constants/Url";
+import {isStringEmpty} from "../../util/CheckerUtil";
+import {buildQRCode} from "../utils/QRCodeUtil";
+import {RES_FAILED, RES_SUCCEED} from "../../api/status/Status";
 
 /**
  * 获取项目所有列表 epic
@@ -55,6 +61,49 @@ export const deleteArchiveEpic = action$ =>
             params: action.data
         }));
 
+/**
+ * 构建文档下载二维码 epic
+ *
+ * 1. 下载地址为空直接返回失败
+ * 2. 使用qrcode 和下载地址生成二维码
+ * 3. 转发fulfilled action
+ *
+ * @param action$
+ */
+export const buildArchiveDownloadQRCodeEpic = action$ =>
+    action$.ofType(ACTION_ARCHIVE_BUILD_DOWNLOAD_QR_CODE)
+        .mergeMap(action => {
+            const data = action.data;
+            const returnData = {
+                type: ACTION_ARCHIVE_BUILD_DOWNLOAD_QR_CODE_FULFILLED
+            };
+
+            if (isStringEmpty(data.downloadArchiveUrl)) {
+                returnData.data = {
+                    status: RES_FAILED,
+                };
+                return Observable.of(returnData);
+            }
+
+            const observable = Observable.fromPromise(buildQRCode(data.downloadArchiveUrl));
+
+            return observable.map(data => {
+                returnData.data = {
+                    status: RES_SUCCEED,
+                    data: {
+                        downloadArchiveQrCodeUrl: data.qrCodeUrl
+                    }
+                };
+                return returnData;
+            }).catch(() => {
+                returnData.data = {
+                    status: RES_FAILED,
+                    msg: '生成二维码失败',
+                };
+                return Observable.of(returnData);
+            });
+        });
+
 
 /**
  * archive epic方法汇总
@@ -62,5 +111,6 @@ export const deleteArchiveEpic = action$ =>
 export const ArchiveManagerEpics = combineEpics(
     fetchProjectsEpic,
     fetchArchivesEpic,
-    deleteArchiveEpic
+    deleteArchiveEpic,
+    buildArchiveDownloadQRCodeEpic
 );

@@ -1,5 +1,6 @@
 // archive actions
 import {
+    ACTION_ARCHIVE_BUILD_DOWNLOAD_QR_CODE,
     ACTION_ARCHIVE_DELETE_ARCHIVE,
     ACTION_ARCHIVE_FETCH_ALL_PROJECTS,
     ACTION_ARCHIVE_FETCH_ARCHIVES,
@@ -97,5 +98,16 @@ export const setDownloadArchiveInfoAction = index => ({
     type: ACTION_ARCHIVE_SET_DOWNLOAD_INFO,
     data: {
         downloadArchiveIndex: index
+    }
+});
+
+/**
+ * 根据下载文档url 构建二维码
+ * @param url
+ */
+export const buildDownloadArchiveQRCodeAction = url => ({
+    type: ACTION_ARCHIVE_BUILD_DOWNLOAD_QR_CODE,
+    data: {
+        downloadArchiveUrl: url
     }
 });

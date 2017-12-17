@@ -1,5 +1,6 @@
 // archive manager
 import {
+    ACTION_ARCHIVE_BUILD_DOWNLOAD_QR_CODE_FULFILLED,
     ACTION_ARCHIVE_DELETE_ARCHIVE_FULFILLED,
     ACTION_ARCHIVE_FETCH_ALL_PROJECTS_FULFILLED,
     ACTION_ARCHIVE_FETCH_ARCHIVES_FULFILLED,
@@ -12,6 +13,7 @@ import {RES_SUCCEED} from "../../api/status/Status";
 import {message} from "antd";
 import {bytesToSize} from "../../util/CalculateUtil";
 import {formatDate} from "../../util/TimeUtil";
+import {isStringEmpty} from "../../util/CheckerUtil";
 
 /**
  * 获取可访问项目列表 reducer
@@ -123,8 +125,35 @@ const setDownloadArchiveInfoReducer = (state, action) => {
 
     return {
         ...state,
-        downloadArchiveInfo: downloadArchiveInfo
+        downloadArchiveInfo: downloadArchiveInfo,
+        downloadArchiveQrCodeUrl: '',
     }
+};
+
+/**
+ * 构建文档下载用二维码 reducer
+ * @param state
+ * @param action
+ * @returns {*}
+ */
+const buildArchiveDownloadQRCodeReducer = (state, action) => {
+    const succeed = action.status === RES_SUCCEED;
+
+    if (!isStringEmpty(action.msg)) {
+        message.error(action.msg);
+    }
+
+    if (!succeed) {
+        return {
+            ...state,
+            downloadArchiveQrCodeUrl: '',
+        };
+    }
+
+    return {
+        ...state,
+        downloadArchiveQrCodeUrl: action.data.downloadArchiveQrCodeUrl,
+    };
 };
 
 const initialArchive = {
@@ -146,6 +175,7 @@ const initialArchive = {
     needRefreshData: false, // 是否需要刷新数据
     downloadDialogVisible: false, // 是否显示下载文档弹窗
     downloadArchiveInfo: {}, // 需要下载的文档信息
+    downloadArchiveQrCodeUrl: '', // 下载文档二维码地址
 };
 
 /**
@@ -186,6 +216,9 @@ export function archive(state = initialArchive, action) {
             break;
         case ACTION_ARCHIVE_SET_DOWNLOAD_INFO:
             newState = setDownloadArchiveInfoReducer(state, action.data);
+            break;
+        case ACTION_ARCHIVE_BUILD_DOWNLOAD_QR_CODE_FULFILLED:
+            newState = buildArchiveDownloadQRCodeReducer(state, action.data);
             break;
         default:
     }

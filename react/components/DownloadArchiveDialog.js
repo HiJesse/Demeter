@@ -1,11 +1,13 @@
 import React from "react";
-import {Modal} from "antd";
+import {Icon, Modal} from "antd";
+import {connect} from "react-redux";
 import {isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import {ArchiveListStyle} from "../containers/styles/ArchiveListViewStyle";
+import {buildDownloadArchiveQRCodeAction} from "../actions/ArchiveManagerAction";
 
 
 // 下载文档信息弹窗
-export default class DownloadArchiveDialog extends React.Component {
+class DownloadArchiveDialog extends React.Component {
 
     render() {
         const data = this.props.data;
@@ -13,6 +15,8 @@ export default class DownloadArchiveDialog extends React.Component {
         if (isObjectEmpty(data) || isObjectEmpty(data.project)) {
             return null;
         }
+
+        this.props.buildDownloadArchiveQRCode(data.archivePath);
 
         return (
             <Modal
@@ -25,7 +29,8 @@ export default class DownloadArchiveDialog extends React.Component {
                 <div
                     style={ArchiveListStyle.dialog_view_download_all}>
                     {this._renderTextContent(data)}
-                    <img style={ArchiveListStyle.dialog_image_download_qrCode} src=''/>
+                    <img style={ArchiveListStyle.dialog_image_download_qrCode}
+                         src={this.props.downloadArchiveQrCodeUrl}/>
 
                 </div>
 
@@ -40,10 +45,18 @@ export default class DownloadArchiveDialog extends React.Component {
      * @private
      */
     _renderTextContent(data) {
+        let platformIcon;
+        
+        if (data.platform === 1) {
+            platformIcon = <Icon type={'android'}/>;
+        } else {
+            platformIcon = <Icon type={'apple'}/>;
+        }
+
         return (
             <div style={{justifyContent: 'space-between',}}>
                 <div>{`项目名称:  ${data.project.projectName}`}</div>
-                <div>{`项目平台:  ${data.platform}`}</div>
+                <div>{'项目平台:  '} {platformIcon}</div>
                 <div>{`文档名称:  ${data.archiveName}`}</div>
                 <div>{`文档描述:  ${data.archiveDes}`}</div>
                 <div>{`文档大小:  ${data.archiveSize}`}</div>
@@ -53,6 +66,21 @@ export default class DownloadArchiveDialog extends React.Component {
         )
     }
 }
+
+function select(state) {
+    const archive = state.archive;
+    return {
+        downloadArchiveQrCodeUrl: archive.downloadArchiveQrCodeUrl,
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        buildDownloadArchiveQRCode: url => dispatch(buildDownloadArchiveQRCodeAction(url)),
+    }
+}
+
+export default connect(select, mapDispatchToProps)(DownloadArchiveDialog);
 
 DownloadArchiveDialog.PropTypes = {
     dialogVisible: React.PropTypes.bool.isRequired, // 是否显示弹窗
