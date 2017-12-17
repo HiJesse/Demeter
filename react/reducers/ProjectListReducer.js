@@ -17,6 +17,7 @@ import {RES_SUCCEED} from "../../api/status/Status";
 import {message} from "antd";
 import {isStringEmpty} from "../../util/CheckerUtil";
 import * as React from "react";
+import {formatDate} from "../../util/TimeUtil";
 
 /**
  * 获取项目列表
@@ -49,7 +50,7 @@ const fetchProjectListReducer = (state, action) => {
                 ios: item.iosAppId
             },
             des: item.des,
-            createdDate: item.createdAt
+            createdDate: formatDate(item.createdAt),
         };
     });
 

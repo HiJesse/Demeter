@@ -1,4 +1,5 @@
 // date util
+import moment from "moment";
 
 /**
  * 获取当前毫秒数
@@ -39,3 +40,9 @@ export const getTime = () => {
  * 获取完整日期 格式为 1900-01-12 12:12:12
  */
 export const getFullDate = () => getDate() + ' ' + getTime();
+
+/**
+ * 按照 1900-01-12 12:12:12 的格式 格式化日期
+ * @param date
+ */
+export const formatDate = date => moment(date).format('YYYY-MM-DD HH:mm:ss');

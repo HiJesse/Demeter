@@ -11,6 +11,7 @@ import {
 import {RES_SUCCEED} from "../../api/status/Status";
 import {message} from "antd";
 import {bytesToSize} from "../../util/CalculateUtil";
+import {formatDate} from "../../util/TimeUtil";
 
 /**
  * 获取可访问项目列表 reducer
@@ -71,7 +72,7 @@ const fetchAllArchivesReducer = (state, action) => {
             archiveName: item.archiveName,
             archiveDes: item.des,
             archiveSize: bytesToSize(item.archiveSize),
-            archiveCreatedAt: item.createdAt,
+            archiveCreatedAt: formatDate(item.createdAt),
             archivePath: item.archivePath,
         };
     });

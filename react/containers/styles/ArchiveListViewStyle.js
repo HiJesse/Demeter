@@ -38,4 +38,15 @@ export const ArchiveListStyle = {
     text_project_name: {
         marginLeft: 10
     },
+    dialog_view_download_all: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    dialog_image_download_qrCode: {
+        width: 150,
+        height: 150,
+        marginRight: 20
+    }
 };
