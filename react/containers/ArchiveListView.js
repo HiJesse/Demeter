@@ -7,15 +7,18 @@ import {
     deleteArchiveAction,
     fetchAllProjectsAction,
     fetchArchivesAction,
+    selectArchiveDesAction,
     selectPlatformAction,
     selectProjectAction,
     setDownloadArchiveInfoAction,
     showDownloadArchiveDialogAction
 } from "../actions/ArchiveManagerAction";
-import {Icon, Popconfirm, Select, Table} from "antd";
+import {Icon, Input, Popconfirm, Select, Table} from "antd";
 import {ArchiveListStyle} from "./styles/ArchiveListViewStyle";
 import {isStringEmpty} from "../../util/CheckerUtil";
 import DownloadArchiveDialog from "../components/DownloadArchiveDialog";
+
+const Search = Input.Search;
 
 /**
  * 归档管理页
@@ -24,7 +27,7 @@ class ArchiveListView extends React.Component {
 
     componentDidMount() {
         this.props.fetchAllProjects();
-        this.props.fetchArchives(this.props.pageSize, this.props.pageNum, null, null);
+        this.props.fetchArchives(this.props.pageSize, this.props.pageNum, null, null, null);
     }
 
     render() {
@@ -33,7 +36,8 @@ class ArchiveListView extends React.Component {
                 this.props.pageSize,
                 this.props.pageNum,
                 this.props.selectedProject,
-                this.props.selectedPlatform
+                this.props.selectedPlatform,
+                this.props.selectedArchiveDes,
             );
         }
 
@@ -57,7 +61,9 @@ class ArchiveListView extends React.Component {
                             pagination.pageSize,
                             pagination.current,
                             this.props.selectedProject,
-                            this.props.selectedPlatform);
+                            this.props.selectedPlatform,
+                            this.props.selectedArchiveDes,
+                        );
                     }}/>
             </div>
         );
@@ -102,7 +108,8 @@ class ArchiveListView extends React.Component {
                             this.props.pageSize,
                             1,
                             project,
-                            this.props.selectedPlatform
+                            this.props.selectedPlatform,
+                            this.props.selectedArchiveDes,
                         );
                     }}
                     filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -121,13 +128,29 @@ class ArchiveListView extends React.Component {
                             this.props.pageSize,
                             1,
                             this.props.selectedProject,
-                            platform
+                            platform,
+                            this.props.selectedArchiveDes,
                         );
                     }}
                     filterOption={filterOption}
                 >
                     {this._buildSelectOptions(this.props.platformList)}
                 </Select>
+
+                <Search
+                    placeholder="搜索文档描述"
+                    style={{width: 200}}
+                    onSearch={archiveDes => {
+                        this.props.selectArchiveDes(archiveDes);
+                        this.props.fetchArchives(
+                            this.props.pageSize,
+                            1,
+                            this.props.selectedProject,
+                            this.props.selectedPlatform,
+                            archiveDes
+                        );
+                    }}
+                />
 
             </div>
         );
@@ -275,6 +298,7 @@ function select(state) {
     return {
         selectedProject: archive.selectedProject, // 选中的项目
         selectedPlatform: archive.selectedPlatform, // 选中的平台
+        selectedArchiveDes: archive.selectedArchiveDes, // 搜索的文档描述
         projectList: archive.projectList, // 项目列表
         platformList: archive.platformList, // 平台列表
         archiveList: archive.archiveList, // 文档列表
@@ -292,9 +316,10 @@ function mapDispatchToProps(dispatch) {
     return {
         selectProject: project => dispatch(selectProjectAction(project)),
         selectPlatform: platform => dispatch(selectPlatformAction(platform)),
+        selectArchiveDes: archiveDes => dispatch(selectArchiveDesAction(archiveDes)),
         fetchAllProjects: () => dispatch(fetchAllProjectsAction(getUID(), StorageUtil.isAdmin())),
-        fetchArchives: (pageSize, pageNum, projectId, platformId) =>
-            dispatch(fetchArchivesAction(getUID(), pageSize, pageNum, projectId, platformId)),
+        fetchArchives: (pageSize, pageNum, projectId, platformId, archiveDes) =>
+            dispatch(fetchArchivesAction(getUID(), pageSize, pageNum, projectId, platformId, archiveDes)),
         deleteArchive: archiveId => dispatch(deleteArchiveAction(getUID(), archiveId)),
         showDownloadDialog: visible => dispatch(showDownloadArchiveDialogAction(visible)),
         setDownloadArchiveInfo: index => dispatch(setDownloadArchiveInfoAction(index)),

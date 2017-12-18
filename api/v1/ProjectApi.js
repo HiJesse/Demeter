@@ -149,7 +149,7 @@ export const fetchProjectList = (req, res) => {
     let msg = RES_MSG_FETCH_PROJECT_LIST;
     let projectCount = 0;
 
-    const projectLike = isStringEmpty(nameSearch) || nameSearch === 'null' ? '%' : nameSearch + '%';
+    const projectLike = isStringEmpty(nameSearch) || nameSearch === 'null' ? '%' : '%' + nameSearch + '%';
 
     isAdminUser({
         id: uId

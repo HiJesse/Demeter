@@ -4,6 +4,7 @@ import {
     ACTION_ARCHIVE_DELETE_ARCHIVE,
     ACTION_ARCHIVE_FETCH_ALL_PROJECTS,
     ACTION_ARCHIVE_FETCH_ARCHIVES,
+    ACTION_ARCHIVE_SELECT_ARCHIVE_DES,
     ACTION_ARCHIVE_SELECT_PLATFORM,
     ACTION_ARCHIVE_SELECT_PROJECT,
     ACTION_ARCHIVE_SET_DOWNLOAD_INFO,
@@ -33,6 +34,17 @@ export const selectPlatformAction = platform => ({
 });
 
 /**
+ * 搜索 archive des
+ * @param archiveDes 文档描述
+ */
+export const selectArchiveDesAction = archiveDes => ({
+    type: ACTION_ARCHIVE_SELECT_ARCHIVE_DES,
+    data: {
+        archiveDes: archiveDes
+    }
+});
+
+/**
  * 根据用户ID获取当前用户可以访问的项目列表
  * @param uId
  * @param isAdmin
@@ -52,15 +64,17 @@ export const fetchAllProjectsAction = (uId, isAdmin) => ({
  * @param uId
  * @param pageSize
  * @param pageNum
- * @param projectId
- * @param platformId
+ * @param projectId 按项目搜索
+ * @param platformId 按平台搜索
+ * @param archiveDes 按文档搜索
  */
-export const fetchArchivesAction = (uId, pageSize, pageNum, projectId, platformId) => ({
+export const fetchArchivesAction = (uId, pageSize, pageNum, projectId, platformId, archiveDes) => ({
     type: ACTION_ARCHIVE_FETCH_ARCHIVES,
     data: {
         uId: uId,
         projectId: projectId,
         platformId: platformId,
+        archiveDes: archiveDes,
         pageSize: pageSize,
         pageNum: pageNum,
     }

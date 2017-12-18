@@ -4,6 +4,7 @@ import {
     ACTION_ARCHIVE_DELETE_ARCHIVE_FULFILLED,
     ACTION_ARCHIVE_FETCH_ALL_PROJECTS_FULFILLED,
     ACTION_ARCHIVE_FETCH_ARCHIVES_FULFILLED,
+    ACTION_ARCHIVE_SELECT_ARCHIVE_DES,
     ACTION_ARCHIVE_SELECT_PLATFORM,
     ACTION_ARCHIVE_SELECT_PROJECT,
     ACTION_ARCHIVE_SET_DOWNLOAD_INFO,
@@ -159,6 +160,7 @@ const buildArchiveDownloadQRCodeReducer = (state, action) => {
 const initialArchive = {
     selectedProject: null, // 已选择的项目
     selectedPlatform: null, // 已选择的平台
+    selectedArchiveDes: null, // 已选择的文档描述
     projectList: [], // 项目列表
     platformList: [{
         value: '1',
@@ -197,6 +199,12 @@ export function archive(state = initialArchive, action) {
             newState = {
                 ...state,
                 selectedPlatform: action.data.selectedPlatform
+            };
+            break;
+        case ACTION_ARCHIVE_SELECT_ARCHIVE_DES:
+            newState = {
+                ...state,
+                selectedArchiveDes: action.data.archiveDes
             };
             break;
         case ACTION_ARCHIVE_FETCH_ALL_PROJECTS_FULFILLED:

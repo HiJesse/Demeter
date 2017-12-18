@@ -348,7 +348,7 @@ export const fetchUserList = (req, res) => {
     let msg = RES_MSG_FETCH_USER_LIST;
     let userCount = 0;
 
-    const accountLike = isStringEmpty(accountSearch) || accountSearch === 'null' ? '%' : accountSearch + '%';
+    const accountLike = isStringEmpty(accountSearch) || accountSearch === 'null' ? '%' : '%' + accountSearch + '%';
 
     isAdminUser({
         id: uId

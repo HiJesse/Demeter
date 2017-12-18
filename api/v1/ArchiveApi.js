@@ -1,6 +1,6 @@
 // archive api
-import orm from "orm";
 import {buildResponse} from "../../util/AjaxUtil";
+import orm from "orm";
 import {
     RES_FAILED_DELETE_ARCHIVE,
     RES_FAILED_FETCH_ARCHIVE,
@@ -104,8 +104,9 @@ export const fetchArchiveList = (req, res) => {
     const pageNum = Number(req.query.pageNum);
     const projectId = req.query.projectId;
     const platformId = req.query.platformId;
+    const archiveDes = req.query.archiveDes;
 
-    LogUtil.i(`${TAG} fetchArchiveList ${uId} ${projectId} ${platformId} ${pageSize} ${pageNum}`);
+    LogUtil.i(`${TAG} fetchArchiveList ${uId} ${projectId} ${platformId} ${archiveDes} ${pageSize} ${pageNum}`);
 
     if (isStringEmpty(uId) || !isNumberInvalid(pageSize) || !isNumberInvalid(pageNum)) {
         res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
@@ -117,10 +118,14 @@ export const fetchArchiveList = (req, res) => {
     let projectList;
     let projectCount = 0;
 
+    const projectLikeParams = {};
+
+    if (!isStringEmpty(projectId) && projectId !== 'null') {
+        projectLikeParams.id = projectId;
+    }
+
     // 模糊查询
-    const projectLike = isStringEmpty(projectId) || projectId === 'null' ? '%' : projectId + '%';
-    const platformLike = isStringEmpty(platformId) || platformId === 'null' ? '%' : platformId + '%';
-    const projectLikeParams = {id: orm.like(projectLike)};
+    const archiveDesLike = isStringEmpty(archiveDes) || archiveDes === 'null' ? '%' : '%' + archiveDes + '%';
 
     isUserExist({
         id: uId
@@ -132,16 +137,26 @@ export const fetchArchiveList = (req, res) => {
         }
     }).then(projects => {
         projectList = projects;
-        return countArchive({
+        const params = {
             projectId: splitProjectID(projects),
-            platformId: orm.like(platformLike)
-        });
+            des: orm.like(archiveDesLike),
+        };
+
+        if (!isStringEmpty(platformId) && platformId !== 'null') {
+            params.platformId = platformId;
+        }
+        return countArchive(params);
     }).then(count => {
         projectCount = count;
-        return findArchiveByPage({
+        const params = {
             projectId: splitProjectID(projectList),
-            platformId: orm.like(platformLike)
-        }, pageSize, pageNum);
+            des: orm.like(archiveDesLike),
+        };
+
+        if (!isStringEmpty(platformId) && platformId !== 'null') {
+            params.platformId = platformId;
+        }
+        return findArchiveByPage(params, pageSize, pageNum);
     }).then(archives => {
         res.json(buildResponse(RES_SUCCEED, {
             archiveList: concatArchiveAndProjectInfo(archives, projectList),
