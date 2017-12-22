@@ -5,8 +5,10 @@ import FooterView from "../components/FooterView";
 import {homeStyle} from "./styles/HomeStyle";
 import {isArrayEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import {
+    ARCHIVE_MANAGER,
+    ARCHIVE_MANAGER_CREATE,
+    ARCHIVE_MANAGER_LIST,
     getValuesFromKey,
-    MENU_ARCHIVE,
     MENU_JOINED_PROJECT_LIST,
     MENU_PROJECT_MANAGER,
     MENU_USER_CENTER,
@@ -33,6 +35,7 @@ import ProjectListView from "./ProjectListView";
 import JoinedProjectListView from "./JoinedProjectListView";
 import Dashboard from "./Dashboard";
 import ArchiveListView from "./ArchiveListView";
+import CreateArchiveView from "./CreateArchiveView";
 
 const confirm = Modal.confirm;
 const {Header, Content, Footer, Sider} = Layout;
@@ -68,7 +71,7 @@ class HomePage extends React.Component {
                         mode="inline"
                         onSelect={this._onMenuSelected.bind(this)}>
 
-                        {this._createMenu(MENU_ARCHIVE)}
+                        {this._createMenu(ARCHIVE_MANAGER)}
 
                         {this._createMenu(MENU_JOINED_PROJECT_LIST)}
                         {this._createMenu(MENU_PROJECT_MANAGER)}
@@ -201,55 +204,38 @@ class HomePage extends React.Component {
         let content;
         switch (this.props.pageContent) {
             case USER_CENTER_INFO:
-                content = (
-                    <UserCenter />
-                );
+                content = (<UserCenter />);
                 break;
             case USER_CENTER_PASSWORD: {
-                content = (
-                    <ModifyPasswordByIdView />
-                );
+                content = (<ModifyPasswordByIdView />);
                 break;
             }
             case USER_MANAGER_CREATE:
-                content = (
-                    <CreateUserView />
-                );
+                content = (<CreateUserView />);
                 break;
             case USER_MANAGER_RESET_PWD:
-                content = (
-                    <ResetPasswordView />
-                );
+                content = (<ResetPasswordView />);
                 break;
             case USER_MANAGER_LIST:
-                content = (
-                    <UserListView />
-                );
+                content = (<UserListView />);
                 break;
             case PROJECT_MANAGER_CREATE:
-                content = (
-                    <CreateProjectView />
-                );
+                content = (<CreateProjectView />);
                 break;
             case PROJECT_MANAGER_LIST:
-                content = (
-                    <ProjectListView />
-                );
+                content = (<ProjectListView />);
                 break;
             case MENU_JOINED_PROJECT_LIST.key:
-                content = (
-                    <JoinedProjectListView />
-                );
+                content = (<JoinedProjectListView />);
                 break;
-            case MENU_ARCHIVE.key:
-                content = (
-                    <ArchiveListView />
-                );
+            case ARCHIVE_MANAGER_LIST:
+                content = (<ArchiveListView />);
+                break;
+            case ARCHIVE_MANAGER_CREATE:
+                content = (<CreateArchiveView />);
                 break;
             default:
-                content = (
-                    <Dashboard />
-                );
+                content = (<Dashboard />);
         }
         return (
             <div style={homeStyle.view_content}>

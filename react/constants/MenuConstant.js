@@ -62,14 +62,20 @@ export const MENU_USER_MANAGER = {
     }]
 };
 
-/**
- * 菜单 文件归档
- * @type {{key: string, value: string, icon: string}}
- */
-export const MENU_ARCHIVE = {
+// 归档管理
+export const ARCHIVE_MANAGER_LIST = 'archive_manager_list';
+export const ARCHIVE_MANAGER_CREATE = 'archive_manager_create';
+export const ARCHIVE_MANAGER = {
     key: 'archive_manager',
-    value: '文件归档',
+    value: '归档管理',
     icon: 'file',
+    MENU_SUB: [{
+        key: ARCHIVE_MANAGER_LIST,
+        value: '归档列表',
+    }, {
+        key: ARCHIVE_MANAGER_CREATE,
+        value: '新建归档',
+    }]
 };
 
 /**
@@ -122,11 +128,8 @@ export function getValuesFromKey(key) {
             key: MENU_JOINED_PROJECT_LIST.key,
             value: MENU_JOINED_PROJECT_LIST.value,
         };
-    } else if (key.startsWith(MENU_ARCHIVE.key)) {
-        values = {
-            key: MENU_ARCHIVE.key,
-            value: MENU_ARCHIVE.value,
-        };
+    } else if (key.startsWith(ARCHIVE_MANAGER.key)) {
+        values = getValueFromSpecificKey(key, ARCHIVE_MANAGER);
     }
     return values;
 }
