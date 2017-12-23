@@ -112,7 +112,7 @@ class ArchiveListView extends React.Component {
                             this.props.selectedArchiveDes,
                         );
                     }}
-                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    filterOption={filterOption}
                 >
                     {this._buildSelectOptions(this.props.projectList)}
                 </Select>

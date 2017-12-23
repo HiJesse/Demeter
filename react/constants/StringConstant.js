@@ -15,3 +15,6 @@ export const MSG_NICKNAME = '昵称至少为2个字符';
 export const MSG_PROJECT_NAME = '项目名称至少为2个字符';
 // 项目描述非法信息
 export const MSG_PROJECT_DES = '项目描述至少为3个字符';
+
+// 文档描述非法信息
+export const MSG_ARCHIVE_DES = '文档描述至少为3个字符';

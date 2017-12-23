@@ -1,5 +1,12 @@
 // 表单 规则
-import {MSG_ACCOUNT, MSG_NICKNAME, MSG_PASSWORD, MSG_PROJECT_DES, MSG_PROJECT_NAME} from "./StringConstant";
+import {
+    MSG_ACCOUNT,
+    MSG_ARCHIVE_DES,
+    MSG_NICKNAME,
+    MSG_PASSWORD,
+    MSG_PROJECT_DES,
+    MSG_PROJECT_NAME
+} from "./StringConstant";
 
 /**
  * 账号规则
@@ -49,4 +56,14 @@ export const FROM_RULE_PROJECT_DES = {
     required: true,
     min: 3,
     message: MSG_PROJECT_DES
+};
+
+/**
+ * 文档说明规则
+ * @type {{required: boolean, min: number, message}}
+ */
+export const FROM_RULE_ARCHIVE_DES = {
+    required: true,
+    min: 3,
+    message: MSG_ARCHIVE_DES
 };
