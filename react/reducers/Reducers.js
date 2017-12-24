@@ -8,6 +8,7 @@ import {projectList} from "./ProjectListReducer";
 import {projectMembersManager} from "./ProjectMembersManagerReducer";
 import {dashboard} from "./DashboardReducer";
 import {archive} from "./ArchiveManagerReducer";
+import {archiveCreation} from "./ArchiveCreationReducer";
 
 // 将reducer组合起来
 const reducers = combineReducers({
@@ -18,7 +19,8 @@ const reducers = combineReducers({
     projectList,
     projectMembersManager,
     dashboard,
-    archive
+    archive,
+    archiveCreation
 });
 
 export default reducers;

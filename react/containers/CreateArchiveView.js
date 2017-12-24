@@ -4,9 +4,9 @@ import {Button, Form, Icon, Input, Select, Upload} from "antd";
 import {homeStyle} from "./styles/HomeStyle";
 import {FROM_RULE_ARCHIVE_DES} from "../constants/FormRule";
 import {ArchiveListStyle} from "./styles/ArchiveListViewStyle";
-import {isArrayEmpty} from "../../util/CheckerUtil";
 import {fetchAllProjectsAction, selectPlatformAction, selectProjectAction} from "../actions/ArchiveManagerAction";
 import * as StorageUtil from "../utils/StorageUtil";
+import {getArchiveFileAction} from "../actions/ArchiveCreationAction";
 
 const FormItem = Form.Item;
 const {TextArea} = Input;
@@ -56,19 +56,12 @@ class CreateArchiveView extends React.Component {
     }
 
     /**
-     * 构建表单item 选择平台
+     * 构建表单item 上传文档
      * @returns {XML}
      * @private
      */
     _buildArchiveUploadFormItem() {
         const {getFieldDecorator} = this.props.form;
-        const archiveFile = this.props.archiveFile;
-        const uploadButton = (
-            <div>
-                <Icon type="plus"/>
-                <div className="ant-upload-text">Upload</div>
-            </div>
-        );
 
         return (
             <FormItem
@@ -76,18 +69,17 @@ class CreateArchiveView extends React.Component {
                 {getFieldDecorator('archive')(
                     <div>
                         <Upload
+                            disabled={this.props.uploadDisabled}
                             action={''}
-                            accept={'image/*'}
-                            listType="picture-card"
-                            fileList={archiveFile}
-                            onChange={this.onArchiveChange}
                             beforeUpload={file => this.props.getArchiveFile(file)}
                             onRemove={() => {
-                                this.props.getArchiveFile(undefined);
+                                this.props.getArchiveFile(null);
                                 return true;
                             }}
                         >
-                            {!isArrayEmpty(archiveFile) && archiveFile.length >= 1 ? null : uploadButton}
+                            <Button>
+                                <Icon type="upload"/> {'点击上传'}
+                            </Button>
                         </Upload>
                     </div>
                 )}
@@ -172,14 +164,6 @@ class CreateArchiveView extends React.Component {
     }
 
     /**
-     * archive 记录 变化
-     */
-    onArchiveChange = (({fileList}) => {
-        this.setState({});
-        // this.props.uploadArchive(fileList)
-    });
-
-    /**
      * 点击创建新项目
      * @param e
      * @private
@@ -198,9 +182,13 @@ const CreateArchiveViewFrom = Form.create()(CreateArchiveView);
 
 function select(state) {
     const archive = state.archive;
+    const archiveCreation = state.archiveCreation;
+
     return {
+        uploadDisabled: archiveCreation.uploadDisabled, //是否禁用上传
         projectList: archive.projectList, // 项目列表
         platformList: archive.platformList, // 平台列表
+        archiveFile: archiveCreation.archiveFile, // 要上传的文档文件信息
     };
 }
 
@@ -209,6 +197,7 @@ function mapDispatchToProps(dispatch) {
         selectProject: project => dispatch(selectProjectAction(project)),
         selectPlatform: platform => dispatch(selectPlatformAction(platform)),
         fetchAllProjects: () => dispatch(fetchAllProjectsAction(StorageUtil.getUID(), StorageUtil.isAdmin())),
+        getArchiveFile: file => dispatch(getArchiveFileAction(file)),
     }
 }
 
