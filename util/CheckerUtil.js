@@ -13,6 +13,9 @@ export function isArrayEmpty(val) {
     return val === undefined || val === null || val.length === 0;
 }
 
+// check is array
+export const isArray = val => val instanceof Array;
+
 // number invalid checker
 export const isNumberInvalid = num => typeof num === 'number' && !isNaN(num);
 

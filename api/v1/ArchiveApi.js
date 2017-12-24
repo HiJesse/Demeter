@@ -12,7 +12,7 @@ import {
     RES_MSG_UPLOAD_ARCHIVE,
     RES_SUCCEED
 } from "../status/Status";
-import {isNumberInvalid, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
+import {isArray, isNumberInvalid, isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import * as LogUtil from "../../util/LogUtil";
 import {isProjectPlatformExist} from "../../models/ProjectPlatformModel";
 import {findProject, isProjectExist} from "../../models/ProjectModel";
@@ -34,6 +34,66 @@ const TAG = 'ArchiveApi';
 /**
  * 上传文档接口, cli使用
  *
+ * 1. 校验用户是否存在
+ * 2. 校验用户是否加入该项目
+ * 3. 创建文档记录并添加进项目中
+ *
+ * @param req
+ * @param res
+ */
+export const uploadArchive = (req, res) => {
+    const uId = req.body.uId;
+    const projectId = req.body.projectId;
+    const platformId = req.body.platformId;
+    const archiveDes = req.body.archiveDes;
+    const archive = req.file;
+
+    LogUtil.i(`${TAG} uploadArchive ${uId} ${projectId} ${platformId} ${archiveDes}`);
+    if (isStringEmpty(uId) || isObjectEmpty(archive) || isObjectEmpty(projectId) || isObjectEmpty(platformId)) {
+        res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
+        return;
+    }
+
+    let status = RES_FAILED_UPLOAD_ARCHIVE;
+    let msg = RES_MSG_UPLOAD_ARCHIVE;
+
+    isUserExist({
+        id: uId
+    }).then(user => {
+        if (user.admin) { // 如果是管理员则校验项目是否存在
+            return isProjectExist({id: projectId});
+        } else { // 普通用户校验用户是否加入改项目
+            return findUserJoinedProjects(user, {id: projectId});
+        }
+    }).then(project => {
+        // 兼容两个promise返回值
+        const projectObj = isArray(project) ? project[0] : project;
+        const createArchiveParams = {
+            projectId: projectId,
+            platformId: platformId,
+            archiveName: archive.originalname,
+            archivePath: archive.filename,
+            archiveSize: archive.size,
+            createAt: getFullDate(),
+        };
+
+        if (!isStringEmpty(archiveDes)) {
+            createArchiveParams.des = archiveDes;
+        }
+
+        return createArchive(createArchiveParams, projectObj);
+    }).then(() => {
+        res.json(buildResponse(RES_SUCCEED, {}, '创建文档成功'));
+    }).catch(err => {
+        LogUtil.e(`${TAG} uploadArchive ${JSON.stringify(err)}`);
+        [status, msg] = buildArchiveErrorStatus(err, status, msg);
+        res.json(buildResponse(status, {}, msg));
+    });
+};
+
+/**
+ * 上传文档接口, cli使用
+ *
  * 1. 校验项目平台信息是否存在
  * 2. 反查项目是否存在
  * 3. 创建文档记录并添加进项目中
@@ -46,7 +106,7 @@ export const uploadArchiveByCLI = (req, res) => {
     const archiveDes = req.body.archiveDes;
     const archive = req.file;
 
-    LogUtil.i(`${TAG} uploadArchive ${appId}`);
+    LogUtil.i(`${TAG} uploadArchiveByCLI ${appId}`);
     if (isStringEmpty(appId) || isObjectEmpty(archive)) {
         res.json(buildResponse(RES_FAILED_PARAMS_INVALID, {}, RES_MSG_PARAMS_INVALID));
         return;
@@ -81,7 +141,7 @@ export const uploadArchiveByCLI = (req, res) => {
     }).then(() => {
         res.json(buildResponse(RES_SUCCEED, {}, '创建文档成功'));
     }).catch(err => {
-        LogUtil.e(`${TAG} uploadArchive ${JSON.stringify(err)}`);
+        LogUtil.e(`${TAG} uploadArchiveByCLI ${JSON.stringify(err)}`);
         [status, msg] = buildArchiveErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     });

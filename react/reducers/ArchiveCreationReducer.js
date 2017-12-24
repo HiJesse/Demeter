@@ -40,17 +40,11 @@ const uploadArchiveCheckerReducer = (state, data) => {
  * @param action
  */
 const uploadArchiveReducer = (state, action) => {
-    const succeed = action.status === RES_SUCCEED;
-    if (!succeed) {
+    if (action.status === RES_SUCCEED) {
+        message.success('创建项目成功', 1.5, () => location.reload());
+    } else {
         message.error(action.msg);
-        return {
-            ...state
-        };
     }
-
-    return {
-        ...state
-    };
 };
 
 /**
@@ -74,7 +68,7 @@ export function archiveCreation(state = initialArchiveCreationState, action) {
             uploadArchiveCheckerReducer(state, action.data);
             break;
         case ACTION_ARCHIVE_UPLOAD_FULFILLED:
-            newState = uploadArchiveReducer(state, action.data);
+            uploadArchiveReducer(state, action.data);
             break;
         default:
     }

@@ -41,7 +41,7 @@ export const uploadArchiveEpic = action$ =>
 
             return ajaxRequest({
                 actionType: ACTION_ARCHIVE_UPLOAD_FULFILLED,
-                method: AJAX_METHOD.GET,
+                method: AJAX_METHOD.POST_MULTI_FORM,
                 url: URL_CREATE_ARCHIVE,
                 params: action.data
             })
