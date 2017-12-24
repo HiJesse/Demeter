@@ -6,7 +6,7 @@ import {FROM_RULE_ARCHIVE_DES} from "../constants/FormRule";
 import {ArchiveListStyle} from "./styles/ArchiveListViewStyle";
 import {fetchAllProjectsAction, selectPlatformAction, selectProjectAction} from "../actions/ArchiveManagerAction";
 import * as StorageUtil from "../utils/StorageUtil";
-import {getArchiveFileAction} from "../actions/ArchiveCreationAction";
+import {getArchiveFileAction, uploadArchiveAction} from "../actions/ArchiveCreationAction";
 
 const FormItem = Form.Item;
 const {TextArea} = Input;
@@ -15,6 +15,9 @@ const {TextArea} = Input;
 class CreateArchiveView extends React.Component {
 
     componentDidMount() {
+        this.props.getArchiveFile(null);
+        this.props.selectProject(null);
+        this.props.selectPlatform(null);
         this.props.fetchAllProjects();
     }
 
@@ -65,7 +68,7 @@ class CreateArchiveView extends React.Component {
 
         return (
             <FormItem
-                label="文档上传">
+                label="新建归档">
                 {getFieldDecorator('archive')(
                     <div>
                         <Upload
@@ -172,7 +175,12 @@ class CreateArchiveView extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                // upload archive
+                this.props.uploadArchiveFile(
+                    this.props.archiveFile,
+                    this.props.selectedProject,
+                    this.props.selectedPlatform,
+                    values.archiveDes
+                );
             }
         });
     }
@@ -189,6 +197,8 @@ function select(state) {
         projectList: archive.projectList, // 项目列表
         platformList: archive.platformList, // 平台列表
         archiveFile: archiveCreation.archiveFile, // 要上传的文档文件信息
+        selectedProject: archive.selectedProject, // 选中的项目
+        selectedPlatform: archive.selectedPlatform, // 选中的平台
     };
 }
 
@@ -198,6 +208,8 @@ function mapDispatchToProps(dispatch) {
         selectPlatform: platform => dispatch(selectPlatformAction(platform)),
         fetchAllProjects: () => dispatch(fetchAllProjectsAction(StorageUtil.getUID(), StorageUtil.isAdmin())),
         getArchiveFile: file => dispatch(getArchiveFileAction(file)),
+        uploadArchiveFile: (file, projectId, platformId, archiveDes) =>
+            dispatch(uploadArchiveAction(StorageUtil.getUID(), file, projectId, platformId, archiveDes)),
     }
 }
 

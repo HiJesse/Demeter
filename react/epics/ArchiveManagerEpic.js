@@ -9,18 +9,43 @@ import {
     ACTION_ARCHIVE_FETCH_ALL_PROJECTS,
     ACTION_ARCHIVE_FETCH_ALL_PROJECTS_FULFILLED,
     ACTION_ARCHIVE_FETCH_ARCHIVES,
-    ACTION_ARCHIVE_FETCH_ARCHIVES_FULFILLED
+    ACTION_ARCHIVE_FETCH_ARCHIVES_FULFILLED,
+    ACTION_ARCHIVE_UPLOAD,
+    ACTION_ARCHIVE_UPLOAD_FULFILLED
 } from "../constants/ActionType";
 import {AJAX_METHOD, ajaxRequest} from "../../util/AjaxUtil";
 import {
+    URL_CREATE_ARCHIVE,
     URL_DELETE_ARCHIVE_LIST,
     URL_FETCH_ARCHIVE_LIST,
     URL_FETCH_JOINED_PROJECT_LIST,
     URL_FETCH_PROJECT_LIST
 } from "../constants/Url";
-import {isStringEmpty} from "../../util/CheckerUtil";
+import {isObjectEmpty, isStringEmpty} from "../../util/CheckerUtil";
 import {buildQRCode} from "../utils/QRCodeUtil";
 import {RES_FAILED, RES_SUCCEED} from "../../api/status/Status";
+
+/**
+ * 上传文档 epic
+ * @param action$
+ */
+export const uploadArchiveEpic = action$ =>
+    action$.ofType(ACTION_ARCHIVE_UPLOAD)
+        .mergeMap(action => {
+
+            if (isObjectEmpty(action.data.archive) ||
+                isObjectEmpty(action.data.projectId) ||
+                isObjectEmpty(action.data.platformId)) {
+                return [];
+            }
+
+            return ajaxRequest({
+                actionType: ACTION_ARCHIVE_UPLOAD_FULFILLED,
+                method: AJAX_METHOD.GET,
+                url: URL_CREATE_ARCHIVE,
+                params: action.data
+            })
+        });
 
 /**
  * 获取项目所有列表 epic
@@ -109,6 +134,7 @@ export const buildArchiveDownloadQRCodeEpic = action$ =>
  * archive epic方法汇总
  */
 export const ArchiveManagerEpics = combineEpics(
+    uploadArchiveEpic,
     fetchProjectsEpic,
     fetchArchivesEpic,
     deleteArchiveEpic,

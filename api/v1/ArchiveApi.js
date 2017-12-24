@@ -41,7 +41,7 @@ const TAG = 'ArchiveApi';
  * @param req
  * @param res
  */
-export const uploadArchive = (req, res) => {
+export const uploadArchiveByCLI = (req, res) => {
     const appId = req.body.appId;
     const archiveDes = req.body.archiveDes;
     const archive = req.file;

@@ -74,7 +74,7 @@ router.get('/dashboard/fetchDashboard', dashboard.fetchDashboard);
 /* archive 相关*/
 
 // 上传文档
-router.post('/archive/uploadArchive', ProjectArchiveMulter.single('archive'), archive.uploadArchive);
+router.post('/archive/uploadArchiveByCLI', ProjectArchiveMulter.single('archive'), archive.uploadArchiveByCLI);
 // 获取文档列表
 router.get('/archive/fetchArchiveList', archive.fetchArchiveList);
 // 删除文档
