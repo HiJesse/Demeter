@@ -270,7 +270,7 @@ export const createUserInfo = (req, res) => {
             account: account,
             pwd: md5('a123456'),
             admin: false,
-            createAt: getFullDate(),
+            createdAt: getFullDate(),
         })
     }).then(() => {
         res.json(buildResponse(RES_SUCCEED, {}, '创建成功'));

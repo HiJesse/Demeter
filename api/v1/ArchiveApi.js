@@ -74,7 +74,7 @@ export const uploadArchive = (req, res) => {
             archiveName: archive.originalname,
             archivePath: archive.filename,
             archiveSize: archive.size,
-            createAt: getFullDate(),
+            createdAt: getFullDate(),
         };
 
         if (!isStringEmpty(archiveDes)) {
@@ -130,7 +130,7 @@ export const uploadArchiveByCLI = (req, res) => {
             archiveName: archive.originalname,
             archivePath: archive.filename,
             archiveSize: archive.size,
-            createAt: getFullDate(),
+            createdAt: getFullDate(),
         };
 
         if (!isStringEmpty(archiveDes)) {

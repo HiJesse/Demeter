@@ -24,7 +24,7 @@ export const ormPaging = () => {
             model.page = (findParams, pageNum) => {
                 const perPage = model.settings.get("pagination.perpage");
 
-                return model.find(findParams).offset((pageNum - 1) * perPage).limit(perPage);
+                return model.find(findParams).order('-createdAt').offset((pageNum - 1) * perPage).limit(perPage);
             };
 
             /**

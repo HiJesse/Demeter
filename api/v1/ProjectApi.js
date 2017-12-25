@@ -70,7 +70,7 @@ export const createProjectInfo = (req, res) => {
             projectName: projectName,
             des: projectDes,
             avatar: projectLogo === undefined ? '' : projectLogo.filename,
-            createAt: getFullDate(),
+            createdAt: getFullDate(),
         });
     }).then(() => {
         res.json(buildResponse(RES_SUCCEED, {}, '创建成功'));
