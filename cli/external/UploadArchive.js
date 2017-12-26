@@ -4,8 +4,9 @@ require('isomorphic-fetch');
 const argv = require('yargs').argv;
 const fs = require("fs");
 const formstream = require('formstream');
+const API_UPLOAD = '/api/v1/archive/uploadArchiveByCLI';
 
-const api = argv.api; // 接口api
+const host = argv.host; // 接口host
 const appId = argv.key; // app id
 const archive = argv.archive; // 文档文件
 const archiveDes = argv.archiveDes; // 文档描述
@@ -18,10 +19,11 @@ const exit = code => process.exit(code);
  * 校验参数
  */
 const checkParams = () => {
-    if (isStringEmpty(api) ||
+    if (isStringEmpty(host) ||
         isStringEmpty(appId) ||
         isStringEmpty(archive)) {
         console.log('参数不合法');
+        printCLI();
         exit(-1);
     }
 
@@ -31,16 +33,28 @@ const checkParams = () => {
             uploadArchive();
         } else {
             console.log('文档不存在');
+            printCLI();
             exit(-1);
         }
     });
 };
 
 /**
+ * 打印 cli 命令格式
+ */
+const printCLI = () => {
+    console.log('--host 域名 eg. http://localhost:3000');
+    console.log('--key AppID');
+    console.log('--archive 文件');
+    console.log('--archiveDes 文档描述');
+};
+
+/**
  * 打印参数
  */
 const printParams = () => {
-    console.log(`API: ${api}`);
+    console.log(`Host: ${host}`);
+    console.log(`API: ${API_UPLOAD}`);
     console.log(`Key: ${appId}`);
     console.log(`Archive: ${archive}`);
     console.log(`ArchiveDes: ${archiveDes}`);
@@ -52,6 +66,7 @@ const printParams = () => {
 const uploadArchive = () => {
     console.log('开始上传');
     const form = formstream();
+    const url = host + API_UPLOAD;
 
     form.field('appId', appId);
     form.file('archive', archive.toString(), archive.toString());
@@ -66,15 +81,14 @@ const uploadArchive = () => {
         body: form
     };
 
-    fetch(api, data).then(response => {
+    fetch(url, data).then(response => {
         if (!response.ok) {
-            console.log(`${api} 请求失败 code = ${response.status}`);
+            console.log(`${url} 请求失败 code = ${response.status}`);
             exit(-1);
         }
         parseUploadResult(response.json());
     }).catch((e) => {
-        console.log(`${api} 请求失败`);
-        console.log(e);
+        console.log(`${url} 请求失败 ${e}`);
         exit(-1);
     });
 };

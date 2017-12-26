@@ -41,7 +41,7 @@ const uploadArchiveCheckerReducer = (state, data) => {
  */
 const uploadArchiveReducer = (state, action) => {
     if (action.status === RES_SUCCEED) {
-        message.success('创建项目成功', 1.5, () => location.reload());
+        message.success('创建文档成功', 1.5, () => location.reload());
     } else {
         message.error(action.msg);
     }

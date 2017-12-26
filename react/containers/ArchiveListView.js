@@ -202,7 +202,7 @@ class ArchiveListView extends React.Component {
         }, {
             title: '文档大小',
             dataIndex: 'archiveSize',
-            width: '15%',
+            width: '10%',
             render: (text) => (<div>{text}</div>),
         }, {
             title: '创建时间',
