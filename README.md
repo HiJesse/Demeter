@@ -7,7 +7,7 @@ Demeter是一个CMS系统, 提供用户体系以及App项目相关内容管理. 
 | --- | ---------- |
 | ES6 | 项目代码以ES2015为标准 |
 | Rxjs | 构建流式应用 |
-| MongoDB | 使用MongoDB作为数据持久化容器 |
+| MySQL | 使用MySQL作为数据持久化容器 |
 | Express | 基于nodejs的Web后端开发框架 |
 | JWT | 使用JWT实现前后端分离 |
 | React | 构建前端框架 |
@@ -16,11 +16,13 @@ Demeter是一个CMS系统, 提供用户体系以及App项目相关内容管理. 
 | Redux-observable | 处理异步redux action |
 | Webpack | 打包React代码, 并提供dev-server |
 | AntD | 使用AntD提供的UI组件 |
+| log4js | 管理并记录日志 |
 
 ### 项目部署和启动
 
-1. 安装并建立一个名为demeter的mongo数据库
-2. clone仓库在项目跟目录下执行`npm install`
+1. `nodejs`版本为`7.2.1`
+1. 根据`/config/Config.js`中的MySQL配置, 创建相应的数据库名称, 地址, 账号和密码.
+2. clone仓库, 在项目跟目录下执行`npm install`
 3. 安装配置pm2 `npm install pm2 -g`
 4. 项目根目录下 `npm run deploy`部署项目
 5. 浏览器打开[http://localhost:3000/](http://localhost:3000/)站点进入demeter登录页
