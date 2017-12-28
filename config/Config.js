@@ -22,30 +22,25 @@ const JWT = {
 
 //  开发环境配置
 const dev = {
-    DATABASE: 'mongodb://localhost/demeter',
     DB: 'mysql://root:mysql@127.0.0.1/demeter_test',
     SERVER: 'http://localhost',
     SERVER_PORT: 3000,
     PUBLIC_PATH: 'public',
-    REACT_IP: '127.0.0.1',
-    REACT_PORT: 3001,
     LOG_LEVEL: 'debug',
     JWT: JWT
 };
 
 // 生产环境配置
 const product = {
-    DATABASE: 'mongodb://localhost/demeter',
+    DB: 'mysql://root:mysql@127.0.0.1/demeter',
     SERVER: 'http://localhost',
-    SERVER_PORT: 3000,
+    SERVER_PORT: 9000,
     PUBLIC_PATH: 'public',
-    REACT_IP: '127.0.0.1',
-    REACT_PORT: 3001,
     LOG_LEVEL: 'info',
     JWT: JWT
 };
 
-export const env = dev;
+export const env = product;
 
 /**
  * 日志配置

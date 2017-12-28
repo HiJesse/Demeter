@@ -5,7 +5,7 @@
   "scripts": {
     "start": "nodemon ./cli/express.js --exec babel-node",
     "react": "node ./cli/react.js",
-    "packBundle": "webpack",
+    "packBundle": "webpack --config webpack.config.js --progress",
     "deploy": "pm2 start --interpreter babel-node ./cli/express.js --name demeter",
     "undeploy": "pm2 delete demeter"
   },
