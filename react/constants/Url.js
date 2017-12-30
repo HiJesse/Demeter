@@ -1,4 +1,6 @@
-const URL_DOMAIN = 'http://localhost:3000/';
+import * as Config from "../../config/Config";
+
+const URL_DOMAIN = Config.env.SERVER + ':' + Config.env.SERVER_PORT + '/';
 const URL_VERSION = 'api/v1/';
 
 const URL_MODULE = {
