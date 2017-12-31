@@ -21,7 +21,8 @@ const exit = code => process.exit(code);
 const checkParams = () => {
     if (isStringEmpty(host) ||
         isStringEmpty(appId) ||
-        isStringEmpty(archive)) {
+        isStringEmpty(archive) ||
+        isStringEmpty(archiveDes)) {
         console.log('参数不合法');
         printCLI();
         exit(-1);
@@ -70,10 +71,7 @@ const uploadArchive = () => {
 
     form.field('appId', appId);
     form.file('archive', archive.toString(), archive.toString());
-
-    if (!isStringEmpty(archiveDes)) {
-        form.field('archiveDes', archiveDes);
-    }
+    form.field('archiveDes', archiveDes);
 
     const data = {
         method: 'POST',
