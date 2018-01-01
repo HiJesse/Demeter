@@ -1,6 +1,6 @@
 {
   "name": "demeter",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "nodemon ./cli/express.js --exec babel-node",
