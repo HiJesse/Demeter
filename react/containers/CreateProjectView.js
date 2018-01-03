@@ -42,7 +42,7 @@ class CreateProjectView extends React.Component {
                     {getFieldDecorator('projectLogo')(
                         <div>
                             <Upload
-                                action={''}
+                                action={'/upload'}
                                 accept={'image/*'}
                                 listType="picture-card"
                                 fileList={logo}

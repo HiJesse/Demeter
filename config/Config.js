@@ -14,6 +14,7 @@ const JWT = {
         /^\/image\/.*/,
         /^\/assets\/.*/,
         // 接口白名单
+        '/upload',
         '/api/v1/user/login',
         '/api/v1/user/modifyPassword',
         '/api/v1/archive/uploadArchiveByCLI'

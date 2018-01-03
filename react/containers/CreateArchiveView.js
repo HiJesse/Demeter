@@ -73,7 +73,7 @@ class CreateArchiveView extends React.Component {
                     <div>
                         <Upload
                             disabled={this.props.uploadDisabled}
-                            action={''}
+                            action={'/upload'}
                             beforeUpload={file => this.props.getArchiveFile(file)}
                             onRemove={() => {
                                 this.props.getArchiveFile(null);
