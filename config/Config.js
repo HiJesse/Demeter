@@ -24,7 +24,7 @@ const JWT = {
 //  开发环境配置
 const dev = {
     DB: 'mysql://root:mysql@127.0.0.1/demeter_test',
-    SERVER: 'http://localhost',
+    SERVER: 'https://localhost',
     SERVER_PORT: 3000,
     PUBLIC_PATH: 'public',
     LOG_LEVEL: 'debug',
@@ -34,7 +34,7 @@ const dev = {
 // 生产环境配置
 const product = {
     DB: 'mysql://root:mysql@127.0.0.1/demeter',
-    SERVER: 'http://localhost',
+    SERVER: 'https://localhost',
     SERVER_PORT: 9000,
     PUBLIC_PATH: 'public',
     LOG_LEVEL: 'info',

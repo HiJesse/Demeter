@@ -1,37 +1,43 @@
 // express server
+import app from "../config/ExpressConfig";
+import * as Config from "../config/Config";
+import {configHttps} from "../config/HttpsConfig";
+
 /**
  * Module dependencies.
  */
-import app from "../config/ExpressConfig";
-import * as Config from "../config/Config";
 const debug = require('debug')('demeter:server');
-const http = require('http');
+const https = require('https');
 
 /**
  * Get port from environment and store in Express.
  */
-
 const port = normalizePort(Config.env.SERVER_PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Listen on provided port, on all network interfaces.
+ * @param server
  */
-
-const server = http.createServer(app);
+const setupServer = (server) => {
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+};
 
 /**
- * Listen on provided port, on all network interfaces.
+ * Create HTTP & HTTPS server.
  */
+const httpsServer = https.createServer(configHttps(), app);
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+/**
+ * 配置https信息
+ */
+setupServer(httpsServer);
 
 /**
  * Normalize a port into a number, string, or false.
  */
-
 function normalizePort(val) {
     const port = parseInt(val, 10);
 
@@ -51,7 +57,6 @@ function normalizePort(val) {
 /**
  * Event listener for HTTP server "error" event.
  */
-
 function onError(error) {
     if (error.syscall !== 'listen') {
         throw error;
@@ -79,9 +84,8 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
 function onListening() {
-    const addr = server.address();
+    const addr = httpsServer.address();
     const bind = typeof addr === 'string'
         ? 'pipe ' + addr
         : 'port ' + addr.port;
