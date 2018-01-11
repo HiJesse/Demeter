@@ -1,8 +1,9 @@
 // ipa file parser
 import PList from "plist";
+import AdmZip from "adm-zip";
+import BPList from "bplist-parser";
 import * as FileUtil from "./FileUtil";
 import * as LogUtil from "./LogUtil";
-import BPList from "bplist-parser";
 import * as CheckerUtil from "./CheckerUtil";
 
 const TAG = 'IPAUtil';
@@ -12,7 +13,18 @@ const TAG = 'IPAUtil';
  * @param filePath
  */
 export const parseIPA = filePath => {
+    const ipa = new AdmZip(filePath);
+    const ipaEntries = ipa.getEntries(); // an array of ZipEntry records
 
+    ipaEntries.forEach(ipaEntry => {
+        if (CheckerUtil.isStringContains(ipaEntry.entryName, 'Info.plist') &&
+            CheckerUtil.getStringMatchNum(ipaEntry.entryName, '/') === 2) {
+            parseBinaryPList(ipa.readFile(ipaEntry.entryName), (err, data) => {
+                buildPList(data, './test.plist', () => {
+                });
+            });
+        }
+    });
 };
 
 /**
@@ -37,7 +49,7 @@ export const parsePList = (filePath, cb) => {
 
 /**
  * 解析二进制plist内容
- * @param filePath
+ * @param filePath 文件路径 或者文件buffer
  * @param cb
  */
 export const parseBinaryPList = (filePath, cb) => {

@@ -10,6 +10,7 @@
     "undeploy": "pm2 delete demeter"
   },
   "dependencies": {
+    "adm-zip": "^0.4.7",
     "antd": "^2.12.0",
     "body-parser": "~1.17.1",
     "bplist-parser": "^0.1.1",
