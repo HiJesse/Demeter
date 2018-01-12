@@ -21,6 +21,13 @@ const JWT = {
     ]
 };
 
+// 又拍云配置
+const UPYUN = {
+    bucket: "xx",
+    operator: "xxxx",
+    password: "xxxxxxx"
+};
+
 //  开发环境配置
 const dev = {
     DB: 'mysql://root:mysql@127.0.0.1/demeter_test',
@@ -28,7 +35,8 @@ const dev = {
     SERVER_PORT: 3000,
     PUBLIC_PATH: 'public',
     LOG_LEVEL: 'debug',
-    JWT: JWT
+    JWT: JWT,
+    UPYUN: UPYUN,
 };
 
 // 生产环境配置
@@ -38,7 +46,8 @@ const product = {
     SERVER_PORT: 9000,
     PUBLIC_PATH: 'public',
     LOG_LEVEL: 'info',
-    JWT: JWT
+    JWT: JWT,
+    UPYUN: UPYUN,
 };
 
 export const env = product;
