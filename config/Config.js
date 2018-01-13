@@ -23,9 +23,9 @@ const JWT = {
 
 // 又拍云配置
 const UPYUN = {
-    bucket: "xx",
-    operator: "xxxx",
-    password: "xxxxxxx"
+    bucket: "xxx",
+    operator: "xxx",
+    password: "xxx"
 };
 
 //  开发环境配置

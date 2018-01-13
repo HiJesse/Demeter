@@ -110,6 +110,12 @@ export const write = (src, data, encoding) => FS.writeFileSync(src, data, encodi
 export const read = (src, encoding) => FS.readFileSync(src, encoding || 'utf-8');
 
 /**
+ * 获取文件流
+ * @param src
+ */
+export const getReadStream = src => FS.createReadStream(src);
+
+/**
  * 文件中追加内容
  * @param src 文件路径
  * @param data 追加内让

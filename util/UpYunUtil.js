@@ -1,7 +1,7 @@
 // up yun util
 import UpYun from "upyun";
 import * as Config from "../config/Config";
-import * as LogUtil from "./LogUtil";
+import * as FileUtil from "./FileUtil";
 
 const __instance = (function () {
     let instance;
@@ -33,7 +33,6 @@ export default class UpYunUtil {
      * @private
      */
     _initClient() {
-        LogUtil.e('init client');
         const service = new UpYun.Service(Config.env.UPYUN.bucket, Config.env.UPYUN.operator, Config.env.UPYUN.password);
         this.client = new UpYun.Client(service);
     }
@@ -54,6 +53,6 @@ export default class UpYunUtil {
      * @returns {*}
      */
     upload(remotePath, localFile) {
-        return this.client.putFile(remotePath, localFile);
+        return this.client.putFile(remotePath, FileUtil.getReadStream(localFile));
     }
 }
