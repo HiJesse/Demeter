@@ -5,26 +5,57 @@ import BPList from "bplist-parser";
 import * as FileUtil from "./FileUtil";
 import * as LogUtil from "./LogUtil";
 import * as CheckerUtil from "./CheckerUtil";
+import {isObjectEmpty} from "./CheckerUtil";
 
 const TAG = 'IPAUtil';
 
 /**
  * 解析IPA文件
- * @param filePath
+ * @param filePath ipa文件路径
+ * @param outputFilePath 解析出OTA用plist文件路径
+ * @param downloadUrl ipa https下载地址
+ * @param cb
  */
-export const parseIPA = filePath => {
+export const parseIPA = (filePath, outputFilePath, downloadUrl, cb) => {
     const ipa = new AdmZip(filePath);
+    let failed = true;
+
+    if (isObjectEmpty(ipa)) {
+        cb(new Error(`${TAG} parseIPA invalid ${filePath}`));
+        return;
+    }
+
     const ipaEntries = ipa.getEntries(); // an array of ZipEntry records
 
+    if (isObjectEmpty(ipa)) {
+        cb(new Error(`${TAG} parseIPA invalid entries`));
+        return;
+    }
+
+    // 遍历ipa包内entry
     ipaEntries.forEach(ipaEntry => {
         if (CheckerUtil.isStringContains(ipaEntry.entryName, 'Info.plist') &&
             CheckerUtil.getStringMatchNum(ipaEntry.entryName, '/') === 2) {
             parseBinaryPList(ipa.readFile(ipaEntry.entryName), (err, data) => {
-                buildPList(data, './test.plist', () => {
+
+                if (err) {
+                    cb(err);
+                    return;
+                }
+
+                data.OTAUrl = downloadUrl;
+
+                buildPList(data, outputFilePath, () => {
+                    failed = false;
+                    cb(null);
                 });
             });
         }
     });
+
+    if (failed) {
+        cb(new Error(`${TAG} parseIPA invalid Info.plist`));
+    }
 };
 
 /**

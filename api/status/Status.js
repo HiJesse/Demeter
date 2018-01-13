@@ -155,3 +155,9 @@ export const RES_MSG_ARCHIVE_NOT_EXIST = '文档不存在';
 // 查询文档总数失败
 export const RES_FAILED_COUNT_ARCHIVE = 4006;
 export const RES_MSG_COUNT_ARCHIVE = '查询文档总数失败';
+// 解析ipa失败
+export const RES_FAILED_PARSE_IOS_IPA_ERROR = 4007;
+export const RES_MSG_PARSE_IOS_IPA_ERROR = '解析IPA文件失败';
+// 上传 OTA plist失败
+export const RES_FAILED_UPLOAD_OTA_PLIST_ERROR = 4008;
+export const RES_MSG_UPLOAD_OTA_PLIST_ERROR = '上传OTA plist失败';

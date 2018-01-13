@@ -8,11 +8,15 @@ import {
     RES_FAILED_COUNT_ARCHIVE,
     RES_FAILED_DELETE_ARCHIVE,
     RES_FAILED_FETCH_ARCHIVES,
+    RES_FAILED_PARSE_IOS_IPA_ERROR,
+    RES_FAILED_UPLOAD_OTA_PLIST_ERROR,
     RES_MSG_ARCHIVE_NOT_EXIST,
     RES_MSG_CONCAT_ARCHIVE_PROJECT,
     RES_MSG_COUNT_ARCHIVE,
     RES_MSG_DELETE_ARCHIVE,
-    RES_MSG_FETCH_ARCHIVES
+    RES_MSG_FETCH_ARCHIVES,
+    RES_MSG_PARSE_IOS_IPA_ERROR,
+    RES_MSG_UPLOAD_OTA_PLIST_ERROR
 } from "./Status";
 
 /**
@@ -48,6 +52,12 @@ export const buildArchiveErrorStatus = (err, code, msg) => {
     } else if (err.countArchiveError) {
         code = RES_FAILED_COUNT_ARCHIVE;
         msg = RES_MSG_COUNT_ARCHIVE;
+    } else if (err.parseIOSPlatformIPAArchiveError) {
+        code = RES_FAILED_PARSE_IOS_IPA_ERROR;
+        msg = RES_MSG_PARSE_IOS_IPA_ERROR;
+    } else if (err.uploadIOSIPAPlistError) {
+        code = RES_FAILED_UPLOAD_OTA_PLIST_ERROR;
+        msg = RES_MSG_UPLOAD_OTA_PLIST_ERROR;
     }
 
     return [code, msg];

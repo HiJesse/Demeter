@@ -28,6 +28,9 @@ import {isAdminUser, isUserExist} from "../../models/UserModel";
 import {buildArchiveErrorStatus} from "../status/ArchiveErrorMapping";
 import {findUserJoinedProjects} from "./base/BaseProjectMemberApi";
 import {concatArchiveAndProjectInfo, splitProjectID} from "../../util/ArrayUtil";
+import UpYunUtil from "../../util/UpYunUtil";
+import * as IPAUtil from "../../util/IPAUtil";
+import * as PathUtil from "../../util/PathUtil";
 
 const TAG = 'ArchiveApi';
 
@@ -146,6 +149,47 @@ export const uploadArchiveByCLI = (req, res) => {
         res.json(buildResponse(status, {}, msg));
     });
 };
+
+/**
+ * 解析IOS平台归档的IPA文件, 用来IOS OTA
+ *
+ * 1. 判断平台是否为IOS, 归档文件是否为IPA
+ * 2. 解析IPA文件, 获取Info.plist信息并输出可以OTA用的plist文件
+ * 3. 创建又拍云存放OTA plist文件路径
+ * 4. 上传OTA plist文件到又拍云
+ * 5. 拼装OTA plist https下载地址
+ *
+ * @param archive
+ */
+const parseIOSPlatformIPAArchive = (archive) => new Promise((resolve, reject) => {
+    const up = new UpYunUtil();
+    const publicPath = 'public/upload/project_archive/';
+    const archiveRealPath = `${publicPath}${archive.filename}`;
+    const plistLocalPath = `${archiveRealPath}.plist`;
+    const plistUpYunPath = `download/test/${archive.filename}.plist`;
+    const ipaDownloadUrl = `${PathUtil.URL_ARCHIVE}${archive.filename}`;
+
+    IPAUtil.parseIPA(archiveRealPath, plistLocalPath, ipaDownloadUrl, (err) => {
+
+        if (err) {
+            LogUtil.e(`${TAG} parseIOSPlatformIPAArchive ${err}`);
+            reject({parseIOSPlatformIPAArchiveError: true});
+        }
+
+        up.mkdir('download/test').then(() => {
+            return up.upload(plistUpYunPath, plistLocalPath);
+        }).then(succeed => {
+            if (!succeed) {
+                LogUtil.e(`${TAG} uploadIOSIPAPlistError ${err}`);
+                reject({uploadIOSIPAPlistError: true});
+            }
+            resolve({OTAUrl: `${archive.filename}.plist`});
+        }).catch(err => {
+            LogUtil.e(`${TAG} uploadIOSIPAPlistError ${err}`);
+            reject({uploadIOSIPAPlistError: true});
+        })
+    });
+});
 
 /**
  * 分页获取文档列表 支持按项目 | 平台 | 文档说明模糊匹配
