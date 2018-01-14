@@ -20,6 +20,7 @@ export const archiveModel = (orm, db) => {
         des: {type: 'text', default: '什么都没写'}, // 文档描述
         archiveName: {type: 'text', required: true}, // 文档名称
         archivePath: {type: 'text', required: true}, // 文档路径
+        extraData: {type: 'text'}, // 扩展信息 例如IOS OTA plist下载路径等
         archiveSize: {type: 'number'}, // 文档大小 KB
         createdAt: {type: 'date', time: true, defaultValue: getFullDate()}, // 文档创建时间
     }, {

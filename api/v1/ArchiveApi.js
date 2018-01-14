@@ -180,8 +180,7 @@ const parseIOSPlatformIPAArchive = (archive) => new Promise((resolve, reject) =>
             return up.upload(plistUpYunPath, plistLocalPath);
         }).then(succeed => {
             if (!succeed) {
-                LogUtil.e(`${TAG} uploadIOSIPAPlistError ${err}`);
-                reject({uploadIOSIPAPlistError: true});
+                throw new Error('upload upyun failed');
             }
             resolve({OTAUrl: `${archive.filename}.plist`});
         }).catch(err => {
