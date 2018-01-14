@@ -31,6 +31,7 @@ import {concatArchiveAndProjectInfo, splitProjectID} from "../../util/ArrayUtil"
 import UpYunUtil from "../../util/UpYunUtil";
 import * as IPAUtil from "../../util/IPAUtil";
 import * as PathUtil from "../../util/PathUtil";
+import {PLATFORM_IOS} from "../../models/PlatformModel";
 
 const TAG = 'ArchiveApi';
 
@@ -39,7 +40,8 @@ const TAG = 'ArchiveApi';
  *
  * 1. 校验用户是否存在
  * 2. 校验用户是否加入该项目
- * 3. 创建文档记录并添加进项目中
+ * 3. 判断IOS IPA 是否需要OTA
+ * 4. 创建文档记录并添加进项目中
  *
  * @param req
  * @param res
@@ -59,6 +61,7 @@ export const uploadArchive = (req, res) => {
 
     let status = RES_FAILED_UPLOAD_ARCHIVE;
     let msg = RES_MSG_UPLOAD_ARCHIVE;
+    let project;
 
     isUserExist({
         id: uId
@@ -68,7 +71,10 @@ export const uploadArchive = (req, res) => {
         } else { // 普通用户校验用户是否加入改项目
             return findUserJoinedProjects(user, {id: projectId});
         }
-    }).then(project => {
+    }).then(data => {
+        project = data;
+        return parseIOSPlatformIPAArchive(platformId, archive);
+    }).then(data => {
         // 兼容两个promise返回值
         const projectObj = isArray(project) ? project[0] : project;
         const createArchiveParams = {
@@ -82,6 +88,10 @@ export const uploadArchive = (req, res) => {
 
         if (!isStringEmpty(archiveDes)) {
             createArchiveParams.des = archiveDes;
+        }
+
+        if (!isObjectEmpty(data)) {
+            createArchiveParams.extraData = data.OTAUrl;
         }
 
         return createArchive(createArchiveParams, projectObj);
@@ -99,7 +109,8 @@ export const uploadArchive = (req, res) => {
  *
  * 1. 校验项目平台信息是否存在
  * 2. 反查项目是否存在
- * 3. 创建文档记录并添加进项目中
+ * 3. 判断IOS IPA 是否需要OTA
+ * 4. 创建文档记录并添加进项目中
  *
  * @param req
  * @param res
@@ -118,6 +129,7 @@ export const uploadArchiveByCLI = (req, res) => {
     let status = RES_FAILED_UPLOAD_ARCHIVE;
     let msg = RES_MSG_UPLOAD_ARCHIVE;
     let platformId = 1;
+    let project;
 
     isProjectPlatformExist({
         appId: appId
@@ -126,7 +138,10 @@ export const uploadArchiveByCLI = (req, res) => {
         return isProjectExist({
             id: projectPlatform.project_id
         });
-    }).then(project => {
+    }).then(data => {
+        project = data;
+        return parseIOSPlatformIPAArchive(platformId, archive);
+    }).then(data => {
         const createArchiveParams = {
             projectId: project.id,
             platformId: platformId,
@@ -138,6 +153,10 @@ export const uploadArchiveByCLI = (req, res) => {
 
         if (!isStringEmpty(archiveDes)) {
             createArchiveParams.des = archiveDes;
+        }
+
+        if (!isObjectEmpty(data)) {
+            createArchiveParams.extraData = data.OTAUrl;
         }
 
         return createArchive(createArchiveParams, project);
@@ -159,9 +178,15 @@ export const uploadArchiveByCLI = (req, res) => {
  * 4. 上传OTA plist文件到又拍云
  * 5. 拼装OTA plist https下载地址
  *
+ * @param platformId
  * @param archive
  */
-const parseIOSPlatformIPAArchive = (archive) => new Promise((resolve, reject) => {
+const parseIOSPlatformIPAArchive = (platformId, archive) => new Promise((resolve, reject) => {
+    if (platformId !== (PLATFORM_IOS.platformId + 1).toString() || !archive.originalname.endsWith('.ipa')) {
+        resolve({});
+        return;
+    }
+
     const up = new UpYunUtil();
     const publicPath = 'public/upload/project_archive/';
     const archiveRealPath = `${publicPath}${archive.filename}`;
@@ -174,6 +199,7 @@ const parseIOSPlatformIPAArchive = (archive) => new Promise((resolve, reject) =>
         if (err) {
             LogUtil.e(`${TAG} parseIOSPlatformIPAArchive ${err}`);
             reject({parseIOSPlatformIPAArchiveError: true});
+            return;
         }
 
         up.mkdir('download/test').then(() => {
