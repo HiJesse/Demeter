@@ -116,12 +116,12 @@ export const setDownloadArchiveInfoAction = index => ({
 });
 
 /**
- * 根据下载文档url 构建二维码
- * @param url
+ * 根据下载文档 构建二维码
+ * @param archive
  */
-export const buildDownloadArchiveQRCodeAction = url => ({
+export const buildDownloadArchiveQRCodeAction = archive => ({
     type: ACTION_ARCHIVE_BUILD_DOWNLOAD_QR_CODE,
     data: {
-        downloadArchiveUrl: url
+        archive: archive
     }
 });

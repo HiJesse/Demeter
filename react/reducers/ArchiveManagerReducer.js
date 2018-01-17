@@ -77,6 +77,7 @@ const fetchAllArchivesReducer = (state, action) => {
             archiveSize: bytesToSize(item.archiveSize),
             archiveCreatedAt: formatDate(item.createdAt),
             archivePath: item.archivePath,
+            archiveExtraData: item.extraData,
         };
     });
 

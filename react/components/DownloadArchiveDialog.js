@@ -16,7 +16,7 @@ class DownloadArchiveDialog extends React.Component {
             return null;
         }
 
-        this.props.buildDownloadArchiveQRCode(data.archivePath);
+        this.props.buildDownloadArchiveQRCode(data);
 
         return (
             <Modal
@@ -46,7 +46,7 @@ class DownloadArchiveDialog extends React.Component {
      */
     _renderTextContent(data) {
         let platformIcon;
-        
+
         if (data.platform === 1) {
             platformIcon = <Icon type={'android'}/>;
         } else {
@@ -76,7 +76,7 @@ function select(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        buildDownloadArchiveQRCode: url => dispatch(buildDownloadArchiveQRCodeAction(url)),
+        buildDownloadArchiveQRCode: archive => dispatch(buildDownloadArchiveQRCodeAction(archive)),
     }
 }
 

@@ -103,14 +103,24 @@ export const buildArchiveDownloadQRCodeEpic = action$ =>
                 type: ACTION_ARCHIVE_BUILD_DOWNLOAD_QR_CODE_FULFILLED
             };
 
-            if (isStringEmpty(data.downloadArchiveUrl)) {
+            const archive = data.archive;
+
+            if (isStringEmpty(archive)) {
                 returnData.data = {
                     status: RES_FAILED,
                 };
                 return Observable.of(returnData);
             }
 
-            const observable = Observable.fromPromise(buildQRCode(data.downloadArchiveUrl));
+            let codePromise;
+            // ios ipa 有OTA地址
+            if (archive.platform === 2 && archive.archiveName.endsWith('ipa') && !isStringEmpty(archive.archiveExtraData)) {
+                codePromise = buildQRCode(archive.archiveExtraData);
+            } else {
+                codePromise = buildQRCode(archive.archivePath);
+            }
+
+            const observable = Observable.fromPromise(codePromise);
 
             return observable.map(data => {
                 returnData.data = {
