@@ -4,6 +4,7 @@ require('isomorphic-fetch');
 const argv = require('yargs').argv;
 const fs = require("fs");
 const formstream = require('formstream');
+const https = require("https");
 const API_UPLOAD = '/api/v1/archive/uploadArchiveByCLI';
 
 const host = argv.host; // 接口host
@@ -73,10 +74,15 @@ const uploadArchive = () => {
     form.file('archive', archive.toString(), archive.toString());
     form.field('archiveDes', archiveDes);
 
+    const agent = new https.Agent({
+        rejectUnauthorized: false
+    });
+
     const data = {
         method: 'POST',
         headers: form.headers(),
-        body: form
+        body: form,
+        agent
     };
 
     fetch(url, data).then(response => {
