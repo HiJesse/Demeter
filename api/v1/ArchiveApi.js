@@ -32,6 +32,7 @@ import UpYunUtil from "../../util/UpYunUtil";
 import * as IPAUtil from "../../util/IPAUtil";
 import * as PathUtil from "../../util/PathUtil";
 import {PLATFORM_IOS} from "../../models/PlatformModel";
+import * as FileUtil from "../../util/FileUtil";
 
 const TAG = 'ArchiveApi';
 
@@ -182,13 +183,13 @@ export const uploadArchiveByCLI = (req, res) => {
  * @param archive
  */
 const parseIOSPlatformIPAArchive = (platformId, archive) => new Promise((resolve, reject) => {
-    if (platformId !== (PLATFORM_IOS.platformId + 1).toString() || !archive.originalname.endsWith('.ipa')) {
+    if (String(platformId) !== String(PLATFORM_IOS.platformId + 1) || !archive.originalname.endsWith('.ipa')) {
         resolve({});
         return;
     }
 
     const up = new UpYunUtil();
-    const publicPath = 'public/upload/project_archive/';
+    const publicPath = `${PathUtil.UPLOAD_PATH}${PathUtil.UPLOAD_PROJECT_ARCHIVE}`;
     const archiveRealPath = `${publicPath}${archive.filename}`;
     const plistLocalPath = `${archiveRealPath}.plist`;
     const plistUpYunPath = `download/test/${archive.filename}.plist`;
@@ -304,7 +305,8 @@ export const fetchArchiveList = (req, res) => {
  *
  * 1. 用户鉴权
  * 2. 文档是否存在
- * 3. 删除文档
+ * 3. 删除数据库文档
+ * 4. 删除本地文档
  *
  * @param req
  * @param res
@@ -322,18 +324,39 @@ export const deleteArchive = (req, res) => {
 
     let status = RES_FAILED_DELETE_ARCHIVE;
     let msg = RES_MSG_DELETE_ARCHIVE;
+    let archiveInfo;
 
     isAdminUser({
         id: uId
     }).then(() => {
         return isArchiveExist({id: archiveId});
     }).then(archive => {
+        archiveInfo = archive;
         return deleteArchiveInfo(archive);
     }).then(() => {
         res.json(buildResponse(RES_SUCCEED, {}, '删除成功'));
+        deleteLocalArchive(archiveInfo);
     }).catch(err => {
         LogUtil.e(`${TAG} deleteArchive ${JSON.stringify(err)}`);
         [status, msg] = buildArchiveErrorStatus(err, status, msg);
         res.json(buildResponse(status, {}, msg));
     });
+};
+
+/**
+ * 根据数据库中的archive信息删除本地文件
+ * @param archive
+ */
+const deleteLocalArchive = archive => {
+    const publicPath = `${PathUtil.UPLOAD_PATH}${PathUtil.UPLOAD_PROJECT_ARCHIVE}`;
+    const localArchive = `${publicPath}${archive.archivePath}`;
+    const localExtraData = `${publicPath}${archive.extraData}`;
+
+    if (!isStringEmpty(archive.archivePath)) {
+        FileUtil.deleteFile(localArchive);
+    }
+
+    if (!isStringEmpty(archive.extraData)) {
+        FileUtil.deleteFile(localExtraData);
+    }
 };
