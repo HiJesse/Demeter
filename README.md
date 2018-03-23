@@ -30,6 +30,10 @@ Demeter是一个CMS系统, 提供用户体系以及App项目相关内容管理. 
 8. 使用初始管理员账号密码`admin/a123456`登录.
 9. 根目录下 `npm run undeploy`卸载项目.
 
+内网部署, 服务连续在线两月+.
+
+![](http://od9tun44g.bkt.clouddn.com/demeter/dashboard_keymetrics.png)
+
 ### WIKI
 
 1. [用户模块](https://github.com/HiJesse/Demeter/wiki/用户模块)
