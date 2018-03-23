@@ -31,7 +31,6 @@ import {concatArchiveAndProjectInfo, splitProjectID} from "../../util/ArrayUtil"
 import UpYunUtil from "../../util/UpYunUtil";
 import * as IPAUtil from "../../util/IPAUtil";
 import * as PathUtil from "../../util/PathUtil";
-import {PLATFORM_IOS} from "../../models/PlatformModel";
 import * as FileUtil from "../../util/FileUtil";
 
 const TAG = 'ArchiveApi';
@@ -183,10 +182,12 @@ export const uploadArchiveByCLI = (req, res) => {
  * @param archive
  */
 const parseIOSPlatformIPAArchive = (platformId, archive) => new Promise((resolve, reject) => {
-    if (String(platformId) !== String(PLATFORM_IOS.platformId + 1) || !archive.originalname.endsWith('.ipa')) {
-        resolve({});
-        return;
-    }
+    // if (String(platformId) !== String(PLATFORM_IOS.platformId + 1) || !archive.originalname.endsWith('.ipa')) {
+    //     resolve({});
+    //     return;
+    // }
+    resolve({});
+    return; //TODO 当前版本先屏蔽IOS OTA
 
     const up = new UpYunUtil();
     const publicPath = `${PathUtil.UPLOAD_PATH}${PathUtil.UPLOAD_PROJECT_ARCHIVE}`;
