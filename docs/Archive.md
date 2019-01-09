@@ -25,23 +25,23 @@
 
 		使用效果如下图所示.
 
-		![](http://od9tun44g.bkt.clouddn.com/demeter/archive_cli_example.png)
+		![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/demeter/archive_cli_example.png)
 
 	* Web归档	
 
 		在归档管理tab选择新建归档可以直接上传文档. 只支持单一文件上传, 选择要上传的项目和平台后填写文档说明即可上传.
 
-		![](http://od9tun44g.bkt.clouddn.com/demeter/archive_web_upload.png)
+		![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/demeter/archive_web_upload.png)
 	
 	
 2. 归档列表
 
 	用户可以根据项目|平台|文档说明模糊分页查询归档列表, 如果想要看到其他项目的归档需要管理员将该用户加入到对应的项目中. 只有管理员可以删除文档.
 
-	![](http://od9tun44g.bkt.clouddn.com/demeter/archive_list.png)
+	![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/demeter/archive_list.png)
 	
 3. 下载归档
 
 	点击归档列表中某一个归档的下载后, 会展示出下载方式. 可以直接点击下载地址进行下载, 为了方便测试下载app测试包也提供了扫描下载的方式.
 
-	![](http://od9tun44g.bkt.clouddn.com/demeter/archive_download.png)
+	![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/demeter/archive_download.png)

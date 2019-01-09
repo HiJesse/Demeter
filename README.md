@@ -32,7 +32,7 @@ Demeter是一个CMS系统, 提供用户体系以及App项目相关内容管理. 
 
 内网部署, 服务连续在线两月+.
 
-![](http://od9tun44g.bkt.clouddn.com/demeter/dashboard_keymetrics.png)
+![](https://raw.githubusercontent.com/HiJesse/Static-Res/master/image/demeter/dashboard_keymetrics.png)
 
 ### WIKI
 
